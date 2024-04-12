@@ -23,7 +23,7 @@ if ( function_exists( 'add_action' ) ) {
 						if ( ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
 							define( 'NFD_MIGRATION_MODULE_VERSION', '1.0.0' );
 						}
-						defined( 'INSTAWP_API_KEY' ) || define( 'INSTAWP_API_KEY', 'Tja4XscZD4l4zNwHD8y7j3kAffKs8edJatS0axvt' );
+						defined( 'INSTAWP_API_KEY' ) || define( 'INSTAWP_API_KEY', '' );
 						defined( 'INSTAWP_API_DOMAIN' ) || define( 'INSTAWP_API_DOMAIN', 'https://app.instawp.io' );
 						defined( 'INSTAWP_MIGRATE_ENDPOINT' ) || define( 'INSTAWP_MIGRATE_ENDPOINT', 'migrate/bluehost' );
 						new Migration( $container );
