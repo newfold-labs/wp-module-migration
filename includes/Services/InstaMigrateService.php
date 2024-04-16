@@ -19,7 +19,6 @@ class InstaMigrateService {
 	function __construct() {
 
 		Helper::set_api_domain( INSTAWP_API_DOMAIN );
-
 			$this->api_key      = Helper::get_api_key( false, INSTAWP_API_KEY );
 			$this->api_url      = Helper::get_api_domain();
 			$this->connect_id   = Helper::get_connect_id();
@@ -27,7 +26,6 @@ class InstaMigrateService {
 			$this->redirect_url = esc_url( $this->api_url . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . $this->connect_uuid );
 
 	}
-
 	/**
 	 * Install InstaWP plugin 
 	 */
@@ -54,11 +52,10 @@ class InstaMigrateService {
 			$connect_response = Helper::instawp_generate_api_key( $this->api_key );
 
 			if ( ! $connect_response ) {
-				return wp_send_json_error(
-					array(
-						'message'  => esc_html__( 'Website could not connect successfully.' ),
-						'response' => $connect_response
-					)
+				return new \WP_Error(
+					'Bad request',
+					esc_html__( 'Website could not connect successfully.' ),
+					array('status' => 400)
 				);
 			}
 
@@ -75,12 +72,12 @@ class InstaMigrateService {
 			);
 		}
 
-		return wp_send_json_error(
-			array(
-				'message'  => esc_html__( 'Migration might be finished.' ),
-				'response' => false,
-			)
+		return new \WP_Error(
+			'Bad request',
+			esc_html__( 'Migration might be finished.' ),
+			array('status' => 400)
 		);
+	
 	}
 
 	private function set_api_data( $key, $value ) {
