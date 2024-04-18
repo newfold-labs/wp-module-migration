@@ -9,11 +9,41 @@ use InstaWP\Connect\Helpers\Installer;
  */
 class InstaMigrateService {
 
+	/**
+	 * InstaWP Api key to connect with it
+	 *
+	 * @var $api_key
+	 */
 	private $api_key;
+	/**
+	 * InstaWP Api URL
+	 *
+	 * @var $api_url
+	 */
 	private $api_url;
+	/**
+	 * Connect id fetching from instaWP once connection is successful
+	 *
+	 * @var $connect_id
+	 */
 	private $connect_id;
+	/**
+	 * Connect uuid fetching from instaWP once connection is successful
+	 *
+	 * @var $connect_uuid
+	 */
 	private $connect_uuid;
+	/**
+	 * InstaWP Connect plugin slug used for installing the instaWP plugin once
+	 *
+	 * @var $connect_plugin_slug
+	 */
 	private $connect_plugin_slug = 'instawp-connect';
+	/**
+	 * Redirect url once website is connected to start migration
+	 *
+	 * @var $redirect_url
+	 */
 	private $redirect_url;
 
 	function __construct() {
@@ -24,10 +54,9 @@ class InstaMigrateService {
 			$this->connect_id   = Helper::get_connect_id();
 			$this->connect_uuid = Helper::get_connect_uuid();
 			$this->redirect_url = esc_url( $this->api_url . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . $this->connect_uuid );
-
 	}
 	/**
-	 * Install InstaWP plugin 
+	 * Install InstaWP plugin
 	 */
 	public function InstallInstaWpConnect() {
 		if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'get_mu_plugins' ) ) {
@@ -40,7 +69,7 @@ class InstaMigrateService {
 					'slug'     => 'instawp-connect',
 					'type'     => 'plugin',
 					'activate' => true,
-				)
+				),
 			);
 			$installer = new Installer( $params );
 			$response  = $installer->start();
@@ -55,10 +84,9 @@ class InstaMigrateService {
 				return new \WP_Error(
 					'Bad request',
 					esc_html__( 'Website could not connect successfully.' ),
-					array('status' => 400)
+					array( 'status' => 400 )
 				);
 			}
-
 		}
 
 		// Ready to start the migration
@@ -75,11 +103,16 @@ class InstaMigrateService {
 		return new \WP_Error(
 			'Bad request',
 			esc_html__( 'Migration might be finished.' ),
-			array('status' => 400)
+			array( 'status' => 400 )
 		);
-	
 	}
 
+	/**
+	 * Updates the values in db
+	 *
+	 * @param string $key keyname
+	 * @param string $value  value
+	 */
 	private function set_api_data( $key, $value ) {
 
 		$api_options = get_option( 'instawp_api_options', array() );
@@ -92,7 +125,11 @@ class InstaMigrateService {
 
 		return update_option( 'instawp_api_options', $api_options );
 	}
-
+	/**
+	 * Gets the values from db
+	 *
+	 * @param string $key keyname
+	 */
 	private function get_api_data( $key = 'api_key' ) {
 
 		$api_options = get_option( 'instawp_api_options', array() );
@@ -131,7 +168,4 @@ class InstaMigrateService {
 
 		return $value;
 	}
-
 }
-
-require_once dirname(dirname(__DIR__)). "/vendor/autoload.php";
