@@ -20,7 +20,7 @@ class MigrateController {
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'connectInstawp' ),
-					'permission_callback' => null,
+					'permission_callback' => array($this, 'rest_is_authorized_admin')
 				),
 			)
 		);
@@ -31,5 +31,11 @@ class MigrateController {
 		$response     = $instaService->InstallInstaWpConnect();
 
 		return $response;
+	}
+
+	public static function rest_is_authorized_admin()
+	{
+			$admin = 'manage_options';
+			return \is_user_logged_in() && \current_user_can($admin);
 	}
 }
