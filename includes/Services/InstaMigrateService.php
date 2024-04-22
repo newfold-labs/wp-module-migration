@@ -10,50 +10,14 @@ use InstaWP\Connect\Helpers\Installer;
 class InstaMigrateService {
 
 	/**
-	 * InstaWP Api key to connect with it
-	 *
-	 * @var $api_key
-	 */
-	private $api_key;
-	/**
-	 * InstaWP Api URL
-	 *
-	 * @var $api_url
-	 */
-	private $api_url;
-	/**
-	 * Connect id fetching from instaWP once connection is successful
-	 *
-	 * @var $connect_id
-	 */
-	private $connect_id;
-	/**
-	 * Connect uuid fetching from instaWP once connection is successful
-	 *
-	 * @var $connect_uuid
-	 */
-	private $connect_uuid;
-	/**
 	 * InstaWP Connect plugin slug used for installing the instaWP plugin once
 	 *
 	 * @var $connect_plugin_slug
 	 */
 	private $connect_plugin_slug = 'instawp-connect';
-	/**
-	 * Redirect url once website is connected to start migration
-	 *
-	 * @var $redirect_url
-	 */
-	private $redirect_url;
 
 	function __construct() {
-
 		Helper::set_api_domain( INSTAWP_API_DOMAIN );
-			$this->api_key      = Helper::get_api_key( false, INSTAWP_API_KEY );
-			$this->api_url      = Helper::get_api_domain();
-			$this->connect_id   = Helper::get_connect_id();
-			$this->connect_uuid = Helper::get_connect_uuid();
-			$this->redirect_url = esc_url( $this->api_url . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . $this->connect_uuid );
 	}
 	/**
 	 * Install InstaWP plugin
@@ -78,7 +42,8 @@ class InstaMigrateService {
 		// Connect the website with InstaWP server
 		if ( empty( Helper::get_api_key() ) ) {
 
-			$connect_response = Helper::instawp_generate_api_key( $this->api_key );
+			$api_key          = Helper::get_api_key( false, INSTAWP_API_KEY );
+			$connect_response = Helper::instawp_generate_api_key( $api_key );
 
 			if ( ! $connect_response ) {
 				return new \WP_Error(
@@ -90,12 +55,17 @@ class InstaMigrateService {
 		}
 
 		// Ready to start the migration
-		if ( function_exists( 'instawp' ) && ! empty( $this->connect_id ) ) {
+		if ( function_exists( 'instawp' ) ) {
+			// Check if there is a connect ID
+			if ( empty( Helper::get_connect_id() ) ) {
+				return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
+			}
+
 			return wp_send_json_success(
 				array(
-					'message'      => esc_html__( 'Ready to start migration.' ),
+					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
 					'response'     => true,
-					'redirect_url' => $this->redirect_url,
+					'redirect_url' => esc_url( Helper::get_api_domain() . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
 				)
 			);
 		}
@@ -105,67 +75,5 @@ class InstaMigrateService {
 			esc_html__( 'Migration might be finished.' ),
 			array( 'status' => 400 )
 		);
-	}
-
-	/**
-	 * Updates the values in db
-	 *
-	 * @param string $key keyname
-	 * @param string $value  value
-	 */
-	private function set_api_data( $key, $value ) {
-
-		$api_options = get_option( 'instawp_api_options', array() );
-
-		if ( ! is_array( $api_options ) || empty( $api_options ) ) {
-			$api_options = array();
-		}
-
-		$api_options[ $key ] = $value;
-
-		return update_option( 'instawp_api_options', $api_options );
-	}
-	/**
-	 * Gets the values from db
-	 *
-	 * @param string $key keyname
-	 */
-	private function get_api_data( $key = 'api_key' ) {
-
-		$api_options = get_option( 'instawp_api_options', array() );
-		$value       = '';
-
-		if ( ( ! is_array( $api_options ) || empty( $api_options ) ) && 'api_key' !== $key && 'api_url' !== $key ) {
-			return $value;
-		}
-
-		if ( isset( $api_options[ $key ] ) ) {
-			$value = $api_options[ $key ];
-		}
-
-		// Check api_key && ENV
-		if ( 'api_key' === $key && empty( $value ) ) {
-			$env_file = ABSPATH . '.env';
-
-			if ( file_exists( $env_file ) && is_readable( $env_file ) ) {
-				$env_data = parse_ini_file( ABSPATH . '.env' );
-				$value    = isset( $env_data['INSTAWP_API_KEY'] ) ? sanitize_text_field( $env_data['INSTAWP_API_KEY'] ) : $value;
-			}
-		}
-
-		// Check api_key && constant
-		if ( 'api_key' === $key && empty( $value ) ) {
-			$value = defined( 'INSTAWP_API_KEY' ) ? INSTAWP_API_KEY : $value;
-		}
-
-		// Check api_url && constant
-		if ( 'api_url' === $key ) {
-			$value = defined( 'INSTAWP_ENVIRONMENT' ) ? 'https://' . INSTAWP_ENVIRONMENT . '.instawp.io' : $value;
-			$value = empty( $value ) ? 'https://app.instawp.io' : $value;
-
-			$this->set_api_data( 'api_url', $value );
-		}
-
-		return $value;
 	}
 }
