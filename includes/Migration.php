@@ -31,7 +31,6 @@ class Migration {
 		$this->container    = $container;
 		$this->instaService = new InstaMigrateService();
 
-		add_action( 'init', array( $this, 'delete_plugins' ) );
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 	}
