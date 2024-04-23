@@ -16,6 +16,9 @@ class InstaMigrateService {
 	 */
 	private $connect_plugin_slug = 'instawp-connect';
 
+	/**
+	 * Set required api keys for insta to start the migration
+	 */
 	function __construct() {
 		Helper::set_api_domain( INSTAWP_API_DOMAIN );
 	}

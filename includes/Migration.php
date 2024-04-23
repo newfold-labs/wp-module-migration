@@ -9,14 +9,17 @@ use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
  * @package NewfoldLabs\WP\Module\Migration
  */
 class Migration {
-
-	/*
-	* Container loaded from the brand plugin.
-	*
-	* @var Container
-	*/
+	/**
+	 * Container loaded from the brand plugin.
+	 *
+	 * @var Container
+	 */
 	protected $container;
-	protected $instaService;
+
+	/**
+	 * @var insta_service
+	 */
+	protected $insta_service;
 
 	/**
 	 * Array map of API controllers.
@@ -28,13 +31,16 @@ class Migration {
 	);
 
 	public function __construct( Container $container ) {
-		$this->container    = $container;
-		$this->instaService = new InstaMigrateService();
+		$this->container     = $container;
+		$this->insta_service = new InstaMigrateService();
 
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 	}
 
+	/**
+	 * Registering the rest routes
+	 */
 	public function register_routes() {
 		foreach ( $this->controllers as $controller ) {
 			$rest_api = new $controller();
@@ -42,8 +48,10 @@ class Migration {
 		}
 	}
 
+	/**
+	 * Triggers on instawp connect installation
+	 */
 	public function on_update_nfd_migrate_site() {
-		$response = $this->instaService->InstallInstaWpConnect();
+		$response = $this->insta_service->InstallInstaWpConnect();
 	}
-	
 }

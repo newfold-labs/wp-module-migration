@@ -1,7 +1,13 @@
 <?php
 namespace NewfoldLabs\WP\Module\Migration\Services;
 
+/**
+ * Utility Service
+ */
 class UtilityService {
+	/**
+	 * Get the api key from worker
+	 */
 	public static function get_insta_api_key() {
 		$insta_cf_worker = NFD_PROXY_ACCESS_WORKER . '/get/token?access_token=BH_MIGRATION_API_KEY';
 		$insta_cf_data   = wp_remote_get(
@@ -12,7 +18,7 @@ class UtilityService {
 					'Accept'        => 'application/json',
 					'PHP_VERSION'   => PHP_VERSION,
 					'migration_key' => true,
-          'site_url'      =>  get_option('siteurl', '')
+					'site_url'      => get_option( 'siteurl', '' ),
 				),
 			)
 		);
