@@ -1,5 +1,6 @@
 {
     "name": "newfold-labs/wp-module-migration",
+    "description": "Initiates the migration process",
     "autoload": {
         "psr-4": {
             "NewfoldLabs\\WP\\Module\\Migration\\": "includes/"
