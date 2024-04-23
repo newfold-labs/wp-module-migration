@@ -1,7 +1,7 @@
 name: Lint PHP
 on:
   pull_request:
-    types: [ opened, edited, reopened, ready_for_review ]
+    types: [ opened, edited, reopened, ready_for_review, synchronize ]
     paths:
       - '**.php'
 
@@ -37,7 +37,7 @@ jobs:
         if: "!! env.GIT_DIFF"
 
       - name: Cache Composer vendor directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}

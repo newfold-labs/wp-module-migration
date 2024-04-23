@@ -9,6 +9,10 @@
     "lint": "wp-scripts lint-js ./src/index.js",
     "start": "wp-scripts start ./src/index.js --config ./scripts/webpack.config.js"
   },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/newfold-labs/wp-module-migration.git"
