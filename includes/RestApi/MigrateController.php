@@ -35,7 +35,7 @@ class MigrateController {
 			array(
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'connectInstawp' ),
+					'callback'            => array( $this, 'connect_instawp' ),
 					'permission_callback' => array( $this, 'rest_is_authorized_admin' ),
 				),
 			)
@@ -47,9 +47,9 @@ class MigrateController {
 	 *
 	 * @return array
 	 */
-	public function connectInstawp() {
-		$instaService = new InstaMigrateService();
-		$response     = $instaService->InstallInstaWpConnect();
+	public function connect_instawp() {
+		$insta_service = new InstaMigrateService();
+		$response      = $insta_service->install_instawp_connect();
 
 		return $response;
 	}

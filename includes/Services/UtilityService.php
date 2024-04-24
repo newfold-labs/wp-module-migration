@@ -24,6 +24,7 @@ class UtilityService {
 		);
 		$insta_response  = json_decode( wp_remote_retrieve_body( $insta_cf_data ) );
 
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 		return $insta_response ? base64_decode( $insta_response->data ) : '';
 	}
 }

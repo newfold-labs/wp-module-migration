@@ -59,6 +59,6 @@ class Migration {
 	 * Triggers on instawp connect installation
 	 */
 	public function on_update_nfd_migrate_site() {
-		$response = $this->insta_service->InstallInstaWpConnect();
+		$response = $this->insta_service->install_instawp_connect();
 	}
 }

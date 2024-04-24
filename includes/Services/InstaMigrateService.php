@@ -19,13 +19,13 @@ class InstaMigrateService {
 	/**
 	 * Set required api keys for insta to initiate the migration
 	 */
-	function __construct() {
+	public function __construct() {
 		Helper::set_api_domain( INSTAWP_API_DOMAIN );
 	}
 	/**
 	 * Install InstaWP plugin
 	 */
-	public function InstallInstaWpConnect() {
+	public function install_instawp_connect() {
 		if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'get_mu_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
