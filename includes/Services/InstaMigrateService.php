@@ -3,6 +3,7 @@ namespace NewfoldLabs\WP\Module\Migration\Services;
 
 use InstaWP\Connect\Helpers\Helper;
 use InstaWP\Connect\Helpers\Installer;
+use NewfoldLabs\WP\Module\Migration\Services\EventService;
 
 /**
  * Class InstaMigrateService
@@ -56,7 +57,15 @@ class InstaMigrateService {
 				);
 			}
 		}
-
+		$currentURL = $_SERVER['REQUEST_URI'];
+		$event = [
+			"category" => "wonder_start",
+			"action" => "migration_initiated",
+			"data" => [
+				"page"=> $currentURL
+			]
+	];
+		EventService::send( $event );
 		// Ready to start the migration
 		if ( function_exists( 'instawp' ) ) {
 			// Check if there is a connect ID
