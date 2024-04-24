@@ -17,6 +17,8 @@ class Migration {
 	protected $container;
 
 	/**
+	 * To create insta service instance
+	 *
 	 * @var insta_service
 	 */
 	protected $insta_service;
@@ -30,6 +32,11 @@ class Migration {
 		'NewfoldLabs\\WP\\Module\\Migration\\RestApi\\MigrateController',
 	);
 
+	/**
+	 * Migration constructor.
+	 *
+	 * @param Container $container Container loaded from the brand plugin.
+	 */
 	public function __construct( Container $container ) {
 		$this->container     = $container;
 		$this->insta_service = new InstaMigrateService();
