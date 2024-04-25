@@ -43,6 +43,7 @@ class Migration {
 
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
+		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
 	}
 
 	/**
@@ -60,5 +61,18 @@ class Migration {
 	 */
 	public function on_update_nfd_migrate_site() {
 		$response = $this->insta_service->install_instawp_connect();
+	}
+
+	/**
+	 * Updates showMigrationSteps option based on instawp_last_migration_details
+	 *
+	 * @param array $new_option array values
+	 */
+	public function on_update_instawp_last_migration_details( $new_option ) {
+		$value_updated = $new_option['status'];
+		if ( 'completed' === $value_updated ) {
+			update_option( 'showMigrationSteps', true );
+		}
+		return $new_option;
 	}
 }
