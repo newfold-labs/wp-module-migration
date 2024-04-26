@@ -25,7 +25,7 @@ if ( function_exists( 'add_action' ) ) {
 						if ( ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
 							define( 'NFD_MIGRATION_MODULE_VERSION', '1.0.0' );
 						}
-						$migrate_endpoint = 'migrate/'. $container->plugin()->id;
+						$migrate_endpoint = 'migrate/' . $container->plugin()->id;
 						if ( 'atomic' === getContext( 'platform' ) ) {
 							$migrate_endpoint = 'migrate/bh-cloud';
 						}
