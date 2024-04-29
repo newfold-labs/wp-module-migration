@@ -3,6 +3,8 @@ namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
+use NewfoldLabs\WP\Module\Migration\Services\EventService;
+
 /**
  * Class Migration
  *
@@ -43,6 +45,7 @@ class Migration {
 
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
+		add_action( 'deleted_plugin', array( $this, 'delete_plugin' ), 10, 1 );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
 	}
 
@@ -61,6 +64,33 @@ class Migration {
 	 */
 	public function on_update_nfd_migrate_site() {
 		$response = $this->insta_service->install_instawp_connect();
+	}
+
+		/**
+		 * Updates showMigrationSteps option based on instawp_last_migration_details
+		 *
+		 * @param string $file path of plugin installed
+		 */
+	public function delete_plugin( $file ) {
+		$migrationDetails     = (array) get_option( 'instawp_last_migration_details', array() );
+		$isMigrationCompleted = $migrationDetails['status'];
+		if ( 'instawp-connect/instawp-connect.php' === $file ) {
+			if ( 'completed' === $isMigrationCompleted ) {
+				$event = array(
+					'category' => 'wonder_start',
+					'action'   => 'migration_completed',
+					'data'     => array(),
+				);
+				EventService::send( $event );
+			} else {
+				$event = array(
+					'category' => 'wonder_start',
+					'action'   => 'migration_failed',
+					'data'     => array(),
+				);
+				EventService::send( $event );
+			}
+		}
 	}
 
 	/**
