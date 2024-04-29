@@ -33,7 +33,7 @@ if ( function_exists( 'add_action' ) ) {
 						$response = UtilityService::get_insta_api_key( $brand );
 						defined( 'INSTAWP_API_KEY' ) || define( 'INSTAWP_API_KEY', $response );
 						defined( 'INSTAWP_API_DOMAIN' ) || define( 'INSTAWP_API_DOMAIN', 'https://app.instawp.io' );
-						defined( 'INSTAWP_MIGRATE_ENDPOINT' ) || define( 'INSTAWP_MIGRATE_ENDPOINT', 'migrate/' . $migrate_endpoint );
+						defined( 'INSTAWP_MIGRATE_ENDPOINT' ) || define( 'INSTAWP_MIGRATE_ENDPOINT', 'migrate/' . $brand );
 
 						new Migration( $container );
 					},
