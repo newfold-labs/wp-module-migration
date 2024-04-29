@@ -7,9 +7,11 @@ namespace NewfoldLabs\WP\Module\Migration\Services;
 class UtilityService {
 	/**
 	 * Get the api key from worker
+	 *
+	 * @param string $brand name of the brand
 	 */
-	public static function get_insta_api_key() {
-		$insta_cf_worker = NFD_PROXY_ACCESS_WORKER . '/get/token?access_token=BH_MIGRATION_API_KEY';
+	public static function get_insta_api_key( $brand ) {
+		$insta_cf_worker = NFD_PROXY_ACCESS_WORKER . '/get/token?brand=' . $brand;
 		$insta_cf_data   = wp_remote_get(
 			$insta_cf_worker,
 			array(
