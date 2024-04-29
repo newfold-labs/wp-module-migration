@@ -45,7 +45,8 @@ class Migration {
 
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
-		add_action( 'deleted_plugin', array( $this, 'delete_plugin' ), 10, 2 );
+		add_action( 'deleted_plugin', array( $this, 'delete_plugin' ), 10, 1 );
+		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
 	}
 
 	/**
@@ -65,27 +66,43 @@ class Migration {
 		$response = $this->insta_service->install_instawp_connect();
 	}
 
-	public function delete_plugin( $file, $deleted ) {
-		$migrationDetails         = (array) get_option( 'instawp_last_migration_details', array() );
+		/**
+		 * Updates showMigrationSteps option based on instawp_last_migration_details
+		 *
+		 * @param string $file path of plugin installed
+		 */
+	public function delete_plugin( $file ) {
+		$migrationDetails     = (array) get_option( 'instawp_last_migration_details', array() );
 		$isMigrationCompleted = $migrationDetails['status'];
 		if ( 'instawp-connect/instawp-connect.php' === $file ) {
-			if (  $isMigrationCompleted === 'completed')
-			{
-				$event = [
-					"category" => "wonder_start",
-					"action" => "migration_completed",
-					"data" => []
-			];
+			if ( 'completed' === $isMigrationCompleted ) {
+				$event = array(
+					'category' => 'wonder_start',
+					'action'   => 'migration_completed',
+					'data'     => array(),
+				);
 				EventService::send( $event );
 			} else {
-				$event = [
-					"category" => "wonder_start",
-					"action" => "migration_failed",
-					"data" => []
-			];
+				$event = array(
+					'category' => 'wonder_start',
+					'action'   => 'migration_failed',
+					'data'     => array(),
+				);
 				EventService::send( $event );
 			}
-			
-	 }
+		}
+	}
+
+	/**
+	 * Updates showMigrationSteps option based on instawp_last_migration_details
+	 *
+	 * @param array $new_option status of migration
+	 */
+	public function on_update_instawp_last_migration_details( $new_option ) {
+		$value_updated = $new_option['status'];
+		if ( 'completed' === $value_updated ) {
+			update_option( 'showMigrationSteps', true );
+		}
+		return $new_option;
 	}
 }

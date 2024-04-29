@@ -56,7 +56,6 @@ class InstaMigrateService {
 				);
 			}
 		}
-		
 		// Ready to start the migration
 		if ( function_exists( 'instawp' ) ) {
 			// Check if there is a connect ID

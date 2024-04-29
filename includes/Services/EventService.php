@@ -1,6 +1,6 @@
 <?php
 
-namespace NewfoldLabs\WP\Module\Onboarding\Services;
+namespace NewfoldLabs\WP\Module\Migration\Services;
 
 /**
  * Class for handling analytics events.
