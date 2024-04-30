@@ -82,7 +82,7 @@ class Migration {
 					'data'     => array(),
 				);
 				EventService::send( $event );
-			} else {
+			} elseif ( 'failed' === $isMigrationCompleted ) {
 				$event = array(
 					'category' => 'wonder_start',
 					'action'   => 'migration_failed',
