@@ -25,12 +25,15 @@
         },
         {
             "type": "vcs",
-            "url": "git@github.com:InstaWP/connect-helpers.git"
+            "url": "git@github.com:InstaWP/connect-helpers.git",
+            "only": [
+              "instawp/*"
+            ]
         }
       ],
       "require": {
           "newfold-labs/wp-module-loader": "^1.0.10",
-          "instawp/connect-helpers": "dev-main"
+          "instawp/connect-helpers": "1.0.0"
         },
       "require-dev": {
         "newfold-labs/wp-php-standards": "^1.2"
