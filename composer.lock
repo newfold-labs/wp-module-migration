@@ -258,16 +258,16 @@
         },
         {
             "name": "wp-forge/wp-options",
-            "version": "1.1",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-forge/wp-options.git",
-                "reference": "df8899255dee19365599caa8801c75803e94e413"
+                "reference": "511b1c5e626582dd4c3c1b5602e7a20352dabc1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-forge/wp-options/zipball/df8899255dee19365599caa8801c75803e94e413",
-                "reference": "df8899255dee19365599caa8801c75803e94e413",
+                "url": "https://api.github.com/repos/wp-forge/wp-options/zipball/511b1c5e626582dd4c3c1b5602e7a20352dabc1b",
+                "reference": "511b1c5e626582dd4c3c1b5602e7a20352dabc1b",
                 "shasum": ""
             },
             "type": "library",
@@ -289,9 +289,9 @@
             "description": "A WordPress helper class for managing plugin options.",
             "support": {
                 "issues": "https://github.com/wp-forge/wp-options/issues",
-                "source": "https://github.com/wp-forge/wp-options/tree/1.1"
+                "source": "https://github.com/wp-forge/wp-options/tree/1.1.1"
             },
-            "time": "2022-03-04T16:23:42+00:00"
+            "time": "2024-05-10T14:57:37+00:00"
         }
     ],
     "packages-dev": [
