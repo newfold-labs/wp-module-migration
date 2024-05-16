@@ -71,7 +71,7 @@ class Migration {
 	 * @param array $new_option status of migration
 	 */
 	public function on_update_instawp_last_migration_details( $new_option ) {
-		$value_updated = $new_option['status'];
+		$value_updated = array_key_exists( 'status', $new_option ) && $new_option['status'];
 		if ( 'completed' === $value_updated ) {
 			update_option( 'showMigrationSteps', true );
 			$event = array(
@@ -80,7 +80,7 @@ class Migration {
 				'data'     => array(),
 			);
 			EventService::send( $event );
-		}elseif ( 'failed' === $value_updated ) {
+		} elseif ( 'failed' === $value_updated ) {
 			$event = array(
 				'category' => 'wonder_start',
 				'action'   => 'migration_failed',
