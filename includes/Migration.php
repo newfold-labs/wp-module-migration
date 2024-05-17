@@ -66,14 +66,14 @@ class Migration {
 	}
 
 	/**
-	 * Updates showMigrationSteps option based on instawp_last_migration_details
+	 * Updates nfd_show_migration_steps option based on instawp_last_migration_details
 	 *
 	 * @param array $new_option status of migration
 	 */
 	public function on_update_instawp_last_migration_details( $new_option ) {
 		$value_updated = $new_option['status'];
 		if ( 'completed' === $value_updated ) {
-			update_option( 'showMigrationSteps', true );
+			update_option( 'nfd_show_migration_steps', true );
 			$event = array(
 				'category' => 'wonder_start',
 				'action'   => 'migration_completed',
