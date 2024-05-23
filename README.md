@@ -99,7 +99,8 @@ In rare scenarios, like UI redesign where the change is bigger or a major refact
 4. package-lock.json should auto update.
 
 5. Once Satis starts showing the updated version, run the below command for composer update:
-composer update newfold-labs/wp-module-migration -W
+ ```sh
+ composer update newfold-labs/wp-module-migration -W
 
 6. Create a branch (naming convention: update/wp-module-migration-version_number).
 
