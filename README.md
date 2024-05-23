@@ -18,7 +18,7 @@ The migration module is used to initiate the migration process by installing the
 ## Module Responsibilities
 
 - It installs the `instawp-connect` plugin and connects the website with it.
-- It triggers the events based on update option hook when insta updates the `instawp_last_migration_details` value.
+- It triggers the events based on update option hook when instawp updates the `instawp_last_migration_details` value in database.
 
 ## Critical Paths
 - Migration process is initiated when user hits the endpoint ( `/newfold-migration/v1/migrate/connect` ).
@@ -27,7 +27,7 @@ The migration module is used to initiate the migration process by installing the
 ## How it works
 - When user hits the endpoint or updates the value in db, it installs the plugin and connects the plugin with the website and returns a url.
 - Once you're redirected to the url, you'll be taken to instawp screen where it'll ask you for source website that you wanted to migrate and migration starts here and completes in the instawp screens only.
-- As soon as the migration gets completed, the current BH plugin which is present in destination site is being replaced with the latest BH plugin from hiive url. Instawp is updating the db  value `instawp_last_migration_details` with the respective status, which we're using to trigger the events based on update hook of that value and doing the post migration logic here updating the db value to show migration steps in brand plugin dashboard.
+- As soon as the migration gets completed, the current BH plugin which is present in destination site is being replaced with the latest BH plugin from hiive url. Instawp is updating the db  value `instawp_last_migration_details` with the respective status, which we're using to trigger the events ( `migration_completed`, `migration_failed` ) based on update hook of that value and doing the post migration logic here updating the db value to show migration steps in brand plugin dashboard.
 
 ## Installation
 
