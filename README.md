@@ -8,7 +8,6 @@ height="42" />
 [![License](https://img.shields.io/github/license/newfold-labs/wp-module-migration?labelColor=333333&color=666666&style=for-the-badge)](https://raw.githubusercontent.com/newfold-labs/wp-module-migration/master/LICENSE)
 
 The migration module is used to initiate the migration process by installing the required plugins for migration.
-
 <br><br>
 [![React](https://img.shields.io/badge/Wordpress-21759B?style=for-the-badge&logo=wordpress&logoColor=white)]()
 [![React](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)]()
@@ -55,55 +54,56 @@ In rare scenarios, like UI redesign where the change is bigger or a major refact
 
 1. Merge approved PRs into trunk branch
 
-2. Do version update to new one in package.json and update the version in bootstrap.php 
+2. Do version update to new one in `package.json` and update the version in `bootstrap.php`
 
-3. Run, npm install (this will auto update version in package-lock.json) 
+3. Run `npm install` (this will auto update version in `package-lock.json`)
 
-4. Commit above change in separate commit (commit message: Bump to new version value) 
+4. Commit above change in separate commit (commit message: Bump to new version value)
 
-5. Go to https://github.com/newfold-labs/wp-module-migration/releases 
+5. Go to [GitHub Releases](https://github.com/newfold-labs/wp-module-migration/releases)
 
-6. Click on Draft a new release button.
+6. Click on **Draft a new release** button.
 
-7. By default, you'll always create a release from target: trunk branch.
+7. By default, you'll always create a release from target: `trunk` branch.
 
-8. Give V version that you want to release and click on create a new tag. 
+8. Give `V` version that you want to release and click on **create a new tag**.
 
-9. Click Generate release notes button it will basically collect all the pull requests that came in from the previous release to now and then just create a summary. (It won't track any direct comments to the trunk. It will just only track pull request) 
+9. Click **Generate release notes** button. It will basically collect all the pull requests that came in from the previous release to now and then just create a summary. (It won't track any direct comments to the trunk. It will just only track pull requests.)
 
-10. Keep Set as the latest release checkbox `checked` as it is by default. 
+10. Keep **Set as the latest release** checkbox `checked` as it is by default.
 
-11. Click Publish a release button. 
+11. Click **Publish a release** button.
 
-12. Go to https://newfold-labs.github.io/satis/ Satis is a PHP registry for our packages. 
+12. Go to [Satis](https://newfold-labs.github.io/satis/). Satis is a PHP registry for our packages.
 
-13. On above URL in `package` filter, you can search for migration 
+13. On above URL in `package` filter, you can search for migration.
 
-14. We have set up an integration within our workflow itself so once workflow completes, we trigger alert to Satis that newer version of migration module is released and rebuild Satis so that it can show newer version in packages (Repo: https://github.com/newfold-labs/satis/actions) 
+14. We have set up an integration within our workflow itself so once the workflow completes, we trigger an alert to Satis that a newer version of the migration module is released and rebuild Satis so that it can show the newer version in packages (Repo: [Satis Actions](https://github.com/newfold-labs/satis/actions))
 
-15. The newer version will appear in 5 to 10 minutes of rebuilding. 
+15. The newer version will appear in 5 to 10 minutes of rebuilding.
 
-16. You can check the status of Statis build & Publish workflow here https://github.com/newfold-labs/wp-module-migration/actions 
+16. You can check the status of Satis build & Publish workflow [here](https://github.com/newfold-labs/wp-module-migration/actions).
 
-17. On successful completion you can see latest package here https://github.com/newfold-labs/wp-module-migration/pkgs/npm/wp-module-migration 
+17. On successful completion, you can see the latest package [here](https://github.com/newfold-labs/wp-module-migration/pkgs/npm/wp-module-migration).
+
 
 #### Changes to BlueHost plugin repo
 
-1. In composer.json file, update version of newfold-labs/wp-module-migration 
+1. In `composer.json` file, update the version of `newfold-labs/wp-module-migration`.
 
-2. In package.json file, newfold-labs/wp-module-migration : version number 
+2. In `package.json` file, update `newfold-labs/wp-module-migration` to the new version number.
 
-3. Run command, 
-```npm i --legacy-peer-deps```  
+3. Run command:
+   ```sh
+   npm i --legacy-peer-deps
+4. package-lock.json should auto update.
 
-4. Package-lock.json should auto update. 
+5. Once Satis starts showing the updated version, run the below command for composer update:
+composer update newfold-labs/wp-module-migration -W
 
-5. Once Satis starts showing updated version run below command for composer update, 
-```$ composer update newfold-labs/wp-module-migration -W``` 
+6. Create a branch (naming convention: update/wp-module-migration-version_number).
 
-6. We need to create a branch (naming convention: update/wp-module-migration-version_number). 
-
-7. Currently we don't have the permission to publish directly to the BlueHost plugin So, we need to create a fork basically of the repo then push it to that fork and then create a pull request against the develop branch. 
+7. Currently, we don't have the permission to publish directly to the BlueHost plugin. So, we need to create a fork of the repo, push it to that fork, and then create a pull request against the develop branch. 
 
 8. The new release process is thus completed. 
 [More on NewFold WordPress Modules](https://github.com/newfold-labs/wp-module-loader)
