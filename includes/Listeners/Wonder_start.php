@@ -1,7 +1,7 @@
 <?php
+namespace NewfoldLabs\WP\Module\Migration\Listeners;
 
 use NewfoldLabs\WP\Module\Data\Listeners\Listener;
-
 
 class Wonder_start extends Listener {
     /**
@@ -21,20 +21,8 @@ class Wonder_start extends Listener {
 	public function on_update_instawp_last_migration_details( $new_option ) {
 		$value_updated = $new_option['status'];
 		if ( 'completed' === $value_updated ) {
-			$event = array(
-				// 'category' => 'wonder_start',
-				'action'   => 'migration_completed',
-				'data'     => array(),
-			);
-			// EventService::send( $event );
 			$this->push('migration_completed', array());
 		} elseif ( 'failed' === $value_updated ) {
-			$event = array(
-				'category' => 'wonder_start',
-				'action'   => 'migration_failed',
-				'data'     => array(),
-			);
-			// EventService::send( $event );
 			$this->push('migration_failed', array());
 		}
 		return $new_option;
