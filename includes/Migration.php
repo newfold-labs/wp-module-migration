@@ -3,7 +3,6 @@ namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
-use NewfoldLabs\WP\Module\Migration\Services\EventService;
 
 /**
  * Class Migration
@@ -74,19 +73,6 @@ class Migration {
 		$value_updated = $new_option['status'];
 		if ( 'completed' === $value_updated ) {
 			update_option( 'showMigrationSteps', true );
-			$event = array(
-				'category' => 'wonder_start',
-				'action'   => 'migration_completed',
-				'data'     => array(),
-			);
-			EventService::send( $event );
-		} elseif ( 'failed' === $value_updated ) {
-			$event = array(
-				'category' => 'wonder_start',
-				'action'   => 'migration_failed',
-				'data'     => array(),
-			);
-			EventService::send( $event );
 		}
 		return $new_option;
 	}
