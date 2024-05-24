@@ -39,7 +39,7 @@ class Migration {
 	 * @var array
 	 */
 	const LISTENERS = array(
-		'\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\Wonder_start',
+		'\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\Wonder_Start',
 	);
 
 	/**

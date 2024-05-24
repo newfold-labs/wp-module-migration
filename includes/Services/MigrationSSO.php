@@ -16,11 +16,11 @@ class MigrationSSO {
 			'orderby' => 'ID',
 			'order'   => 'ASC',
 			'number'  => 1, // Limit the query to 1 user
-			'fields'  => 'ID' // Retrieve only the ID field
+			'fields'  => 'ID', // Retrieve only the ID field
 		);
-		
-		$user_query = new WP_User_Query($args);
-		
+
+		$user_query = new WP_User_Query( $args );
+
 		// Get the results
 		$user_ids = $user_query->get_results();
 
@@ -31,10 +31,10 @@ class MigrationSSO {
 		SSO_Helpers::saveToken( $token );
 
 		$query_string = http_build_query(
-			[
+			array(
 				'action' => SSO_Helpers::ACTION,
 				'token'  => $token,
-			]
+			)
 		);
 
 		// Return token and the magic login URL
