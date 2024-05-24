@@ -34,15 +34,6 @@ class Migration {
 	);
 
 	/**
-	 * List of default listener category classes
-	 *
-	 * @var array
-	 */
-	const LISTENERS = array(
-		'\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\Wonder_Start',
-	);
-
-	/**
 	 * Migration constructor.
 	 *
 	 * @param Container $container Container loaded from the brand plugin.
@@ -51,7 +42,13 @@ class Migration {
 		$this->container     = $container;
 		$this->insta_service = new InstaMigrateService();
 
-		apply_filters( 'newfold_data_listeners', $this::LISTENERS );
+		add_filter( 
+			'newfold_data_listeners', 
+			function( $listeners ) {
+			  $listeners[] = '\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\Wonder_Start'; 
+			  return $listeners; 
+			}
+		  );
 
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );

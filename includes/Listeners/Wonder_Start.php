@@ -13,7 +13,7 @@ class Wonder_Start extends Listener {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
+		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ) );
 	}
 
 	/**
