@@ -23,7 +23,7 @@ if ( function_exists( 'add_action' ) ) {
 					'callback' => function ( Container $container ) {
 
 						if ( ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
-							define( 'NFD_MIGRATION_MODULE_VERSION', '1.0.2' );
+							define( 'NFD_MIGRATION_MODULE_VERSION', '1.0.3' );
 						}
 						$brand = $container->plugin()->id;
 						if ( 'atomic' === getContext( 'platform' ) ) {
