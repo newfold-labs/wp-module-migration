@@ -1,19 +1,26 @@
 import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
-import { __ } from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
+import { getMigrateRedirectUrl } from '../utils/helper';
 
 const content = {
-	title: __( "Let's migrate your existing site to your new account", "wp-module-migration" ),
-	description: __( "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you.", "wp-module-migration" ),
-	learnMoreText: __( "Learn more", "wp-module-migration" ),
-	dismissButtonText: __( "Dismiss this card", "wp-module-migration" ),
-	buttonText: __( "Migrate your site", "wp-module-migration" )
-}
+	title: __(
+		"Let's migrate your existing site to your new account",
+		'wp-module-migration'
+	),
+	description: __(
+		'Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you.',
+		'wp-module-migration'
+	),
+	learnMoreText: __( 'Learn more', 'wp-module-migration' ),
+	dismissButtonText: __( 'Dismiss this card', 'wp-module-migration' ),
+	buttonText: __( 'Migrate your site', 'wp-module-migration' ),
+};
 
 const DashboardMigrate = ( {} ) => {
 	const connectMigrate = () => {
-		getMigrateRedirectUrl().then( (res) => {
+		getMigrateRedirectUrl().then( ( res ) => {
 			window.open( res?.data?.redirect_url, '_self' );
-		});
+		} );
 	};
 	return (
 		<div className=" nfd-rounded nfd-border nfd-p-4 nfd-grid nfd-grid-cols-2 nfd-gap-4">
@@ -25,7 +32,8 @@ const DashboardMigrate = ( {} ) => {
 					<p>
 						<a href="#" target="_blank">
 							{ content.learnMoreText }
-						</a>.
+						</a>
+						.
 					</p>
 				</div>
 				<button className="nfd-text-primary nfd-text-left">

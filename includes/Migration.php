@@ -3,7 +3,6 @@ namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
-use NewfoldLabs\WP\Module\Migration\Services\EventService;
 
 /**
  * Class Migration
@@ -43,6 +42,14 @@ class Migration {
 		$this->container     = $container;
 		$this->insta_service = new InstaMigrateService();
 
+		add_filter(
+			'newfold_data_listeners',
+			function ( $listeners ) {
+				$listeners[] = '\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\Wonder_Start';
+				return $listeners;
+			}
+		);
+
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
@@ -74,19 +81,6 @@ class Migration {
 		$value_updated = $new_option['status'];
 		if ( 'completed' === $value_updated ) {
 			update_option( 'showMigrationSteps', true );
-			$event = array(
-				'category' => 'wonder_start',
-				'action'   => 'migration_completed',
-				'data'     => array(),
-			);
-			EventService::send( $event );
-		} elseif ( 'failed' === $value_updated ) {
-			$event = array(
-				'category' => 'wonder_start',
-				'action'   => 'migration_failed',
-				'data'     => array(),
-			);
-			EventService::send( $event );
 		}
 		return $new_option;
 	}
