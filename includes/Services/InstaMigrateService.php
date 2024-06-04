@@ -3,6 +3,7 @@ namespace NewfoldLabs\WP\Module\Migration\Services;
 
 use InstaWP\Connect\Helpers\Helper;
 use InstaWP\Connect\Helpers\Installer;
+use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 
 /**
  * Class InstaMigrateService
@@ -15,6 +16,16 @@ class InstaMigrateService {
 	 * @var $connect_plugin_slug
 	 */
 	private $connect_plugin_slug = 'instawp-connect';
+
+	/**
+	 * Set required api keys for insta to initiate the migration
+	 */
+	public function _construct() {
+		if ( ! defined( 'INSTAWP_API_KEY' ) ) {
+			$response = UtilityService::get_insta_api_key( $brand );
+			define( 'INSTAWP_API_KEY', $response );
+		}
+	}
 
 	/**
 	 * Install InstaWP plugin
@@ -61,7 +72,7 @@ class InstaMigrateService {
 				array(
 					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
 					'response'     => true,
-					'redirect_url' => esc_url( Helper::get_api_domain() . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
+					'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
 				)
 			);
 		}
