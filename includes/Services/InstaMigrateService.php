@@ -17,14 +17,12 @@ class InstaMigrateService {
 	 */
 	private $connect_plugin_slug = 'instawp-connect';
 
+	private $insta_api_key = '';
 	/**
 	 * Set required api keys for insta to initiate the migration
 	 */
-	public function _construct() {
-		if ( ! defined( 'INSTAWP_API_KEY' ) ) {
-			$response = UtilityService::get_insta_api_key( $brand );
-			define( 'INSTAWP_API_KEY', $response );
-		}
+	public function __construct() {
+			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
 	}
 
 	/**
@@ -49,8 +47,7 @@ class InstaMigrateService {
 
 		// Connect the website with InstaWP server
 		if ( empty( Helper::get_api_key() ) ) {
-
-			$api_key          = Helper::get_api_key( false, INSTAWP_API_KEY );
+			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
 			$connect_response = Helper::instawp_generate_api_key( $api_key );
 
 			if ( ! $connect_response ) {
