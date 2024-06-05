@@ -17,6 +17,11 @@ class InstaMigrateService {
 	 */
 	private $connect_plugin_slug = 'instawp-connect';
 
+	/**
+	 * InstaWP Connect plugin API key used for connecting the instaWP plugin 
+	 *
+	 * @var $insta_api_key
+	 */
 	private $insta_api_key = '';
 	/**
 	 * Set required api keys for insta to initiate the migration
