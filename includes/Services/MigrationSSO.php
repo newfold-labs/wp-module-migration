@@ -1,7 +1,7 @@
 <?php
 namespace NewfoldLabs\WP\Module\Migration\Services;
 
-use NewFoldLabs\WP\Module\SSO\SSO_REST_Controller;
+use NewFoldLabs\WP\Module\SSO\SSO_Helpers;
 /**
  * Migration SSO service
  */
@@ -19,7 +19,7 @@ class MigrationSSO {
 			'fields'  => 'ID', // Retrieve only the ID field
 		);
 
-		$user_query = new WP_User_Query( $args );
+		$user_query = new \WP_User_Query( $args );
 
 		// Get the results
 		$user_ids = $user_query->get_results();
@@ -37,7 +37,7 @@ class MigrationSSO {
 			)
 		);
 
-		// Return token and the magic login URL
-		return rest_ensure_response( admin_url( '/admin-ajax.php' ) . "?{$query_string}" );
+		$response = rest_ensure_response( admin_url( '/admin-ajax.php' ) . "?{$query_string}" );
+		return $response;
 	}
 }
