@@ -27,7 +27,8 @@ class InstaMigrateService {
 	 * Set required api keys for insta to initiate the migration
 	 */
 	public function __construct() {
-			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
+			// comment this out so we don't hammer the key service anymore
+			// $this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
 	}
 
 	/**
