@@ -39,8 +39,7 @@ class Migration {
 	 * @param Container $container Container loaded from the brand plugin.
 	 */
 	public function __construct( Container $container ) {
-		$this->container     = $container;
-		$this->insta_service = new InstaMigrateService();
+		$this->container = $container;
 
 		add_filter(
 			'newfold_data_listeners',
@@ -67,9 +66,13 @@ class Migration {
 
 	/**
 	 * Triggers on instawp connect installation
+	 *
+	 * @param boolean $option status of migration
 	 */
-	public function on_update_nfd_migrate_site() {
-		$response = $this->insta_service->install_instawp_connect();
+	public function on_update_nfd_migrate_site( $option ) {
+		$this->insta_service = new InstaMigrateService();
+		$this->insta_service->install_instawp_connect();
+		return $option;
 	}
 
 	/**

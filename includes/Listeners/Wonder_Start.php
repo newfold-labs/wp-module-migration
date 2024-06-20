@@ -20,9 +20,10 @@ class Wonder_Start extends Listener {
 	 * Triggers events
 	 *
 	 * @param array $new_option status of migration
+	 * @param array $old_value previous status of migration
 	 */
 	public function on_update_instawp_last_migration_details( $new_option, $old_value ) {
-		if( $old_value != $new_option ){
+		if ( $old_value !== $new_option ) {
 			$value_updated = $new_option['status'];
 			if ( 'completed' === $value_updated ) {
 				$this->push( 'migration_completed', array() );
@@ -30,7 +31,7 @@ class Wonder_Start extends Listener {
 				$this->push( 'migration_failed', array() );
 			}
 		}
-		
+
 		return $new_option;
 	}
 }
