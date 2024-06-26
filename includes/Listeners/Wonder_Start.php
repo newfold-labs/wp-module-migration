@@ -29,6 +29,8 @@ class Wonder_Start extends Listener {
 				$this->push( 'migration_completed', array() );
 			} elseif ( 'failed' === $value_updated ) {
 				$this->push( 'migration_failed', array() );
+			} elseif ( 'aborted' === $value_updated ) {
+				$this->push( 'migration_aborted', array() );
 			}
 		}
 
