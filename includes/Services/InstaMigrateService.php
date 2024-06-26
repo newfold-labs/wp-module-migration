@@ -3,6 +3,8 @@ namespace NewfoldLabs\WP\Module\Migration\Services;
 
 use InstaWP\Connect\Helpers\Helper;
 use InstaWP\Connect\Helpers\Installer;
+use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
+use NewfoldLabs\WP\Module\Data\Helpers\Encryption;
 
 /**
  * Class InstaMigrateService
@@ -17,11 +19,23 @@ class InstaMigrateService {
 	private $connect_plugin_slug = 'instawp-connect';
 
 	/**
+	 * InstaWP Connect plugin API key used for connecting the instaWP plugin
+	 *
+	 * @var $insta_api_key
+	 */
+	private $insta_api_key = '';
+	/**
 	 * Set required api keys for insta to initiate the migration
 	 */
 	public function __construct() {
-		Helper::set_api_domain( INSTAWP_API_DOMAIN );
+		$encrypt             = new Encryption();
+		$this->insta_api_key = $encrypt->decrypt( get_option( 'newfold_insta_api_key', false ) );
+		if ( ! $this->insta_api_key ) {
+			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
+			update_option( 'newfold_insta_api_key', $encrypt->encrypt( $this->insta_api_key ) );
+		}
 	}
+
 	/**
 	 * Install InstaWP plugin
 	 */
@@ -44,8 +58,7 @@ class InstaMigrateService {
 
 		// Connect the website with InstaWP server
 		if ( empty( Helper::get_api_key() ) ) {
-
-			$api_key          = Helper::get_api_key( false, INSTAWP_API_KEY );
+			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
 			$connect_response = Helper::instawp_generate_api_key( $api_key );
 
 			if ( ! $connect_response ) {
@@ -67,7 +80,7 @@ class InstaMigrateService {
 				array(
 					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
 					'response'     => true,
-					'redirect_url' => esc_url( Helper::get_api_domain() . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
+					'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
 				)
 			);
 		}
