@@ -51,9 +51,9 @@ class MigrateController {
 		$insta_service = new InstaMigrateService();
 		$response      = $insta_service->install_instawp_connect();
 
-		if( is_wp_error( $response ) ){
-            return $response;
-        }
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
 		return wp_send_json_success( $response );
 	}
 

@@ -39,7 +39,7 @@ class Migration {
 	 * @var array
 	 */
 	protected $options = array(
-		'nfd_migrate_site' => 'boolean'
+		'nfd_migrate_site' => 'boolean',
 	);
 
 	/**
@@ -113,6 +113,5 @@ class Migration {
 				)
 			);
 		}
-		
 	}
 }
