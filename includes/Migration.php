@@ -39,7 +39,7 @@ class Migration {
 	 * @var array
 	 */
 	protected $options = array(
-		'nfd_migration_mfe_initiated' => 'boolean'
+		'nfd_migrate_site' => 'boolean'
 	);
 
 	/**
@@ -82,7 +82,6 @@ class Migration {
 	public function on_update_nfd_migrate_site( $option ) {
 		$this->insta_service = new InstaMigrateService();
 		$this->insta_service->install_instawp_connect();
-		update_option( 'nfd_migration_mfe_initiated', true );
 		return $option;
 	}
 
