@@ -34,6 +34,15 @@ class Migration {
 	);
 
 	/**
+	 * Option settings
+	 *
+	 * @var array
+	 */
+	protected $options = array(
+		'nfd_migrate_site' => 'boolean',
+	);
+
+	/**
 	 * Migration constructor.
 	 *
 	 * @param Container $container Container loaded from the brand plugin.
@@ -62,6 +71,7 @@ class Migration {
 			$rest_api = new $controller();
 			$rest_api->register_routes();
 		}
+		self::register_settings();
 	}
 
 	/**
@@ -86,5 +96,22 @@ class Migration {
 			update_option( 'nfd_show_migration_steps', true );
 		}
 		return $new_option;
+	}
+
+	/**
+	 * Register settings.
+	 */
+	public function register_settings() {
+		foreach ( $this->options as $option => $type ) {
+			\register_setting(
+				'general',
+				$option,
+				array(
+					'show_in_rest' => true,
+					'type'         => $type,
+					'description'  => __( 'NFD migration Options', 'wp-module-migration' ),
+				)
+			);
+		}
 	}
 }
