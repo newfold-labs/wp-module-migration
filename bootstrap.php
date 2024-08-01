@@ -28,6 +28,8 @@ if ( function_exists( 'add_action' ) ) {
 						if ( 'atomic' === getContext( 'platform' ) ) {
 							$brand = 'bh-cloud';
 						}
+						define( 'NFD_MIGRATION_PLUGIN_URL', $container->plugin()->url );
+
 						defined( 'NFD_PROXY_ACCESS_WORKER' ) || define( 'NFD_PROXY_ACCESS_WORKER', 'https://hiive.cloud/workers/migration-token-proxy' );
 						defined( 'NFD_MIGRATION_PROXY_WORKER' ) || define( 'NFD_MIGRATION_PROXY_WORKER', 'https://migrate.bluehost.com' );
 

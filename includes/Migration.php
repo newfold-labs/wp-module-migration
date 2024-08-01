@@ -62,6 +62,8 @@ class Migration {
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
 		add_action( 'admin_init', array( $this, 'register_wp_migration_tool' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
+
 	}
 
 	/**
@@ -121,13 +123,28 @@ class Migration {
 	 */
 	public function register_wp_migration_tool() {			
 		register_importer( 
-			'wordpress_migration_site_importer',
+			'site_migration_wordpress_importer',
 			__( 'WordPress Migration Tool', 'wp-module-migration' ),
 			__( 'Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>', 'wp-module-migration' ), 
 			array( $this, 'wordpress_migration_tool' ) );
 	}
 
 	public function wordpress_migration_tool() {
+		// \wp_enqueue_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/popup.js', array( 'jquery' ), '1.0', true );
 		error_log("welcome");
+
+		// echo "<div style='position:absolute; bottom:0; right: 0;left:0;right:0;background-color:pink;'>Preparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the account</div>";
+		$this->insta_service = new InstaMigrateService();
+		$response = $this->insta_service->install_instawp_connect();
+		if( ! is_wp_error($response) ){
+			error_log($response['redirect_url']);
+			wp_redirect( $response['redirect_url'] );
+			die();
+		}
+	}
+
+	public function set_import_tools() {
+		\wp_enqueue_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js', array( 'jquery' ), '1.0', true );
+		
 	}
 }
