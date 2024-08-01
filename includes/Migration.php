@@ -61,6 +61,7 @@ class Migration {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
+		add_action( 'admin_init', array( $this, 'register_wp_migration_tool' ) );
 	}
 
 	/**
@@ -113,5 +114,20 @@ class Migration {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Register WordPress Migration Tool to imports.
+	 */
+	public function register_wp_migration_tool() {			
+		register_importer( 
+			'wordpress_migration_site_importer',
+			__( 'WordPress Migration Tool', 'wp-module-migration' ),
+			__( 'Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>', 'wp-module-migration' ), 
+			array( $this, 'wordpress_migration_tool' ) );
+	}
+
+	public function wordpress_migration_tool() {
+		error_log("welcome");
 	}
 }
