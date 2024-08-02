@@ -130,21 +130,23 @@ class Migration {
 	}
 
 	public function wordpress_migration_tool() {
-		// \wp_enqueue_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/popup.js', array( 'jquery' ), '1.0', true );
-		error_log("welcome");
+		self::instaMigrateService();
+	}
 
-		// echo "<div style='position:absolute; bottom:0; right: 0;left:0;right:0;background-color:pink;'>Preparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the accountPreparing the account</div>";
+	public function instaMigrateService() {
 		$this->insta_service = new InstaMigrateService();
 		$response = $this->insta_service->install_instawp_connect();
 		if( ! is_wp_error($response) ){
 			error_log($response['redirect_url']);
 			wp_redirect( $response['redirect_url'] );
-			die();
+		}else{
+			wp_safe_redirect( admin_url( 'import.php' ) );
 		}
+		die();
 	}
-
+	
 	public function set_import_tools() {
 		\wp_enqueue_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js', array( 'jquery' ), '1.0', true );
-		
+		wp_enqueue_style( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css', array(), '1.0', 'all' );
 	}
 }
