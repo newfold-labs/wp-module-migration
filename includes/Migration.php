@@ -149,5 +149,11 @@ class Migration {
 	public function set_import_tools() {
 		\wp_enqueue_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js', array( 'jquery' ), '1.0', true );
 		wp_enqueue_style( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css', array(), '1.0', 'all' );
+		$migration_data = array(
+			'migration_title'	=> __( 'Let\'s migrate your existing site.', 'wp-module-migration' ),
+			'migration_description'		=> __( 'Please wait a few seconds while we get your new account ready to import your existing WordPress site.', 'wp-module-migration' ),
+			'wordpress_title'			=> __( 'WordPress Content', 'wp-module-migration' )
+		);
+		wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
 	}
 }
