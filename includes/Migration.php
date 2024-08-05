@@ -61,7 +61,7 @@ class Migration {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
-		add_action( 'admin_init', array( $this, 'register_wp_migration_tool' ) );
+		add_action( 'admin_init', array( $this, 'register_wp_migration_tool' ) ); // Adds WOrdpress Migration tool to imports list 
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 
 	}
@@ -129,11 +129,10 @@ class Migration {
 			array( $this, 'wordpress_migration_tool' ) );
 	}
 
+	/*
+	* Initiates the Migration service redirects it the instawp screen
+	*/
 	public function wordpress_migration_tool() {
-		self::instaMigrateService();
-	}
-
-	public function instaMigrateService() {
 		$this->insta_service = new InstaMigrateService();
 		$response = $this->insta_service->install_instawp_connect();
 		if( ! is_wp_error($response) ){
@@ -145,6 +144,9 @@ class Migration {
 		die();
 	}
 	
+	/*
+	* Changes the text wordpress to wordpress content in import page
+	*/
 	public function set_import_tools() {
 		\wp_enqueue_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js', array( 'jquery' ), '1.0', true );
 		wp_enqueue_style( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css', array(), '1.0', 'all' );
