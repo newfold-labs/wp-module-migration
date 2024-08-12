@@ -29,8 +29,31 @@ node.setAttribute("id", "migration-progress-modal")
 document.getElementById("wpbody-content").appendChild(node)
 
 // load a pop up when user clicks on run importer for wordpress migration tool
-    document.querySelector('a[href*="import=site_migration_wordpress_importer"]').addEventListener('click', function(e) {
+    document.querySelector('a[href*="import=site_migration_wordpress_importer"]')?.addEventListener('click', function(e) {
         e.preventDefault(); 
         document.getElementById("migration-progress-modal").style.display = "flex";
-        window.location.href = this.getAttribute('href');
+
+        fetch(
+           nfdplugin.restApiUrl + "/newfold-migration/v1/migrate/connect&_locale=user",
+            {
+              credentials: 'same-origin',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-WP-Nonce': nfdplugin.restApiNonce,
+              },
+            }
+          )
+        .then((response) => response.json())
+       .then(res => {
+        document.getElementById("migration-progress-modal").style.display = "none";
+        if(res?.success){
+            window.open(res?.data?.redirect_url, "_self")
+        }
+        // else{
+            // alert("please try again in sometime. Thanks!")
+        // }
+       })
+        .catch(err => console.error(err))
+       
     });
+   
