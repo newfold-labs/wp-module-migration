@@ -61,11 +61,10 @@ class Migration {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
-		if( $container->plugin()->id === 'bluehost' ){
+		if ( $container->plugin()->id === 'bluehost' ) {
 			add_action( 'admin_init', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list
 			add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 		}
-
 	}
 
 	/**
