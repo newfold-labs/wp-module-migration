@@ -24,6 +24,8 @@ class InstaMigrateService {
 	 * @var $insta_api_key
 	 */
 	private $insta_api_key = '';
+
+	private $count = 0;
 	/**
 	 * Set required api keys for insta to initiate the migration
 	 */
@@ -57,7 +59,7 @@ class InstaMigrateService {
 		}
 
 		// Connect the website with InstaWP server
-		if ( empty( Helper::get_api_key() ) ) {
+		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
 			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
 			$connect_response = Helper::instawp_generate_api_key( $api_key );
 
@@ -73,7 +75,13 @@ class InstaMigrateService {
 		if ( function_exists( 'instawp' ) ) {
 			// Check if there is a connect ID
 			if ( empty( Helper::get_connect_id() ) ) {
-				return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
+				if( $count < 2 ) {
+					$count++;
+					delete_option( 'instawp_api_options' );
+					self::install_instawp_connect();
+				} else {
+					return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
+				}
 			}
 
 			return array(

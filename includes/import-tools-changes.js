@@ -50,10 +50,41 @@ document.getElementById("wpbody-content").appendChild(node)
             window.open(res?.data?.redirect_url, "_self")
         }
         // else{
-            // alert("please try again in sometime. Thanks!")
+        //     document.getElementsByClassName("wrap")[0];
+        //     // alert("please try again in sometime. Thanks!")
         // }
        })
         .catch(err => console.error(err))
        
     });
    
+
+    let params = new URLSearchParams(document.location.search);
+    let canMigrateSite = params.get("migrate");
+
+if(canMigrateSite === "true"){
+    console.log("helloo")
+    document.getElementById("migration-progress-modal").style.display = "flex";
+
+    fetch(
+       nfdplugin.restApiUrl + "/newfold-migration/v1/migrate/connect&_locale=user",
+        {
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-WP-Nonce': nfdplugin.restApiNonce,
+          },
+        }
+      )
+    .then((response) => response.json())
+   .then(res => {
+    document.getElementById("migration-progress-modal").style.display = "none";
+    if(res?.success){
+        window.open(res?.data?.redirect_url, "_self")
+    }
+    // else{
+    //     document.getElementsByClassName("wrap")[0];
+    //     // alert("please try again in sometime. Thanks!")
+    // }
+   })
+}
