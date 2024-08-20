@@ -56,7 +56,7 @@ document.getElementById("wpbody-content").appendChild(node)
                },
                body: JSON.stringify({ 
                 action: "migration_initiated_tools",
-                category: "wonder_start",
+                category: "user_action",
                 data: {
                     page: window.location.href
                 }})
