@@ -27,7 +27,7 @@ class InstaMigrateService {
 
 	/**
 	 * Retry count
-	 * 
+	 *
 	 * @var $count
 	 */
 	private $count = 0;
@@ -80,7 +80,7 @@ class InstaMigrateService {
 		if ( function_exists( 'instawp' ) ) {
 			// Check if there is a connect ID
 			if ( empty( Helper::get_connect_id() ) ) {
-				if( $count < 2 ) {
+				if ( $count < 2 ) {
 					$count++;
 					delete_option( 'instawp_api_options' );
 					self::install_instawp_connect();
