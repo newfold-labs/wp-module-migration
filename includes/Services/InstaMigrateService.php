@@ -25,6 +25,11 @@ class InstaMigrateService {
 	 */
 	private $insta_api_key = '';
 
+	/**
+	 * Retry count
+	 * 
+	 * @var $count
+	 */
 	private $count = 0;
 	/**
 	 * Set required api keys for insta to initiate the migration
