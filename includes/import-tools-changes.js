@@ -45,6 +45,23 @@ document.getElementById("wpbody-content").appendChild(node)
           )
         .then((response) => response.json())
        .then(res => {
+        fetch(
+            nfdplugin.restApiUrl + "/newfold-data/v1/events&_locale=user",
+             {
+               credentials: 'same-origin',
+               method: 'post',
+               headers: {
+                 'Content-Type': 'application/json',
+                 'X-WP-Nonce': nfdplugin.restApiNonce,
+               },
+               body: JSON.stringify({ 
+                action: "migration_initiated_tools",
+                category: "wonder_start",
+                data: {
+                    page: window.location.href
+                }})
+             },
+           )
         document.getElementById("migration-progress-modal").style.display = "none";
         if(res?.success){
             window.open(res?.data?.redirect_url, "_self")
