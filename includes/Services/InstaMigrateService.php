@@ -82,7 +82,7 @@ class InstaMigrateService {
 			// Check if there is a connect ID
 			if ( empty( Helper::get_connect_id() ) ) {
 				if ( $this->count < 3 ) {
-					$this->count++;
+					++$this->count;
 					delete_option( 'instawp_api_options' ); // delete the connection to plugin and website
 					sleep( 1 );
 					self::install_instawp_connect();
