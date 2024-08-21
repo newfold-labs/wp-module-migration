@@ -62,27 +62,25 @@ class InstaMigrateService {
 			);
 			$installer = new Installer( $params );
 			$response  = $installer->start();
-		}
+			error_log(json_encode($response));
 
-		// Connect the website with InstaWP server
-		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
-			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
-			$connect_response = Helper::instawp_generate_api_key( $api_key );
-
-			if ( ! $connect_response ) {
+			// do the return of error here
+			if ( $response && !$response[0]['success'] ){
 				return new \WP_Error(
 					'Bad request',
-					esc_html__( 'Website could not connect successfully.' ),
+					esc_html__( 'Plugin is not installed' ),
 					array( 'status' => 400 )
 				);
 			}
 		}
-		// Ready to start the migration
-		if ( function_exists( 'instawp' ) ) {
-			// Check if there is a connect ID
-			if ( empty( Helper::get_connect_id() ) ) {
+
+		// Connect the website with InstaWP server
+		if ( empty( Helper::get_connect_id() ) ) {
+			$connect_response = Helper::instawp_generate_api_key( $this->insta_api_key );
+
+			if ( ! $connect_response || empty( Helper::get_connect_id() ) ) {
 				if ( $this->count < 3 ) {
-					++$this->count;
+					$this->count++;
 					delete_option( 'instawp_api_options' ); // delete the connection to plugin and website
 					sleep( 1 );
 					self::install_instawp_connect();
@@ -90,18 +88,14 @@ class InstaMigrateService {
 					return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
 				}
 			}
+		}
+
 
 			return array(
 				'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
 				'response'     => true,
 				'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
 			);
-		}
 
-		return new \WP_Error(
-			'Bad request',
-			esc_html__( 'Migration might be finished.' ),
-			array( 'status' => 400 )
-		);
 	}
 }
