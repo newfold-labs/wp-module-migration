@@ -28,7 +28,7 @@ class InstaMigrateService {
 	/**
 	 * Retry count
 	 *
-	 * @var $count
+	 * @var int $count
 	 */
 	private $count = 0;
 
@@ -81,9 +81,10 @@ class InstaMigrateService {
 		if ( function_exists( 'instawp' ) ) {
 			// Check if there is a connect ID
 			if ( empty( Helper::get_connect_id() ) ) {
-				if ( $count < 2 ) {
-					$count++;
-					delete_option( 'instawp_api_options' );
+				if ( $this->count < 3 ) {
+					$this->count++;
+					delete_option( 'instawp_api_options' ); // delete the connection to plugin and website
+					sleep( 1 );
 					self::install_instawp_connect();
 				} else {
 					return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
