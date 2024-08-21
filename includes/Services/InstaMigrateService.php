@@ -62,16 +62,6 @@ class InstaMigrateService {
 			);
 			$installer = new Installer( $params );
 			$response  = $installer->start();
-			error_log(json_encode($response));
-
-			// do the return of error here
-			if ( $response && !$response[0]['success'] ){
-				return new \WP_Error(
-					'Bad request',
-					esc_html__( 'Plugin is not installed' ),
-					array( 'status' => 400 )
-				);
-			}
 		}
 
 		// Connect the website with InstaWP server
