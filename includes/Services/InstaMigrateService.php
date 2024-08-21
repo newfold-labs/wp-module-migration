@@ -77,11 +77,10 @@ class InstaMigrateService {
 				return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
 			}
 		}
-			return array(
-				'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
-				'response'     => true,
-				'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
-			);
-
+		return array(
+			'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
+			'response'     => true,
+			'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
+		);
 	}
 }
