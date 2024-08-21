@@ -68,19 +68,15 @@ class InstaMigrateService {
 		if ( empty( Helper::get_connect_id() ) ) {
 			$connect_response = Helper::instawp_generate_api_key( $this->insta_api_key );
 
-			if ( ! $connect_response || empty( Helper::get_connect_id() ) ) {
-				if ( $this->count < 3 ) {
-					$this->count++;
+			if ( empty( Helper::get_connect_id() ) && $this->count < 3 ) {
+					++$this->count;
 					delete_option( 'instawp_api_options' ); // delete the connection to plugin and website
 					sleep( 1 );
 					self::install_instawp_connect();
-				} else {
-					return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
-				}
+			} else {
+				return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
 			}
 		}
-
-
 			return array(
 				'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
 				'response'     => true,
