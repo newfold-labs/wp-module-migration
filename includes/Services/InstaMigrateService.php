@@ -86,7 +86,7 @@ class InstaMigrateService {
 					'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
 				);
 			}
-			
+
 			if ( $this->count < 3 ) {
 				++$this->count;
 				delete_option( 'instawp_api_options' ); // delete the connection to plugin and website
