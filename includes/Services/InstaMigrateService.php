@@ -48,6 +48,7 @@ class InstaMigrateService {
 	 * Install InstaWP plugin
 	 */
 	public function install_instawp_connect() {
+
 		if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'get_mu_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
@@ -65,10 +66,8 @@ class InstaMigrateService {
 		}
 
 		// Connect the website with InstaWP server
-		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
-			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
-			$connect_response = Helper::instawp_generate_api_key( $api_key );
-
+		if ( empty( Helper::get_connect_id() ) ) {
+			$connect_response = Helper::instawp_generate_api_key( $this->insta_api_key );
 			if ( ! $connect_response ) {
 				return new \WP_Error(
 					'Bad request',
@@ -80,22 +79,22 @@ class InstaMigrateService {
 		// Ready to start the migration
 		if ( function_exists( 'instawp' ) ) {
 			// Check if there is a connect ID
-			if ( empty( Helper::get_connect_id() ) ) {
-				if ( $this->count < 3 ) {
-					++$this->count;
-					delete_option( 'instawp_api_options' ); // delete the connection to plugin and website
-					sleep( 1 );
-					self::install_instawp_connect();
-				} else {
-					return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
-				}
+			if ( ! empty( Helper::get_connect_id() ) ) {
+				return array(
+					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
+					'response'     => true,
+					'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
+				);
 			}
-
-			return array(
-				'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
-				'response'     => true,
-				'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
-			);
+			
+			if ( $this->count < 3 ) {
+				++$this->count;
+				delete_option( 'instawp_api_options' ); // delete the connection to plugin and website
+				sleep( 1 );
+				self::install_instawp_connect();
+			} else {
+				return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
+			}
 		}
 
 		return new \WP_Error(
