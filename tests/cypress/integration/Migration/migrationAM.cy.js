@@ -12,11 +12,11 @@ describe(
     { testIsolation: true },
     () => {
         before(  () => {
-            wpLogin();
- 
             if ( pluginId !== 'bluehost' ) {
                 this.skip();
             }
+            wpLogin();
+ 
             cy.exec(
                 `npx wp-env run cli wp option set nfd_migrate_site "true"`
             );
@@ -25,6 +25,9 @@ describe(
         } );
  
         it('Verify Migration page is loaded', ()=>{
+            if ( pluginId !== 'bluehost' ) {
+                this.skip();
+            }
             cy.intercept(
                 'GET',
                 'https://migrate.bluehost.com/api/v2/initial-data'
