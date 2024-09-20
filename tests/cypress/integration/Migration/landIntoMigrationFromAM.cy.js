@@ -2,10 +2,7 @@ import { GetPluginId } from '../wp-module-support/pluginID.cy';
 import { wpLogin } from '../wp-module-support/utils.cy';
 const customCommandTimeout = 120000;
 const pluginId = GetPluginId();
-const helpCenter = JSON.stringify( {
-	canAccessAI: true,
-	canAccessHelpCenter: true,
-} );
+
 if ( pluginId == 'bluehost' ) {
 	describe(
 		'Verify Migration- emulating AM flow',
