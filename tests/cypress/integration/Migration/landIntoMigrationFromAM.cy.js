@@ -16,7 +16,7 @@ if ( pluginId == 'bluehost' ) {
 				);
 
 				cy.reload();
-			} );
+			} )
 
 			it( 'Verify Migration page is loaded', () => {
 				cy.intercept(
