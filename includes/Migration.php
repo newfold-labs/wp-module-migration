@@ -61,7 +61,7 @@ class Migration {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
-		if ( $container->plugin()->id === 'bluehost' ) {
+		if ( in_array( $container->plugin()->id, array( 'bluehost', 'hostgator' ) ) ) {
 			add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list
 			add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 		}
@@ -155,6 +155,8 @@ class Migration {
 			'migration_title'       => __( 'Preparing your site', 'wp-module-migration' ),
 			'migration_description' => __( 'Please wait a few seconds while we get your new account ready to import your existing WordPress site.', 'wp-module-migration' ),
 			'wordpress_title'       => __( 'WordPress Content', 'wp-module-migration' ),
+			'restApiUrl'            => \esc_url_raw( \get_home_url() . '/index.php?rest_route=' ),
+			'restApiNonce'          => \wp_create_nonce( 'wp_rest' ),
 		);
 		wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
 	}

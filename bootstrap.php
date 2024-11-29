@@ -25,13 +25,17 @@ if ( function_exists( 'add_action' ) ) {
 							define( 'NFD_MIGRATION_MODULE_VERSION', '1.0.12' );
 						}
 						$brand = $container->plugin()->id;
+
+						$migrate_brand = $brand;
+
 						if ( 'atomic' === getContext( 'platform' ) ) {
 							$brand = 'bh-cloud';
+							$migrate_brand = 'bluehost';
 						}
 						define( 'NFD_MIGRATION_PLUGIN_URL', $container->plugin()->url );
 
 						defined( 'NFD_PROXY_ACCESS_WORKER' ) || define( 'NFD_PROXY_ACCESS_WORKER', 'https://hiive.cloud/workers/migration-token-proxy' );
-						defined( 'NFD_MIGRATION_PROXY_WORKER' ) || define( 'NFD_MIGRATION_PROXY_WORKER', 'https://migrate.bluehost.com' );
+						defined( 'NFD_MIGRATION_PROXY_WORKER' ) || define( 'NFD_MIGRATION_PROXY_WORKER', 'https://migrate.' . $migrate_brand . '.com' );
 
 						defined( 'BRAND_PLUGIN' ) || define( 'BRAND_PLUGIN', $brand );
 
