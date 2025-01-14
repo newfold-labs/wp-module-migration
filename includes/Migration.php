@@ -61,10 +61,8 @@ class Migration {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
-		if ( $container->plugin()->id === 'bluehost' ) {
-			add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list
-			add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
-		}
+		add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list.
+		add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 	}
 
 	/**
@@ -81,7 +79,7 @@ class Migration {
 	/**
 	 * Triggers on instawp connect installation
 	 *
-	 * @param boolean $option status of migration
+	 * @param boolean $option status of migration.
 	 */
 	public function on_update_nfd_migrate_site( $option ) {
 		$this->insta_service = new InstaMigrateService();
@@ -92,7 +90,7 @@ class Migration {
 	/**
 	 * Updates nfd_show_migration_steps option based on instawp_last_migration_details
 	 *
-	 * @param array $new_option status of migration
+	 * @param array $new_option status of migration.
 	 */
 	public function on_update_instawp_last_migration_details( $new_option ) {
 		$value_updated = $new_option['status'];
@@ -149,13 +147,23 @@ class Migration {
 	 * Changes the text WordPress to WordPress content in import page
 	 */
 	public function set_import_tools() {
-		\wp_enqueue_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js', array( 'jquery' ), '1.0', true );
-		wp_enqueue_style( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css', array(), '1.0', 'all' );
-		$migration_data = array(
-			'migration_title'       => __( 'Preparing your site', 'wp-module-migration' ),
-			'migration_description' => __( 'Please wait a few seconds while we get your new account ready to import your existing WordPress site.', 'wp-module-migration' ),
-			'wordpress_title'       => __( 'WordPress Content', 'wp-module-migration' ),
-		);
-		wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
+		global $pagenow;
+
+		\wp_register_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js', array( 'jquery' ), '1.0', true );
+		\wp_register_style( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css', array(), '1.0', 'all' );
+
+		if ( 'import.php' === $pagenow ) {
+			\wp_enqueue_script( 'nfd_migration_tool' );
+			\wp_enqueue_style( 'nfd_migration_tool' );
+
+			$migration_data = array(
+				'migration_title'       => __( 'Preparing your site', 'wp-module-migration' ),
+				'migration_description' => __( 'Please wait a few seconds while we get your new account ready to import your existing WordPress site.', 'wp-module-migration' ),
+				'wordpress_title'       => __( 'WordPress Content', 'wp-module-migration' ),
+				'restApiUrl'            => \esc_url_raw( \get_home_url() . '/index.php?rest_route=' ),
+				'restApiNonce'          => \wp_create_nonce( 'wp_rest' ),
+			);
+			wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
+		}
 	}
 }
