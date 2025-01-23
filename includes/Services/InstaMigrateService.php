@@ -67,7 +67,7 @@ class InstaMigrateService {
 		// Connect the website with InstaWP server
 		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
 			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
-			$connect_response = Helper::instawp_generate_api_key( $api_key );
+			$connect_response = Helper::instawp_generate_api_key( $api_key, '', false );
 
 			if ( ! $connect_response ) {
 				return new \WP_Error(
