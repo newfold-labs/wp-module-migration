@@ -65,6 +65,7 @@ class Migration {
 			add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list
 			add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 		}
+		\add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
 	}
 
 	/**
@@ -157,5 +158,31 @@ class Migration {
 			'wordpress_title'       => __( 'WordPress Content', 'wp-module-migration' ),
 		);
 		wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
+
+		\wp_set_script_translations(
+			'nfd_migration_tool',
+			'wp-module-migration',
+			NFD_MIGRATION_DIR . '/languages'
+		);
+	}
+
+	/**
+	 * Load text domain for Module
+	 *
+	 * @return void
+	 */
+	public static function load_text_domain() {
+
+		\load_plugin_textdomain(
+			'wp-module-migration',
+			false,
+			NFD_MIGRATION_DIR . '/languages'
+		);
+
+		\load_script_textdomain(
+			'nfd_migration_tool',
+			'wp-module-migration',
+			NFD_MIGRATION_DIR . '/languages'
+		);
 	}
 }

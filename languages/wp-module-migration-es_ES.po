@@ -1,0 +1,86 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Vara Prasad Maruboina <varaprasad.maruboina@newfold.com>\n"
+"Language-Team: Spanish <es@tp.org.es>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
+"PO-Revision-Date: 2025-02-13 19:23+0530\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: wp-module-migration\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: bootstrap.php:21
+msgid "Migration"
+msgstr ""
+
+#: includes/Migration.php:116
+msgid "NFD migration Options"
+msgstr ""
+
+#: includes/Migration.php:128
+msgid "WordPress Migration Tool"
+msgstr ""
+
+#: includes/Migration.php:129
+msgid ""
+"Migrate an existing WordPress site to this WordPress instance. This tool "
+"will make a copy of an existing site and automatically import it into this "
+"WordPress instance <strong>This will overwrite all the content.</strong>"
+msgstr ""
+
+#: includes/Migration.php:155
+msgid "Preparing your site"
+msgstr ""
+
+#: includes/Migration.php:156
+msgid ""
+"Please wait a few seconds while we get your new account ready to import your "
+"existing WordPress site."
+msgstr ""
+
+#: includes/Migration.php:157
+msgid "WordPress Content"
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:75
+msgid "Website could not connect successfully."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:90
+msgid "Connect plugin is installed but no connect ID."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:95
+msgid "Connect plugin is installed and ready to start the migration."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:103
+msgid "Migration might be finished."
+msgstr ""
+
+#: src/components/DashboardMigrate.js:6
+msgid "Let's migrate your existing site to your new account"
+msgstr ""
+
+#: src/components/DashboardMigrate.js:10
+msgid ""
+"Migrating your site is easy with our free site import tool. Or, you can pay "
+"to have our Migrations Team experts handle your transfer for you."
+msgstr ""
+
+#: src/components/DashboardMigrate.js:14
+msgid "Learn more"
+msgstr ""
+
+#: src/components/DashboardMigrate.js:15
+msgid "Dismiss this card"
+msgstr ""
+
+#: src/components/DashboardMigrate.js:16
+msgid "Migrate your site"
+msgstr ""
