@@ -5,6 +5,7 @@ use InstaWP\Connect\Helpers\Helper;
 use InstaWP\Connect\Helpers\Installer;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Data\Helpers\Encryption;
+use NewfoldLabs\WP\Module\Migration\Steps\GetInstaWpApiKey;
 
 /**
  * Class InstaMigrateService
@@ -36,12 +37,14 @@ class InstaMigrateService {
 	 * Set required api keys for insta to initiate the migration
 	 */
 	public function __construct() {
-		$encrypt             = new Encryption();
+/* 		$encrypt             = new Encryption();
 		$this->insta_api_key = $encrypt->decrypt( get_option( 'newfold_insta_api_key', false ) );
 		if ( ! $this->insta_api_key ) {
 			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
 			update_option( 'newfold_insta_api_key', $encrypt->encrypt( $this->insta_api_key ) );
-		}
+		} */
+	$instawp_get_key_step = new GetInstaWpApiKey();
+	$this->insta_api_key = $instawp_get_key_step->get_api_key();
 	}
 
 	/**
