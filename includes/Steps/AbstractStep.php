@@ -23,6 +23,12 @@ abstract class AbstractStep {
 	private $max_retries = 0;
 
 	/**
+	 * Status of the current step, it could be success, failed, ending
+	 * @var string $status
+	 */
+	private $status;
+
+	/**
 	 * The current step slug.
 	 * 
 	 * @var string $step_slug
@@ -35,16 +41,18 @@ abstract class AbstractStep {
 	protected function run() {}
 
 	/**
-	 * Reset the retry count to 0 and print success log.
+	 * Set the step as successful & reset the retry count to 0 and print success log.
 	 */
 	protected function success() {
+		$this->set_status( 'success' );
 		$this->set_retry_count( 0 );
 		$this->log( 'Operation Completed with Success on intent ' . $this->get_retry_count() );
 	}
 	/**
-	 * Reset the retry count to 0 and print failed log.
+	 * Set the step as failed & reset the retry count to 0 and print failed log.
 	 */
 	protected function failure() {
+		$this->set_status( 'failed' );
 		$this->set_retry_count( 0 );
 		$this->log( 'Failed with ' . $this->get_max_retries() . ' intents' );
 	}
@@ -108,7 +116,6 @@ abstract class AbstractStep {
 	protected function set_retry_count( int $retry_count ) {
 		$this->retry_count = $retry_count > $this->max_retries ? $this->max_retries : $retry_count;
 	}
-
 	/**
 	 * Get the actual retry count
 	 *
@@ -124,5 +131,22 @@ abstract class AbstractStep {
 	 */
 	protected function get_max_retries() {
 		return (int) $this->max_retries;
+	}
+	/**
+	 * Get the status
+	 *
+	 * @return int
+	 */
+	protected function get_status() {
+		return $this->status;
+	}
+	/**
+	 * set the status
+	 *
+	 * @param string $status the status;
+	 */
+	protected function set_status( $status ) {
+		//TODO: add a check for possible values
+		$this->status = $status;
 	}
 }
