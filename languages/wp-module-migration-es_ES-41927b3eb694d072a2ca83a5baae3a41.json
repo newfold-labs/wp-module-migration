@@ -1,0 +1,30 @@
+{
+    "translation-revision-date": "2025-02-19 15:38",
+    "generator": "WP-CLI\/2.11.0",
+    "source": "src\/components\/DashboardMigrate.js",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "es_ES",
+                "plural-forms": "nplurals=2; plural=(n != 1);"
+            },
+            "Let's migrate your existing site to your new account": [
+                "Vamos a migrar tu sitio ya existente a tu nueva cuenta"
+            ],
+            "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you.": [
+                "Migrar su sitio es f\u00e1cil con nuestra herramienta gratuita de importaci\u00f3n de sitios. O puedes pagar para que nuestros expertos en Migrations Team gestionen tu transferencia."
+            ],
+            "Learn more": [
+                "Aprende m\u00e1s"
+            ],
+            "Dismiss this card": [
+                "Descartar esta tarjeta"
+            ],
+            "Migrate your site": [
+                "Migrar tu sitio"
+            ]
+        }
+    }
+}

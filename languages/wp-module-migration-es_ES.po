@@ -1,86 +1,85 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: newfold-labswp-module-staging\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Vara Prasad Maruboina <varaprasad.maruboina@newfold.com>\n"
-"Language-Team: Spanish <es@tp.org.es>\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
-"PO-Revision-Date: 2025-02-13 19:23+0530\n"
+"PO-Revision-Date: 2025-02-19 15:38\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: wp-module-migration\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: newfold-labswp-module-staging\n"
+"X-Crowdin-Project-ID: 764889\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: wp-module-migration.pot\n"
+"X-Crowdin-File-ID: 36\n"
+"Language: es_ES\n"
 
 #: bootstrap.php:21
 msgid "Migration"
-msgstr ""
+msgstr "Migración"
 
 #: includes/Migration.php:116
 msgid "NFD migration Options"
-msgstr ""
+msgstr "Opciones de migración NFD"
 
 #: includes/Migration.php:128
 msgid "WordPress Migration Tool"
-msgstr ""
+msgstr "Herramienta de migración de WordPress"
 
 #: includes/Migration.php:129
-msgid ""
-"Migrate an existing WordPress site to this WordPress instance. This tool "
-"will make a copy of an existing site and automatically import it into this "
-"WordPress instance <strong>This will overwrite all the content.</strong>"
+msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr ""
 
 #: includes/Migration.php:155
 msgid "Preparing your site"
-msgstr ""
+msgstr "Preparando su sitio"
 
 #: includes/Migration.php:156
-msgid ""
-"Please wait a few seconds while we get your new account ready to import your "
-"existing WordPress site."
-msgstr ""
+msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
+msgstr "Por favor, espere unos segundos mientras obtenemos su nueva cuenta lista para importar su sitio WordPress existente."
 
 #: includes/Migration.php:157
 msgid "WordPress Content"
-msgstr ""
+msgstr "Contenido de WordPress"
 
 #: includes/Services/InstaMigrateService.php:75
 msgid "Website could not connect successfully."
-msgstr ""
+msgstr "El sitio web no se pudo conectar correctamente."
 
 #: includes/Services/InstaMigrateService.php:90
 msgid "Connect plugin is installed but no connect ID."
-msgstr ""
+msgstr "Conectar plugin está instalado pero no hay ID de conexión."
 
 #: includes/Services/InstaMigrateService.php:95
 msgid "Connect plugin is installed and ready to start the migration."
-msgstr ""
+msgstr "Conecte el plugin está instalado y listo para iniciar la migración."
 
 #: includes/Services/InstaMigrateService.php:103
 msgid "Migration might be finished."
-msgstr ""
+msgstr "La migración podría haber terminado."
 
 #: src/components/DashboardMigrate.js:6
 msgid "Let's migrate your existing site to your new account"
-msgstr ""
+msgstr "Vamos a migrar tu sitio ya existente a tu nueva cuenta"
 
 #: src/components/DashboardMigrate.js:10
-msgid ""
-"Migrating your site is easy with our free site import tool. Or, you can pay "
-"to have our Migrations Team experts handle your transfer for you."
-msgstr ""
+msgid "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
+msgstr "Migrar su sitio es fácil con nuestra herramienta gratuita de importación de sitios. O puedes pagar para que nuestros expertos en Migrations Team gestionen tu transferencia."
 
 #: src/components/DashboardMigrate.js:14
 msgid "Learn more"
-msgstr ""
+msgstr "Aprende más"
 
 #: src/components/DashboardMigrate.js:15
 msgid "Dismiss this card"
-msgstr ""
+msgstr "Descartar esta tarjeta"
 
 #: src/components/DashboardMigrate.js:16
 msgid "Migrate your site"
-msgstr ""
+msgstr "Migrar tu sitio"
+

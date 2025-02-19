@@ -1,86 +1,85 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: newfold-labswp-module-staging\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Vara Prasad Maruboina <varaprasad.maruboina@newfold.com>\n"
-"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
+"Last-Translator: \n"
+"Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
-"PO-Revision-Date: 2025-02-13 19:23+0530\n"
+"PO-Revision-Date: 2025-02-19 15:38\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: wp-module-migration\n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: newfold-labswp-module-staging\n"
+"X-Crowdin-Project-ID: 764889\n"
+"X-Crowdin-Language: nl\n"
+"X-Crowdin-File: wp-module-migration.pot\n"
+"X-Crowdin-File-ID: 36\n"
+"Language: nl_NL\n"
 
 #: bootstrap.php:21
 msgid "Migration"
-msgstr ""
+msgstr "Migratie"
 
 #: includes/Migration.php:116
 msgid "NFD migration Options"
-msgstr ""
+msgstr "NFD migratie-opties"
 
 #: includes/Migration.php:128
 msgid "WordPress Migration Tool"
-msgstr ""
+msgstr "WordPress Migratietool"
 
 #: includes/Migration.php:129
-msgid ""
-"Migrate an existing WordPress site to this WordPress instance. This tool "
-"will make a copy of an existing site and automatically import it into this "
-"WordPress instance <strong>This will overwrite all the content.</strong>"
-msgstr ""
+msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
+msgstr "Migreer een bestaande WordPress-site naar deze WordPress-instantie. Deze tool maakt een kopie van een bestaande site en importeert deze automatisch in deze WordPress-instantie <strong>Dit overschrijft alle inhoud.</strong>"
 
 #: includes/Migration.php:155
 msgid "Preparing your site"
-msgstr ""
+msgstr "Uw site wordt voorbereid"
 
 #: includes/Migration.php:156
-msgid ""
-"Please wait a few seconds while we get your new account ready to import your "
-"existing WordPress site."
-msgstr ""
+msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
+msgstr "Wacht een paar seconden terwijl we uw nieuwe account klaar hebben om uw bestaande WordPress site te importeren."
 
 #: includes/Migration.php:157
 msgid "WordPress Content"
-msgstr ""
+msgstr "WordPress inhoud"
 
 #: includes/Services/InstaMigrateService.php:75
 msgid "Website could not connect successfully."
-msgstr ""
+msgstr "Website kon geen verbinding maken."
 
 #: includes/Services/InstaMigrateService.php:90
 msgid "Connect plugin is installed but no connect ID."
-msgstr ""
+msgstr "Verbindingsplugin is geïnstalleerd maar geen verbinding-ID."
 
 #: includes/Services/InstaMigrateService.php:95
 msgid "Connect plugin is installed and ready to start the migration."
-msgstr ""
+msgstr "Verbindingsplugin is geïnstalleerd en klaar om de migratie te starten."
 
 #: includes/Services/InstaMigrateService.php:103
 msgid "Migration might be finished."
-msgstr ""
+msgstr "Migratie kan worden voltooid."
 
 #: src/components/DashboardMigrate.js:6
 msgid "Let's migrate your existing site to your new account"
-msgstr ""
+msgstr "Laten we je bestaande site migreren naar je nieuwe account"
 
 #: src/components/DashboardMigrate.js:10
-msgid ""
-"Migrating your site is easy with our free site import tool. Or, you can pay "
-"to have our Migrations Team experts handle your transfer for you."
-msgstr ""
+msgid "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
+msgstr "Het overzetten van je site is eenvoudig met onze gratis site import tool. Of, je kunt betalen om onze Migratie Team experts voor je te laten overgaan."
 
 #: src/components/DashboardMigrate.js:14
 msgid "Learn more"
-msgstr ""
+msgstr "Meer informatie"
 
 #: src/components/DashboardMigrate.js:15
 msgid "Dismiss this card"
-msgstr ""
+msgstr "Deze kaart verwijderen"
 
 #: src/components/DashboardMigrate.js:16
 msgid "Migrate your site"
-msgstr ""
+msgstr "Migreer je site"
+
