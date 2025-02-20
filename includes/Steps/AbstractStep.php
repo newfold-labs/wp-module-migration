@@ -69,6 +69,8 @@ abstract class AbstractStep {
 			return false;
 		}
 
+		sleep( 1 );
+
 		$this->set_retry_count( $count );
 
 		$this->log( 'Intent ' . $count );

@@ -44,7 +44,7 @@ class InstallActivateInstaWp extends AbstractStep {
 			$installer = new Installer( $params );
 			$response  = $installer->start();
 
-			if ( $response[0]['success'] ) {
+			if ( $response[0]['success'] && function_exists( 'instawp' ) ) {
 				$this->success();
 			} else {
 				$this->retry();
