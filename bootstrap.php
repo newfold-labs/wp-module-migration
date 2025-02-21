@@ -20,10 +20,8 @@ if ( function_exists( 'add_action' ) ) {
 					'name'     => 'migration',
 					'label'    => __( 'Migration', 'wp-module-migration' ),
 					'callback' => function ( Container $container ) {
-
-						if ( in_array( $container->plugin()->id, array( 'bluehost', 'hostgator' ) ) ) {
-							if ( ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
-								define( 'NFD_MIGRATION_MODULE_VERSION', '1.0.12' );
+						if ( in_array( $container->plugin()->id, array( 'bluehost', 'hostgator' ) ) && ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
+								define( 'NFD_MIGRATION_MODULE_VERSION', '1.1.0' );
 							}
 							$brand = $container->plugin()->id;
 

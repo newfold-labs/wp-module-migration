@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff3952aaf79f90a97b52ffcde1e6042b",
+    "content-hash": "fccd361447f5522f56f899154c548f2a",
     "packages": [
         {
             "name": "instawp/connect-helpers",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/InstaWP/connect-helpers.git",
-                "reference": "34e9bdeb65e07a926dbeef41f90fac8a5a50a312"
+                "reference": "2e60645a8e670973fba99dcbb9cecd8c9e3eefd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/InstaWP/connect-helpers/zipball/34e9bdeb65e07a926dbeef41f90fac8a5a50a312",
-                "reference": "34e9bdeb65e07a926dbeef41f90fac8a5a50a312",
+                "url": "https://api.github.com/repos/InstaWP/connect-helpers/zipball/2e60645a8e670973fba99dcbb9cecd8c9e3eefd1",
+                "reference": "2e60645a8e670973fba99dcbb9cecd8c9e3eefd1",
                 "shasum": ""
             },
             "require": {
@@ -49,10 +49,10 @@
             ],
             "description": "CLI Package for InstaWP Remote Features",
             "support": {
-                "source": "https://github.com/InstaWP/connect-helpers/tree/1.0.0",
+                "source": "https://github.com/InstaWP/connect-helpers/tree/1.0.1",
                 "issues": "https://github.com/InstaWP/connect-helpers/issues"
             },
-            "time": "2024-05-02T13:07:03+00:00"
+            "time": "2025-01-23T09:43:33+00:00"
         },
         {
             "name": "newfold-labs/container",
@@ -929,13 +929,13 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "platform-overrides": {
         "php": "7.3.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
