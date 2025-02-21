@@ -84,6 +84,7 @@ class Migration {
 	 * @param boolean $option status of migration
 	 */
 	public function on_update_nfd_migrate_site( $option ) {
+		update_option( 'nfd_module_onboarding_should_redirect', 0 );
 		$this->insta_service = new InstaMigrateService();
 		$this->insta_service->install_instawp_connect();
 		return $option;
