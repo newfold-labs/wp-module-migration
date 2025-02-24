@@ -1,0 +1,77 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://github.com/newfold-labs/wp-module-migration/issues\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-02-13T09:55:55+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: wp-module-migration\n"
+
+#: bootstrap.php:21
+msgid "Migration"
+msgstr ""
+
+#: includes/Migration.php:117
+msgid "NFD migration Options"
+msgstr ""
+
+#: includes/Migration.php:129
+msgid "WordPress Migration Tool"
+msgstr ""
+
+#: includes/Migration.php:130
+msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
+msgstr ""
+
+#: includes/Migration.php:156
+msgid "Preparing your site"
+msgstr ""
+
+#: includes/Migration.php:157
+msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
+msgstr ""
+
+#: includes/Migration.php:158
+msgid "WordPress Content"
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:75
+msgid "Website could not connect successfully."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:90
+msgid "Connect plugin is installed but no connect ID."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:95
+msgid "Connect plugin is installed and ready to start the migration."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:103
+msgid "Migration might be finished."
+msgstr ""
+
+#: build/index.js:1
+msgid "Let's migrate your existing site to your new account"
+msgstr ""
+
+#: build/index.js:1
+msgid "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
+msgstr ""
+
+#: build/index.js:1
+msgid "Learn more"
+msgstr ""
+
+#: build/index.js:1
+msgid "Dismiss this card"
+msgstr ""
+
+#: build/index.js:1
+msgid "Migrate your site"
+msgstr ""
