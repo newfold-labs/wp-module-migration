@@ -1,7 +1,7 @@
 {
     "translation-revision-date": "2025-02-13 19:23+0530",
     "generator": "WP-CLI\/2.11.0",
-    "source": "src\/components\/DashboardMigrate.js",
+    "source": "build\/index.js",
     "domain": "messages",
     "locale_data": {
         "messages": {

@@ -9,6 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
 "PO-Revision-Date: 2025-02-19 15:38\n"
+"Language: nl_NL\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: wp-module-migration\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -17,33 +18,32 @@ msgstr ""
 "X-Crowdin-Language: nl\n"
 "X-Crowdin-File: wp-module-migration.pot\n"
 "X-Crowdin-File-ID: 36\n"
-"Language: nl_NL\n"
 
 #: bootstrap.php:21
 msgid "Migration"
 msgstr "Migratie"
 
-#: includes/Migration.php:116
+#: includes/Migration.php:117
 msgid "NFD migration Options"
 msgstr "NFD migratie-opties"
 
-#: includes/Migration.php:128
+#: includes/Migration.php:129
 msgid "WordPress Migration Tool"
 msgstr "WordPress Migratietool"
 
-#: includes/Migration.php:129
+#: includes/Migration.php:130
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migreer een bestaande WordPress-site naar deze WordPress-instantie. Deze tool maakt een kopie van een bestaande site en importeert deze automatisch in deze WordPress-instantie <strong>Dit overschrijft alle inhoud.</strong>"
 
-#: includes/Migration.php:155
+#: includes/Migration.php:156
 msgid "Preparing your site"
 msgstr "Uw site wordt voorbereid"
 
-#: includes/Migration.php:156
+#: includes/Migration.php:157
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Wacht een paar seconden terwijl we uw nieuwe account klaar hebben om uw bestaande WordPress site te importeren."
 
-#: includes/Migration.php:157
+#: includes/Migration.php:158
 msgid "WordPress Content"
 msgstr "WordPress inhoud"
 
@@ -63,23 +63,22 @@ msgstr "Verbindingsplugin is geïnstalleerd en klaar om de migratie te starten."
 msgid "Migration might be finished."
 msgstr "Migratie kan worden voltooid."
 
-#: src/components/DashboardMigrate.js:6
+#: build/index.js:1
 msgid "Let's migrate your existing site to your new account"
 msgstr "Laten we je bestaande site migreren naar je nieuwe account"
 
-#: src/components/DashboardMigrate.js:10
+#: build/index.js:1
 msgid "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
 msgstr "Het overzetten van je site is eenvoudig met onze gratis site import tool. Of, je kunt betalen om onze Migratie Team experts voor je te laten overgaan."
 
-#: src/components/DashboardMigrate.js:14
+#: build/index.js:1
 msgid "Learn more"
 msgstr "Meer informatie"
 
-#: src/components/DashboardMigrate.js:15
+#: build/index.js:1
 msgid "Dismiss this card"
 msgstr "Deze kaart verwijderen"
 
-#: src/components/DashboardMigrate.js:16
+#: build/index.js:1
 msgid "Migrate your site"
 msgstr "Migreer je site"
-

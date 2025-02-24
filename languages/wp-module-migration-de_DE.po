@@ -9,6 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
 "PO-Revision-Date: 2025-02-19 15:38\n"
+"Language: de_DE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: wp-module-migration\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -17,33 +18,32 @@ msgstr ""
 "X-Crowdin-Language: de\n"
 "X-Crowdin-File: wp-module-migration.pot\n"
 "X-Crowdin-File-ID: 36\n"
-"Language: de_DE\n"
 
 #: bootstrap.php:21
 msgid "Migration"
 msgstr "Migration"
 
-#: includes/Migration.php:116
+#: includes/Migration.php:117
 msgid "NFD migration Options"
 msgstr "NFD-Migrationsoptionen"
 
-#: includes/Migration.php:128
+#: includes/Migration.php:129
 msgid "WordPress Migration Tool"
 msgstr "WordPress-Migrations-Tool"
 
-#: includes/Migration.php:129
+#: includes/Migration.php:130
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migrieren Sie eine bestehende WordPress-Seite zu dieser WordPress-Instanz. Dieses Tool wird eine Kopie einer existierenden Site erstellen und automatisch in diese WordPress-Instanz <strong>importieren. Dies wird den gesamten Inhalt überschreiben.</strong>"
 
-#: includes/Migration.php:155
+#: includes/Migration.php:156
 msgid "Preparing your site"
 msgstr "Ihre Seite wird vorbereitet"
 
-#: includes/Migration.php:156
+#: includes/Migration.php:157
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Bitte warten Sie ein paar Sekunden, während wir Ihr neues Konto bereit, um Ihre bestehende WordPress-Seite zu importieren."
 
-#: includes/Migration.php:157
+#: includes/Migration.php:158
 msgid "WordPress Content"
 msgstr "WordPress-Inhalt"
 
@@ -63,23 +63,22 @@ msgstr "Das Connect-Plugin ist installiert und kann die Migration starten."
 msgid "Migration might be finished."
 msgstr "Die Migration könnte beendet werden."
 
-#: src/components/DashboardMigrate.js:6
+#: build/index.js:1
 msgid "Let's migrate your existing site to your new account"
 msgstr "Lass uns deine bestehende Seite auf dein neues Konto migrieren"
 
-#: src/components/DashboardMigrate.js:10
+#: build/index.js:1
 msgid "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
 msgstr "Die Migration Ihrer Website ist mit unserem kostenlosen Import-Tool einfach. Oder Sie können dafür bezahlen, dass unsere Migrations-Team-Experten Ihren Transfer für Sie erledigen."
 
-#: src/components/DashboardMigrate.js:14
+#: build/index.js:1
 msgid "Learn more"
 msgstr "Mehr erfahren"
 
-#: src/components/DashboardMigrate.js:15
+#: build/index.js:1
 msgid "Dismiss this card"
 msgstr "Diese Karte verwerfen"
 
-#: src/components/DashboardMigrate.js:16
+#: build/index.js:1
 msgid "Migrate your site"
 msgstr "Website migrieren"
-

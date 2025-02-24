@@ -1,29 +1,29 @@
 {
-    "translation-revision-date": "2025-02-19 15:38",
+    "translation-revision-date": "2025-02-13 19:23+0530",
     "generator": "WP-CLI\/2.11.0",
-    "source": "src\/components\/DashboardMigrate.js",
+    "source": "build\/index.js",
     "domain": "messages",
     "locale_data": {
         "messages": {
             "": {
                 "domain": "messages",
-                "lang": "nl_NL",
+                "lang": "en_GB",
                 "plural-forms": "nplurals=2; plural=(n != 1);"
             },
             "Let's migrate your existing site to your new account": [
-                "Laten we je bestaande site migreren naar je nieuwe account"
+                "Let's migrate your existing site to your new account"
             ],
             "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you.": [
-                "Het overzetten van je site is eenvoudig met onze gratis site import tool. Of, je kunt betalen om onze Migratie Team experts voor je te laten overgaan."
+                "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
             ],
             "Learn more": [
-                "Meer informatie"
+                "Learn more"
             ],
             "Dismiss this card": [
-                "Deze kaart verwijderen"
+                "Dismiss this card"
             ],
             "Migrate your site": [
-                "Migreer je site"
+                "Migrate your site"
             ]
         }
     }

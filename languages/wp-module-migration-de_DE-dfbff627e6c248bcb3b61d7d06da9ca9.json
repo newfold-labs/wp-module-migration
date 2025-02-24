@@ -1,29 +1,29 @@
 {
     "translation-revision-date": "2025-02-19 15:38",
     "generator": "WP-CLI\/2.11.0",
-    "source": "src\/components\/DashboardMigrate.js",
+    "source": "build\/index.js",
     "domain": "messages",
     "locale_data": {
         "messages": {
             "": {
                 "domain": "messages",
-                "lang": "it_IT",
+                "lang": "de_DE",
                 "plural-forms": "nplurals=2; plural=(n != 1);"
             },
             "Let's migrate your existing site to your new account": [
-                "Migriamo il tuo sito esistente al tuo nuovo account"
+                "Lass uns deine bestehende Seite auf dein neues Konto migrieren"
             ],
             "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you.": [
-                "Migrare il tuo sito \u00e8 facile con il nostro strumento di importazione sito gratuito. Oppure, puoi pagare per avere i nostri esperti del Team Migrazioni a gestire il tuo trasferimento per te."
+                "Die Migration Ihrer Website ist mit unserem kostenlosen Import-Tool einfach. Oder Sie k\u00f6nnen daf\u00fcr bezahlen, dass unsere Migrations-Team-Experten Ihren Transfer f\u00fcr Sie erledigen."
             ],
             "Learn more": [
-                "Scopri di pi\u00f9"
+                "Mehr erfahren"
             ],
             "Dismiss this card": [
-                "Ignora questa carta"
+                "Diese Karte verwerfen"
             ],
             "Migrate your site": [
-                "Migra il tuo sito"
+                "Website migrieren"
             ]
         }
     }
