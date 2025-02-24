@@ -41,7 +41,7 @@ abstract class AbstractStep {
 	protected function run() {}
 
 	/**
-	 * Set the step as successful & reset the retry count to 0 and print success log.
+	 * Set the step status as successful & reset the retry count to 0 and print success log.
 	 */
 	protected function success() {
 		$this->set_status( 'success' );
@@ -49,7 +49,7 @@ abstract class AbstractStep {
 		$this->log( 'Operation Completed with Success on intent ' . $this->get_retry_count() );
 	}
 	/**
-	 * Set the step as failed & reset the retry count to 0 and print failed log.
+	 * Set the step status as failed & reset the retry count to 0 and print failed log.
 	 */
 	protected function failure() {
 		$this->set_status( 'failed' );
@@ -148,7 +148,6 @@ abstract class AbstractStep {
 	 * @param string $status the status;
 	 */
 	protected function set_status( $status ) {
-		//TODO: add a check for possible values
 		$this->status = $status;
 	}
 }

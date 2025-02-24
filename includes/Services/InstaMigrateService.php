@@ -43,22 +43,31 @@ class InstaMigrateService {
 			// Connect the website with InstaWP server
 			$connectToInstaWp = new ConnectToInstaWp( $this->insta_api_key );
 			$connected        = $connectToInstaWp->connect();
-			error_log( 'Ready to start migration' );
 			if ( 'success' === $connected ) {
+				error_log( 'Ready to start migration' );
 				return array(
-					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
+					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
 					'response'     => true,
 					'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
 				);
 			} else {
 				return new \WP_Error(
 					'Bad request',
-					esc_html__( 'Website could not connect successfully.' ),
+					esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
 					array( 'status' => 400 )
 				);
 			}
+		} else {
+			// I have a doubt if we would show that the connection plugin cannot be installed, maybe we could mask with an error message like "Connect service could not be initialized."
+			// if we use this we can remove the following return error
+			return new \WP_Error(
+				'Bad request',
+				esc_html__( 'Connect plugin could not be installed.', 'wp-module-migration' ),
+				array( 'status' => 400 )
+			);
 		}
 
+		// I am not sure about this, maybe we can remove it and use the wp_error of the else above
 		return new \WP_Error(
 			'Bad request',
 			esc_html__( 'Migration might be finished.' ),
