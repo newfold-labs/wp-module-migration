@@ -4,15 +4,29 @@ namespace NewfoldLabs\WP\Module\Migration\Steps;
 
 use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 use InstaWP\Connect\Helpers\Helper;
-use NewfoldLabs\WP\Module\Migration\Steps\GetInstaWpApiKey;
 
+/**
+ * Connection to InstaWp step.
+ *
+ * @package wp-module-migration
+ */
 class ConnectToInstaWp extends AbstractStep {
 	/**
-	 * Construct. Init basic parameters.
+	 * InstaWP Connect plugin API key used for connecting the instaWP plugin
+	 *
+	 * @var $insta_api_key
 	 */
-	public function __construct() {
+	private $insta_api_key = '';
+
+	/**
+	 * Construct. Init basic parameters.
+	 *
+	 * @param string $insta_api_key instawp api key.
+	 */
+	public function __construct( $insta_api_key ) {
 		$this->set_step_slug( 'ConnectToInstaWp' );
 		$this->set_max_retries( 2 );
+		$this->insta_api_key = $insta_api_key;
 	}
 
 	/**
@@ -20,12 +34,9 @@ class ConnectToInstaWp extends AbstractStep {
 	 *
 	 * @return void
 	 */
-	protected function run(  ) {
-		$instawp_get_key_step = new GetInstaWpApiKey();
-		$insta_api_key = $instawp_get_key_step->get_api_key();
-
+	protected function run() {
 		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
-			$api_key          = Helper::get_api_key( false, $insta_api_key );
+			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
 			$connect_response = Helper::instawp_generate_api_key( $api_key, '', false );
 			if ( ! $connect_response ) {
 				delete_option( 'instawp_api_key' );

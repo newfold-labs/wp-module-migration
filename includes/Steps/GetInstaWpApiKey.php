@@ -6,6 +6,11 @@ use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 use NewfoldLabs\WP\Module\Data\Helpers\Encryption;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 
+/**
+ * Get InstaWp api key step.
+ *
+ * @package wp-module-migration
+ */
 class GetInstaWpApiKey extends AbstractStep {
 	/**
 	 * InstaWP Connect plugin API key used for connecting the instaWP plugin
@@ -15,8 +20,9 @@ class GetInstaWpApiKey extends AbstractStep {
 	private $insta_api_key = '';
 
 	/**
-	 * 
-	 * $var NewfoldLabs\WP\Module\Data\Helpers\Encryption instance
+	 * Encryption instance
+	 *
+	 * @var NewfoldLabs\WP\Module\Data\Helpers\Encryption instance
 	 */
 	protected $encrypter;
 
@@ -38,7 +44,6 @@ class GetInstaWpApiKey extends AbstractStep {
 		$this->insta_api_key = $this->encrypter->decrypt( get_option( 'newfold_insta_api_key', false ) );
 		if ( ! $this->insta_api_key ) {
 			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
-			//$this->insta_api_key = false; //TODO: this is only for testing the failing
 			if ( $this->insta_api_key ) {
 				update_option( 'newfold_insta_api_key', $this->encrypter->encrypt( $this->insta_api_key ) );
 				$this->success();

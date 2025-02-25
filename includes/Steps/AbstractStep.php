@@ -1,36 +1,40 @@
 <?php
 namespace NewfoldLabs\WP\Module\Migration\Steps;
+
 /**
  * Abstract class representing a step in the migration process.
- * 
+ *
  * This class provides a base implementation for all migration steps.
  * It should be extended by specific step classes to define the actual
  * step logic.
- * 
+ *
  * @package wp-module-migration
  */
 abstract class AbstractStep {
 	/**
 	 * The actual retry count, it will increment on each retry.
+	 *
 	 * @var int $retry_count
 	 */
 	private $retry_count = 0;
 
 	/**
 	 * The maximum retries possible.
+	 *
 	 * @var int $max_retries
 	 */
 	private $max_retries = 0;
 
 	/**
 	 * Status of the current step, it could be success, failed, ending
+	 *
 	 * @var string $status
 	 */
 	private $status;
 
 	/**
 	 * The current step slug.
-	 * 
+	 *
 	 * @var string $step_slug
 	 */
 	private $step_slug = '';
@@ -46,7 +50,8 @@ abstract class AbstractStep {
 	protected function success() {
 		$this->set_status( 'success' );
 		$this->set_retry_count( 0 );
-		$this->log( 'Operation Completed with Success on intent ' . $this->get_retry_count() );
+		$intent = $this->get_retry_count() + 1;
+		$this->log( 'Operation Completed with Success on intent ' . $intent );
 	}
 	/**
 	 * Set the step status as failed & reset the retry count to 0 and print failed log.
@@ -59,7 +64,7 @@ abstract class AbstractStep {
 
 	/**
 	 * Retry the run method.
-	 * 
+	 *
 	 * @return bool;
 	 */
 	protected function retry() {
@@ -76,13 +81,12 @@ abstract class AbstractStep {
 		$this->log( 'Intent ' . $count );
 
 		$this->run();
-		
 	}
 
 	/**
 	 * Print log
 	 *
-	 * @param mixed $msg the message to print. 
+	 * @param mixed $msg the message to print.
 	 */
 	protected function log( $msg ) {
 		error_log( '----------------------------' );
@@ -95,7 +99,7 @@ abstract class AbstractStep {
 	/**
 	 * Set the current step slug
 	 *
-	 * @param int $slug the retry count value.
+	 * @param string $slug the retry count value.
 	 */
 	protected function set_step_slug( string $slug ) {
 		$this->step_slug = empty( $slug ) ? 'generic' : $slug;
@@ -143,7 +147,7 @@ abstract class AbstractStep {
 		return $this->status;
 	}
 	/**
-	 * set the status
+	 * Set the status
 	 *
 	 * @param string $status the status;
 	 */

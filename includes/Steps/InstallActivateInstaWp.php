@@ -5,6 +5,11 @@ namespace NewfoldLabs\WP\Module\Migration\Steps;
 use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 use InstaWP\Connect\Helpers\Installer;
 
+/**
+ * Install and activate InstaWp step.
+ *
+ * @package wp-module-migration
+ */
 class InstallActivateInstaWp extends AbstractStep {
 
 	/**
