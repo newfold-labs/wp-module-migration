@@ -35,6 +35,7 @@ class ConnectToInstaWp extends AbstractStep {
 	 * @return void
 	 */
 	protected function run() {
+		$this->track_step( $this->get_step_slug(), 'running' );
 		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
 			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
 			$connect_response = Helper::instawp_generate_api_key( $api_key, '', false );

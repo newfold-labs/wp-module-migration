@@ -26,11 +26,18 @@ abstract class AbstractStep {
 	private $max_retries = 0;
 
 	/**
-	 * Status of the current step, it could be success, failed, ending
+	 * Status of the current step, it could be success, running or failed
 	 *
 	 * @var string $status
 	 */
 	private $status;
+
+	/**
+	 * Name of the option to track the migration steps.
+	 *
+	 * @var string $track_option_name.
+	 */
+	protected $track_option_name = 'nfd-migration-steps-status';
 
 	/**
 	 * The current step slug.
@@ -51,6 +58,7 @@ abstract class AbstractStep {
 		$this->set_status( 'success' );
 		$this->set_retry_count( 0 );
 		$intent = $this->get_retry_count() + 1;
+		$this->track_step( $this->step_slug, 'success' );
 		$this->log( 'Operation Completed with Success on intent ' . $intent );
 	}
 	/**
@@ -59,6 +67,7 @@ abstract class AbstractStep {
 	protected function failure() {
 		$this->set_status( 'failed' );
 		$this->set_retry_count( 0 );
+		$this->track_step( $this->step_slug, 'failed' );
 		$this->log( 'Failed with ' . $this->get_max_retries() . ' intents' );
 	}
 
@@ -95,6 +104,19 @@ abstract class AbstractStep {
 		error_log( '----------------------------' );
 	}
 
+	/**
+	 * Track the step status to nfd-migration-steps-status option.
+	 *
+	 * @param string $step the step slug.
+	 * @param string $status the status of the current step.
+	 */
+	protected function track_step( $step, $status ) {
+		$tracks        = get_option( $this->track_option_name, array() );
+		$step          = empty( $step ) ? $this->step_slug : $step;
+		$status        = empty( $status ) ? $this->status : $status;
+		$updated_track = array_replace( $tracks, array( $step => $status ) );
+		update_option( $this->track_option_name, $updated_track );
+	}
 
 	/**
 	 * Set the current step slug
@@ -103,6 +125,15 @@ abstract class AbstractStep {
 	 */
 	protected function set_step_slug( string $slug ) {
 		$this->step_slug = empty( $slug ) ? 'generic' : $slug;
+	}
+
+	/**
+	 * Get the current step slug
+	 *
+	 * @return string
+	 */
+	protected function get_step_slug() {
+		return $this->step_slug;
 	}
 
 	/**

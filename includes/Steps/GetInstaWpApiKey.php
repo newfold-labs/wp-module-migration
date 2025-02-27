@@ -41,6 +41,7 @@ class GetInstaWpApiKey extends AbstractStep {
 	 * @return void
 	 */
 	protected function run() {
+		$this->track_step( $this->get_step_slug(), 'running' );
 		$this->insta_api_key = $this->encrypter->decrypt( get_option( 'newfold_insta_api_key', false ) );
 		if ( ! $this->insta_api_key ) {
 			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
@@ -50,6 +51,8 @@ class GetInstaWpApiKey extends AbstractStep {
 			} else {
 				$this->retry();
 			}
+		} else {
+			$this->success();
 		}
 	}
 
