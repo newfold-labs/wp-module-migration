@@ -34,7 +34,7 @@ class InstallActivateInstaWp extends AbstractStep {
 	 */
 	protected function run() {
 		$this->track_step( $this->get_step_slug(), 'running' );
-		
+
 		if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'get_mu_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
