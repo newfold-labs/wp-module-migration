@@ -40,7 +40,6 @@ class InstallActivateInstaWp extends AbstractStep {
 		}
 		// Install and activate the plugin
 		if ( ! is_plugin_active( sprintf( '%1$s/%1$s.php', $this->connect_plugin_slug ) ) ) {
-			$this->log( 'Installing & activating...' );
 			$params    = array(
 				array(
 					'slug'     => 'instawp-connect',
