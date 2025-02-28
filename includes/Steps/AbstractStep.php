@@ -57,9 +57,7 @@ abstract class AbstractStep {
 	protected function success() {
 		$this->set_status( 'success' );
 		$this->set_retry_count( 0 );
-		$intent = $this->get_retry_count() + 1;
 		$this->track_step( $this->step_slug, 'success' );
-		$this->log( 'Operation Completed with Success on intent ' . $intent );
 	}
 	/**
 	 * Set the step status as failed & reset the retry count to 0 and print failed log.
@@ -68,7 +66,6 @@ abstract class AbstractStep {
 		$this->set_status( 'failed' );
 		$this->set_retry_count( 0 );
 		$this->track_step( $this->step_slug, 'failed' );
-		$this->log( 'Failed with ' . $this->get_max_retries() . ' intents' );
 	}
 
 	/**
@@ -87,21 +84,7 @@ abstract class AbstractStep {
 
 		$this->set_retry_count( $count );
 
-		$this->log( 'Intent ' . $count );
-
 		$this->run();
-	}
-
-	/**
-	 * Print log
-	 *
-	 * @param mixed $msg the message to print.
-	 */
-	protected function log( $msg ) {
-		error_log( '----------------------------' );
-		error_log( '[' . $this->step_slug . ']' );
-		error_log( print_r( $msg, true ) );
-		error_log( '----------------------------' );
 	}
 
 	/**
@@ -114,7 +97,14 @@ abstract class AbstractStep {
 		$tracks        = get_option( $this->track_option_name, array() );
 		$step          = empty( $step ) ? $this->step_slug : $step;
 		$status        = empty( $status ) ? $this->status : $status;
-		$updated_track = array_replace( $tracks, array( $step => $status ) );
+		$intents       = $this->get_retry_count() + 1;
+		$current       = array(
+			$step => array(
+				'status'  => $status,
+				'intents' => $intents,
+			),
+		);
+		$updated_track = array_replace( $tracks, $current );
 		update_option( $this->track_option_name, $updated_track );
 	}
 
