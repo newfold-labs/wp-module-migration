@@ -50,6 +50,11 @@ class GetInstaWpApiKey extends AbstractStep {
 				$this->success();
 			} else {
 				$this->retry();
+				$this->set_response(
+					array(
+						'message' => esc_html__( 'Cannot get Api key.', 'wp-module-migration' ),
+					),
+				);
 			}
 		} else {
 			$this->success();
@@ -63,6 +68,8 @@ class GetInstaWpApiKey extends AbstractStep {
 	 */
 	public function get_api_key() {
 		$this->run();
+		$message = isset( $this->get_response()['message'] ) ? $this->get_response()['message'] : '';
+		$this->track_step( $this->get_step_slug(), $this->get_status(), $message );
 		return $this->insta_api_key;
 	}
 }

@@ -54,6 +54,8 @@ class InstallActivateInstaWp extends AbstractStep {
 				$this->success();
 			} else {
 				$this->retry();
+				$message = $response[0]['message'] ? $response[0]['message'] : __( 'Failed to install and activate the plugin', 'wp-module-migration' );
+				$this->set_response( array( 'message' => $message ) );
 			}
 		} else {
 			$this->success();
@@ -67,6 +69,8 @@ class InstallActivateInstaWp extends AbstractStep {
 	 */
 	public function install() {
 		$this->run();
+		$message = isset( $this->get_response()['message'] ) ? $this->get_response()['message'] : '';
+		$this->track_step( $this->get_step_slug(), $this->get_status(), $message );
 		return $this->get_status();
 	}
 }

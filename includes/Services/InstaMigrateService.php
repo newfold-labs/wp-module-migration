@@ -2,6 +2,7 @@
 namespace NewfoldLabs\WP\Module\Migration\Services;
 
 use InstaWP\Connect\Helpers\Helper;
+use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 use NewfoldLabs\WP\Module\Migration\Steps\GetInstaWpApiKey;
 use NewfoldLabs\WP\Module\Migration\Steps\InstallActivateInstaWp;
 use NewfoldLabs\WP\Module\Migration\Steps\ConnectToInstaWp;
@@ -28,7 +29,9 @@ class InstaMigrateService {
 	 * Set required api keys for insta to initiate the migration
 	 */
 	public function __construct() {
+		update_option( AbstractStep::get_tracking_option_name(), array() );
 		$instawp_get_key_step = new GetInstaWpApiKey();
+		$instawp_get_key_step->set_status( 'running' );
 		$this->insta_api_key  = $instawp_get_key_step->get_api_key();
 	}
 
@@ -36,13 +39,15 @@ class InstaMigrateService {
 	 * Install InstaWP plugin
 	 */
 	public function install_instawp_connect() {
-		$install_activate    = new InstallActivateInstaWp();
+		$install_activate = new InstallActivateInstaWp();
+		$install_activate->set_status( 'running' );
 		$installed_activated = $install_activate->install();
 
 		if ( 'success' === $installed_activated ) {
 			// Connect the website with InstaWP server
 			$connectToInstaWp = new ConnectToInstaWp( $this->insta_api_key );
-			$connected        = $connectToInstaWp->connect();
+			$connectToInstaWp->set_status( 'running' );
+			$connected = $connectToInstaWp->connect();
 			if ( 'success' === $connected ) {
 				return array(
 					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),

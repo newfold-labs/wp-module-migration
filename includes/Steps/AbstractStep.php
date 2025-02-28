@@ -16,35 +16,42 @@ abstract class AbstractStep {
 	 *
 	 * @var int $retry_count
 	 */
-	private $retry_count = 0;
+	protected $retry_count = 0;
 
 	/**
 	 * The maximum retries possible.
 	 *
 	 * @var int $max_retries
 	 */
-	private $max_retries = 0;
+	protected $max_retries = 0;
 
 	/**
 	 * Status of the current step, it could be success, running or failed
 	 *
 	 * @var string $status
 	 */
-	private $status;
+	protected $status;
 
 	/**
 	 * Name of the option to track the migration steps.
 	 *
 	 * @var string $track_option_name.
 	 */
-	protected $track_option_name = 'nfd-migration-steps-status';
+	protected static $track_option_name = 'nfd-migration-steps-status';
 
 	/**
 	 * The current step slug.
 	 *
 	 * @var string $step_slug
 	 */
-	private $step_slug = '';
+	protected $step_slug = '';
+
+	/**
+	 * Collect response messages.
+	 *
+	 * @var array $response
+	 */
+	protected $response = array();
 
 	/**
 	 * Run the main code for.
@@ -64,7 +71,6 @@ abstract class AbstractStep {
 	 */
 	protected function failure() {
 		$this->set_status( 'failed' );
-		$this->set_retry_count( 0 );
 		$this->track_step( $this->step_slug, 'failed' );
 	}
 
@@ -92,9 +98,11 @@ abstract class AbstractStep {
 	 *
 	 * @param string $step the step slug.
 	 * @param string $status the status of the current step.
+	 * @param string $message the message to be stored if needed.
+	 * @param array  $data the data to be stored if needed.
 	 */
-	protected function track_step( $step, $status ) {
-		$tracks        = get_option( $this->track_option_name, array() );
+	protected function track_step( $step, $status, $message = '', $data = array() ) {
+		$tracks        = get_option( $this::get_tracking_option_name(), array() );
 		$step          = empty( $step ) ? $this->step_slug : $step;
 		$status        = empty( $status ) ? $this->status : $status;
 		$intents       = $this->get_retry_count() + 1;
@@ -102,10 +110,12 @@ abstract class AbstractStep {
 			$step => array(
 				'status'  => $status,
 				'intents' => $intents,
+				'message' => $message,
+				'data'    => $data,
 			),
 		);
 		$updated_track = array_replace( $tracks, $current );
-		update_option( $this->track_option_name, $updated_track );
+		update_option( $this::get_tracking_option_name(), $updated_track );
 	}
 
 	/**
@@ -164,7 +174,7 @@ abstract class AbstractStep {
 	 *
 	 * @return int
 	 */
-	protected function get_status() {
+	public function get_status() {
 		return $this->status;
 	}
 	/**
@@ -172,7 +182,32 @@ abstract class AbstractStep {
 	 *
 	 * @param string $status the status;
 	 */
-	protected function set_status( $status ) {
+	public function set_status( $status ) {
 		$this->status = $status;
+	}
+	/**
+	 * Get the tracking option name
+	 *
+	 * @return string
+	 */
+	public static function get_tracking_option_name() {
+		return self::$track_option_name;
+	}
+	/**
+	 * Get the response
+	 *
+	 * @return array
+	 */
+	public function get_response() {
+		return $this->response;
+	}
+	/**
+	 * Set the response
+	 *
+	 * @param array $response the response;
+	 */
+	public function set_response( $response ) {
+		$response       = empty( $response ) || ! is_array( $response ) ? array() : $response;
+		$this->response = $response;
 	}
 }

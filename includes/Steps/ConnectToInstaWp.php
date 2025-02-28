@@ -41,7 +41,13 @@ class ConnectToInstaWp extends AbstractStep {
 			$connect_response = Helper::instawp_generate_api_key( $api_key, '', false );
 			if ( ! $connect_response ) {
 				delete_option( 'instawp_api_key' );
-				$this->retry();
+				if ( ! $this->retry() ) {
+					$this->set_response(
+						array(
+							'message' => esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
+						),
+					);
+				}
 			} else {
 				$this->success();
 			}
@@ -57,6 +63,8 @@ class ConnectToInstaWp extends AbstractStep {
 	 */
 	public function connect() {
 		$this->run();
+		$message = isset( $this->get_response()['message'] ) ? $this->get_response()['message'] : '';
+		$this->track_step( $this->get_step_slug(), $this->get_status(), $message );
 		return $this->get_status();
 	}
 }
