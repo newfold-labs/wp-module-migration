@@ -39,6 +39,10 @@ if ( function_exists( 'add_action' ) ) {
 
 						defined( 'INSTAWP_MIGRATE_ENDPOINT' ) || define( 'INSTAWP_MIGRATE_ENDPOINT', 'migrate/' . $brand );
 
+						if ( ! defined( 'NFD_MIGRATION_DIR' ) ) {
+							define( 'NFD_MIGRATION_DIR', __DIR__ );
+						}
+
 						new Migration( $container );
 					},
 					'isActive' => true,
