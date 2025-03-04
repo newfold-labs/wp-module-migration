@@ -68,12 +68,12 @@ class InstaMigrateService {
 		// Connect the website with InstaWP server
 		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
 			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
-			$connect_response = Helper::instawp_generate_api_key( $api_key );
+			$connect_response = Helper::instawp_generate_api_key( $api_key, '', false );
 
 			if ( ! $connect_response ) {
 				return new \WP_Error(
 					'bad_request',
-					__( 'Website could not connect successfully.', 'wp-module-migrations' ),
+					esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
 					array( 'status' => 400 )
 				);
 			}
@@ -89,18 +89,14 @@ class InstaMigrateService {
 					sleep( 1 );
 					self::install_instawp_connect();
 				} else {
-					return new \WP_Error(
-						'bad_request',
-						__( 'Connect plugin is installed but no connect ID.', 'wp-module-migrations' ),
-						array( 'status' => 400 )
-					);
+					return new \WP_Error( 'bad_request', esc_html__( 'Connect plugin is installed but no connect ID.', 'wp-module-migration' ), array( 'status' => 400 ) );
 				}
 			}
 
 			// Add the current WordPress locale to the redirect URL
 			$locale = get_locale();
 			return array(
-				'message'      => __( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migrations' ),
+				'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
 				'response'     => true,
 				'redirect_url' => esc_url_raw(
 					sprintf(
@@ -116,7 +112,7 @@ class InstaMigrateService {
 
 		return new \WP_Error(
 			'bad_request',
-			__( 'Migration might be finished.', 'wp-module-migrations' ),
+			esc_html__( 'Migration might be finished.', 'wp-module-migration' ),
 			array( 'status' => 400 )
 		);
 	}
