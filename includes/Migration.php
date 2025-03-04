@@ -79,7 +79,6 @@ class Migration {
 			3
 		);
 		add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
-
 	}
 
 	/**
@@ -210,13 +209,13 @@ class Migration {
 		$dir        = $this->container->plugin()->url . 'vendor/newfold-labs/wp-module-migration/';
 
 		if ( file_exists( $asset_file ) ) {
-			error_log( 'welcome' );
 			$asset = require $asset_file;
 			\wp_register_script(
 				self::$handle,
 				$dir . 'build/index.js',
 				array_merge( $asset['dependencies'], array() ),
-				$asset['version']
+				$asset['version'],
+				true
 			);
 		}
 		\wp_set_script_translations(

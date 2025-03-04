@@ -20,6 +20,7 @@ if ( function_exists( 'add_action' ) ) {
 					'name'     => 'migration',
 					'label'    => __( 'Migration', 'wp-module-migration' ),
 					'callback' => function ( Container $container ) {
+						// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 						if ( in_array( $container->plugin()->id, array( 'bluehost', 'hostgator', true ) ) && ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
 							define( 'NFD_MIGRATION_MODULE_VERSION', '1.1.0' );
 						}
