@@ -10,6 +10,7 @@ use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
  * @package NewfoldLabs\WP\Module\Migration
  */
 class Migration {
+
 	/**
 	 * Container loaded from the brand plugin.
 	 *
@@ -68,10 +69,8 @@ class Migration {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
-		if ( $container->plugin()->id === 'bluehost' ) {
-			add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list
-			add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
-		}
+		add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list.
+		add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 		\add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
 		add_filter(
 			'load_script_translation_file',
@@ -153,7 +152,7 @@ class Migration {
 		$this->insta_service = new InstaMigrateService();
 		$response            = $this->insta_service->install_instawp_connect();
 		if ( ! is_wp_error( $response ) ) {
-			wp_redirect( $response['redirect_url'] );
+			wp_safe_redirect( $response['redirect_url'] );
 		} else {
 			wp_safe_redirect( admin_url( 'import.php' ) );
 		}
@@ -170,6 +169,8 @@ class Migration {
 			'migration_title'       => __( 'Preparing your site', 'wp-module-migration' ),
 			'migration_description' => __( 'Please wait a few seconds while we get your new account ready to import your existing WordPress site.', 'wp-module-migration' ),
 			'wordpress_title'       => __( 'WordPress Content', 'wp-module-migration' ),
+			'restApiUrl'            => \esc_url_raw( \get_home_url() . '/index.php?rest_route=' ),
+			'restApiNonce'          => \wp_create_nonce( 'wp_rest' ),
 		);
 		wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
 
@@ -208,13 +209,13 @@ class Migration {
 		$dir        = $this->container->plugin()->url . 'vendor/newfold-labs/wp-module-migration/';
 
 		if ( file_exists( $asset_file ) ) {
-			error_log( 'welcome' );
 			$asset = require $asset_file;
 			\wp_register_script(
 				self::$handle,
 				$dir . 'build/index.js',
 				array_merge( $asset['dependencies'], array() ),
-				$asset['version']
+				$asset['version'],
+				true
 			);
 		}
 		\wp_set_script_translations(
