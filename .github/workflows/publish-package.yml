@@ -15,7 +15,7 @@ jobs:
           scope: '@newfold-labs'
       - name: Setup Registry for NPM Install
         run: printf "\n//npm.pkg.github.com/:_authToken=${{ secrets.NEWFOLD_ACCESS_TOKEN }}" >> .npmrc
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - name: Reset Registry for npm publish
         run: sed -i '$d' .npmrc
       - run: npm publish

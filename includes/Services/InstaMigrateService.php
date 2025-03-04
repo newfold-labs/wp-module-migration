@@ -67,12 +67,12 @@ class InstaMigrateService {
 		// Connect the website with InstaWP server
 		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
 			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
-			$connect_response = Helper::instawp_generate_api_key( $api_key );
+			$connect_response = Helper::instawp_generate_api_key( $api_key, '', false );
 
 			if ( ! $connect_response ) {
 				return new \WP_Error(
 					'Bad request',
-					esc_html__( 'Website could not connect successfully.' ),
+					esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
 					array( 'status' => 400 )
 				);
 			}
@@ -87,12 +87,12 @@ class InstaMigrateService {
 					sleep( 1 );
 					self::install_instawp_connect();
 				} else {
-					return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.' ), array( 'status' => 400 ) );
+					return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.', 'wp-module-migration' ), array( 'status' => 400 ) );
 				}
 			}
 
 			return array(
-				'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.' ),
+				'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
 				'response'     => true,
 				'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
 			);
@@ -100,7 +100,7 @@ class InstaMigrateService {
 
 		return new \WP_Error(
 			'Bad request',
-			esc_html__( 'Migration might be finished.' ),
+			esc_html__( 'Migration might be finished.', 'wp-module-migration' ),
 			array( 'status' => 400 )
 		);
 	}

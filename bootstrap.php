@@ -22,7 +22,7 @@ if ( function_exists( 'add_action' ) ) {
 					'callback' => function ( Container $container ) {
 
 						if ( ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
-							define( 'NFD_MIGRATION_MODULE_VERSION', '1.0.12' );
+							define( 'NFD_MIGRATION_MODULE_VERSION', '1.1.0' );
 						}
 						$brand = $container->plugin()->id;
 						if ( 'atomic' === getContext( 'platform' ) ) {
@@ -36,6 +36,10 @@ if ( function_exists( 'add_action' ) ) {
 						defined( 'BRAND_PLUGIN' ) || define( 'BRAND_PLUGIN', $brand );
 
 						defined( 'INSTAWP_MIGRATE_ENDPOINT' ) || define( 'INSTAWP_MIGRATE_ENDPOINT', 'migrate/' . $brand );
+
+						if ( ! defined( 'NFD_MIGRATION_DIR' ) ) {
+							define( 'NFD_MIGRATION_DIR', __DIR__ );
+						}
 
 						new Migration( $container );
 					},
