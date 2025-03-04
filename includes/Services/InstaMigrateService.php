@@ -14,14 +14,14 @@ class InstaMigrateService {
 	/**
 	 * InstaWP Connect plugin slug used for installing the instaWP plugin once
 	 *
-	 * @var $connect_plugin_slug
+	 * @var string $connect_plugin_slug
 	 */
 	private $connect_plugin_slug = 'instawp-connect';
 
 	/**
 	 * InstaWP Connect plugin API key used for connecting the instaWP plugin
 	 *
-	 * @var $insta_api_key
+	 * @var string $insta_api_key
 	 */
 	private $insta_api_key = '';
 
@@ -33,7 +33,7 @@ class InstaMigrateService {
 	private $count = 0;
 
 	/**
-	 * Set required api keys for insta to initiate the migration
+	 * Set required API keys for insta to initiate the migration
 	 */
 	public function __construct() {
 		$encrypt             = new Encryption();
@@ -51,6 +51,7 @@ class InstaMigrateService {
 		if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'get_mu_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
+
 		// Install and activate the plugin
 		if ( ! is_plugin_active( sprintf( '%1$s/%1$s.php', $this->connect_plugin_slug ) ) ) {
 			$params    = array(
@@ -61,7 +62,7 @@ class InstaMigrateService {
 				),
 			);
 			$installer = new Installer( $params );
-			$response  = $installer->start();
+			$installer->start();
 		}
 
 		// Connect the website with InstaWP server
@@ -71,12 +72,13 @@ class InstaMigrateService {
 
 			if ( ! $connect_response ) {
 				return new \WP_Error(
-					'Bad request',
+					'bad_request',
 					esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
 					array( 'status' => 400 )
 				);
 			}
 		}
+
 		// Ready to start the migration
 		if ( function_exists( 'instawp' ) ) {
 			// Check if there is a connect ID
@@ -87,19 +89,29 @@ class InstaMigrateService {
 					sleep( 1 );
 					self::install_instawp_connect();
 				} else {
-					return new \WP_Error( 'Bad request', esc_html__( 'Connect plugin is installed but no connect ID.', 'wp-module-migration' ), array( 'status' => 400 ) );
+					return new \WP_Error( 'bad_request', esc_html__( 'Connect plugin is installed but no connect ID.', 'wp-module-migration' ), array( 'status' => 400 ) );
 				}
 			}
 
+			// Add the current WordPress locale to the redirect URL
+			$locale = get_locale();
 			return array(
 				'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
 				'response'     => true,
-				'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
+				'redirect_url' => esc_url_raw(
+					sprintf(
+						'%s/%s?d_id=%s&locale=%s',
+						NFD_MIGRATION_PROXY_WORKER,
+						INSTAWP_MIGRATE_ENDPOINT,
+						Helper::get_connect_uuid(),
+						$locale
+					)
+				),
 			);
 		}
 
 		return new \WP_Error(
-			'Bad request',
+			'bad_request',
 			esc_html__( 'Migration might be finished.', 'wp-module-migration' ),
 			array( 'status' => 400 )
 		);

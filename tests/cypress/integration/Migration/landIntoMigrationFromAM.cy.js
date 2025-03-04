@@ -2,8 +2,9 @@ import { GetPluginId } from '../wp-module-support/pluginID.cy';
 import { wpLogin } from '../wp-module-support/utils.cy';
 const customCommandTimeout = 120000;
 const pluginId = GetPluginId();
+const allowedPlugins = [ 'bluehost', 'hostgator' ];
 
-if ( pluginId == 'bluehost' ) {
+if ( allowedPlugins.includes( pluginId ) ) {
 	describe(
 		'Verify Migration- emulating AM flow',
 		{ testIsolation: true },
@@ -21,7 +22,7 @@ if ( pluginId == 'bluehost' ) {
 			it( 'Verify Migration page is loaded', () => {
 				cy.intercept(
 					'GET',
-					'https://migrate.bluehost.com/api/v2/initial-data'
+					'https://migrate.'+ pluginId +'.com/api/v2/initial-data'
 				).as( 'Migration-initialise' );
 				cy.visit(
 					'/wp-admin/?page=nfd-onboarding#/sitegen/step/migration'
@@ -33,7 +34,7 @@ if ( pluginId == 'bluehost' ) {
 						expect( interception.response.statusCode ).to.eq( 200 );
 					} )
 					.then( () => {
-						cy.url().should( 'contain', 'migrate/bluehost?d_id=' );
+						cy.url().should( 'contain', 'migrate/'+ pluginId +'?d_id=' );
 					} );
 			} );
 		}
