@@ -56,11 +56,17 @@ class InstaMigrateService {
 				);
 			} else {
 				return new \WP_Error(
-					'Error',
-					esc_html__( 'Migration service could not be started.', 'wp-module-migration' ),
+					'Bad request',
+					esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
 					array( 'status' => 400 )
 				);
 			}
+		} else {
+			return new \WP_Error(
+				'Error',
+				esc_html__( 'Migration service could not be started.', 'wp-module-migration' ),
+				array( 'status' => 400 )
+			);
 		}
 	}
 }
