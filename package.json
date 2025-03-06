@@ -7,6 +7,7 @@
     "prepublishOnly": "npm run build",
     "build": "wp-scripts build ./src/index.js --config ./scripts/webpack.config.js",
     "lint": "wp-scripts lint-js ./src/index.js",
+	"listjs": "wp-scripts lint-js ./includes/import-tools-changes.js",
     "start": "wp-scripts start ./src/index.js --config ./scripts/webpack.config.js"
   },
   "engines": {
