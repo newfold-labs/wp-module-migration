@@ -33,8 +33,8 @@ class Tracker {
 
 		$file_path = $this->get_full_path();
 
-		if ( $wp_filesystem->file_exists( $file_path ) ) {
-			$track_content = $wp_filesystem->file_get_contents( $file_path );
+		if ( $wp_filesystem->exists( $file_path ) ) {
+			$track_content = $wp_filesystem->get_contents( $file_path );
 			$track_content = json_decode( $track_content, true );
 
 			if ( ! is_array( $track_content ) ) {
@@ -64,9 +64,7 @@ class Tracker {
 		$track_content = $this->get_track_content();
 		if ( count( $step ) > 0 ) {
 			$updated_track = array_replace( $track_content, $step );
-			if ( $wp_filesystem->file_exists( $this->get_full_path() ) && $wp_filesystem->is_writable( $this->get_full_path() ) ) {
-				$updated = $wp_filesystem->file_put_contents( $this->get_full_path(), wp_json_encode( $updated_track ) );
-			}
+			$updated       = $wp_filesystem->put_contents( $this->get_full_path(), wp_json_encode( $updated_track ) );
 		}
 
 		return $updated;
@@ -84,7 +82,7 @@ class Tracker {
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		WP_Filesystem();
 		$deleted = false;
-		if ( $wp_filesystem->file_exists( $this->get_full_path() ) ) {
+		if ( $wp_filesystem->exists( $this->get_full_path() ) ) {
 			$deleted = wp_delete_file( $this->get_full_path() );
 		}
 
@@ -105,8 +103,8 @@ class Tracker {
 
 		$path  = $this->get_full_path();
 		$reset = false;
-		if ( $wp_filesystem->file_exists( $path ) && $wp_filesystem->is_writable( $path ) ) {
-			$reset = $wp_filesystem->file_put_contents( $path, wp_json_encode( array() ) );
+		if ( $wp_filesystem->exists( $path ) && $wp_filesystem->is_writable( $path ) ) {
+			$reset = $wp_filesystem->put_contents( $path, wp_json_encode( array() ) );
 		}
 
 		return $reset;
