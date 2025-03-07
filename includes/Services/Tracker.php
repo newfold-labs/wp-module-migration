@@ -63,6 +63,8 @@ class Tracker {
 		$updated       = false;
 		$track_content = $this->get_track_content();
 		if ( count( $step ) > 0 ) {
+			$currentKey = array_key_first( $step );
+			$step[$currentKey]['time'] = current_time( 'mysql', 1 );
 			$updated_track = array_replace( $track_content, $step );
 			$updated       = $wp_filesystem->put_contents( $this->get_full_path(), wp_json_encode( $updated_track ) );
 		}
