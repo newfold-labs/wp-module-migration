@@ -6,6 +6,7 @@ use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 use NewfoldLabs\WP\Module\Migration\Steps\GetInstaWpApiKey;
 use NewfoldLabs\WP\Module\Migration\Steps\InstallActivateInstaWp;
 use NewfoldLabs\WP\Module\Migration\Steps\ConnectToInstaWp;
+use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 /**
  * Class InstaMigrateService
  */
@@ -19,6 +20,13 @@ class InstaMigrateService {
 	private $insta_api_key = '';
 
 	/**
+	 * Tracker class instance.
+	 *
+	 * @var Tracker $tracker
+	 */
+	private $tracker;
+
+	/**
 	 * Retry count
 	 *
 	 * @var int $count
@@ -29,23 +37,24 @@ class InstaMigrateService {
 	 * Set required api keys for insta to initiate the migration
 	 */
 	public function __construct() {
-		update_option( AbstractStep::get_tracking_option_name(), array() );
-		$instawp_get_key_step = new GetInstaWpApiKey();
+		$this->tracker = new Tracker();
+		$this->tracker->reset_track_file();
+		$instawp_get_key_step = new GetInstaWpApiKey( $this->tracker );
 		$instawp_get_key_step->set_status( 'running' );
-		$this->insta_api_key  = $instawp_get_key_step->get_api_key();
+		$this->insta_api_key = $instawp_get_key_step->get_api_key();
 	}
 
 	/**
 	 * Install InstaWP plugin
 	 */
 	public function install_instawp_connect() {
-		$install_activate = new InstallActivateInstaWp();
+		$install_activate = new InstallActivateInstaWp( $this->tracker );
 		$install_activate->set_status( 'running' );
 		$installed_activated = $install_activate->install();
 
 		if ( 'success' === $installed_activated ) {
 			// Connect the website with InstaWP server
-			$connectToInstaWp = new ConnectToInstaWp( $this->insta_api_key );
+			$connectToInstaWp = new ConnectToInstaWp( $this->insta_api_key, $this->tracker );
 			$connectToInstaWp->set_status( 'running' );
 			$connected = $connectToInstaWp->connect();
 			if ( 'success' === $connected ) {

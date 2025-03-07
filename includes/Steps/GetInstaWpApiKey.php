@@ -5,6 +5,7 @@ namespace NewfoldLabs\WP\Module\Migration\Steps;
 use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 use NewfoldLabs\WP\Module\Data\Helpers\Encryption;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
+use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 
 /**
  * Get InstaWp api key step.
@@ -28,11 +29,14 @@ class GetInstaWpApiKey extends AbstractStep {
 
 	/**
 	 * Construct. Init basic parameters.
+	 *
+	 * @param Tracker $tracker Tracker instance.
 	 */
-	public function __construct() {
+	public function __construct( Tracker $tracker ) {
 		$this->set_step_slug( 'GetInstaWpApiKey' );
 		$this->set_max_retries( 2 );
 		$this->encrypter = new Encryption();
+		$this->set_tracker( $tracker );
 	}
 
 	/**
@@ -41,7 +45,7 @@ class GetInstaWpApiKey extends AbstractStep {
 	 * @return void
 	 */
 	protected function run() {
-		$this->track_step( $this->get_step_slug(), 'running' );
+		$this->tracker->update_track( array( $this->get_step_slug() => array( 'status' => 'running' ) ) );
 		$this->insta_api_key = $this->encrypter->decrypt( get_option( 'newfold_insta_api_key', false ) );
 		if ( ! $this->insta_api_key ) {
 			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
@@ -69,7 +73,15 @@ class GetInstaWpApiKey extends AbstractStep {
 	public function get_api_key() {
 		$this->run();
 		$message = isset( $this->get_response()['message'] ) ? $this->get_response()['message'] : '';
-		$this->track_step( $this->get_step_slug(), $this->get_status(), $message );
+		$current = array(
+			$this->get_step_slug() => array(
+				'status'  => $this->get_status(),
+				'intents' => $this->get_retry_count() + 1,
+				'message' => $message,
+				'data'    => '',
+			),
+		);
+		$this->tracker->update_track( $current );
 		return $this->insta_api_key;
 	}
 }
