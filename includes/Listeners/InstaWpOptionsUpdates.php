@@ -47,17 +47,14 @@ class InstaWpOptionsUpdates extends Listener {
 	 * @return array
 	 */
 	public function on_update_instawp_migration_details( $new_option, $old_value ) {
-		error_log( 'nfd-debug from listener' );
 		if ( $old_value !== $new_option ) {
 			$tracker = new Tracker();
-			error_log( 'nfd-debug1' );
-			$mode   = isset( $new_option['mode'] ) ? $new_option['mode'] : '';
-			$status = isset( $new_option['status'] ) ? $new_option['status'] : '';
+			$mode    = isset( $new_option['mode'] ) ? $new_option['mode'] : '';
+			$status  = isset( $new_option['status'] ) ? $new_option['status'] : '';
 			if ( 'push' === $mode && 'initiated' === $status ) {
 				$tracker->update_track( array( 'pushingStep' => array( 'status' => 'running' ) ) );
 			}
 		}
-		error_log( 'nfd-debug from listener ends' );
 		return $new_option;
 	}
 }
