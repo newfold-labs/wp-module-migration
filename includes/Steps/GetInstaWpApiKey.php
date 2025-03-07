@@ -30,7 +30,7 @@ class GetInstaWpApiKey extends AbstractStep {
 	/**
 	 * Construct. Init basic parameters.
 	 *
- 	 * @param Tracker $tracker
+	 * @param Tracker $tracker Tracker instance.
 	 */
 	public function __construct( Tracker $tracker ) {
 		$this->set_step_slug( 'GetInstaWpApiKey' );

@@ -19,6 +19,11 @@ class InstaMigrateService {
 	 */
 	private $insta_api_key = '';
 
+	/**
+	 * Tracker class instance.
+	 *
+	 * @var Tracker $tracker
+	 */
 	private $tracker;
 
 	/**
@@ -36,7 +41,7 @@ class InstaMigrateService {
 		$this->tracker->reset_track_file();
 		$instawp_get_key_step = new GetInstaWpApiKey( $this->tracker );
 		$instawp_get_key_step->set_status( 'running' );
-		$this->insta_api_key  = $instawp_get_key_step->get_api_key();
+		$this->insta_api_key = $instawp_get_key_step->get_api_key();
 	}
 
 	/**

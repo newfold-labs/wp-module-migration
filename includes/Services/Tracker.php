@@ -19,27 +19,32 @@ class Tracker {
 	 * @var string $path.
 	 */
 	protected $path = ABSPATH;
-	//TODO: add a reset function
 	/**
 	 * Get the current step status.
 	 *
 	 * @return array
 	 */
 	private function get_track_content() {
-		$file_path = $this->path . $this->file_name;
+		global $wp_filesystem;
 
-        if ( file_exists( $file_path ) ) {
-            $track_content = file_get_contents( $file_path );
-            $track_content = json_decode( $track_content, true );
+		// Make sure that the above variable is properly setup.
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
 
-            if ( ! is_array( $track_content ) ) {
-                $track_content = array();
-            }
-        } else {
-            $track_content = array();
-        }
+		$file_path = $this->get_full_path();
 
-        return $track_content;
+		if ( $wp_filesystem->file_exists( $file_path ) ) {
+			$track_content = $wp_filesystem->file_get_contents( $file_path );
+			$track_content = json_decode( $track_content, true );
+
+			if ( ! is_array( $track_content ) ) {
+				$track_content = array();
+			}
+		} else {
+			$track_content = array();
+		}
+
+		return $track_content;
 	}
 
 	/**
@@ -49,11 +54,19 @@ class Tracker {
 	 * @return bool
 	 */
 	public function update_track( $step = array() ) {
-		$updated = false;
+		global $wp_filesystem;
+
+		// Make sure that the above variable is properly setup.
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+
+		$updated       = false;
 		$track_content = $this->get_track_content();
 		if ( count( $step ) > 0 ) {
 			$updated_track = array_replace( $track_content, $step );
-			$updated = file_put_contents( $this->get_full_path(), json_encode( $updated_track ) );
+			if ( $wp_filesystem->file_exists( $this->get_full_path() ) && $wp_filesystem->is_writable( $this->get_full_path() ) ) {
+				$updated = $wp_filesystem->file_put_contents( $this->get_full_path(), wp_json_encode( $updated_track ) );
+			}
 		}
 
 		return $updated;
@@ -65,9 +78,14 @@ class Tracker {
 	 * @return bool
 	 */
 	public function delete_track() {
+		global $wp_filesystem;
+
+		// Make sure that the above variable is properly setup.
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
 		$deleted = false;
-		if ( file_exists( $this->get_full_path() ) ) {
-			$deleted = unlink( $this->get_full_path() );
+		if ( $wp_filesystem->file_exists( $this->get_full_path() ) ) {
+			$deleted = wp_delete_file( $this->get_full_path() );
 		}
 
 		return $deleted;
@@ -79,35 +97,41 @@ class Tracker {
 	 * @return bool
 	 */
 	public function reset_track_file() {
+		global $wp_filesystem;
+
+		// Make sure that the above variable is properly setup.
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+
 		$path  = $this->get_full_path();
 		$reset = false;
-		if ( file_exists( $path ) ) {
-			$reset = file_put_contents( $path, json_encode( array() ) );
+		if ( $wp_filesystem->file_exists( $path ) && $wp_filesystem->is_writable( $path ) ) {
+			$reset = $wp_filesystem->file_put_contents( $path, wp_json_encode( array() ) );
 		}
 
 		return $reset;
 	}
 
 	/**
-     * Set the tracker file path.
-     *
+	 * Set the tracker file path.
+	 *
 	 * @param string $path the path to the tracker file.
-     * @return void
-     */
-    public function set_path( $path ) {
-        $path = ! empty( $path ) ? $path : ABSPATH;
+	 * @return void
+	 */
+	public function set_path( $path ) {
+		$path       = ! empty( $path ) ? $path : ABSPATH;
 		$this->path = $path;
-    }
+	}
 	/**
-     * Set the tracker file name.
-     *
+	 * Set the tracker file name.
+	 *
 	 * @param string $file_name the name of the tracker file.
-     * @return void
-     */
-    public function set_file_name( $file_name ) {
-        $file_name = ! empty( $file_name ) ? $file_name : '.nfd-migration-tracking';
+	 * @return void
+	 */
+	public function set_file_name( $file_name ) {
+		$file_name       = ! empty( $file_name ) ? $file_name : '.nfd-migration-tracking';
 		$this->file_name = $file_name;
-    }
+	}
 
 	/**
 	 * Get the tracker file path.

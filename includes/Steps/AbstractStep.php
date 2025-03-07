@@ -182,6 +182,8 @@ abstract class AbstractStep {
 	}
 	/**
 	 * Set the tracker instance for the step
+	 *
+	 * @param Tracker $tracker the tracker instance.
 	 */
 	public function set_tracker( Tracker $tracker ) {
 		$this->tracker = $tracker;

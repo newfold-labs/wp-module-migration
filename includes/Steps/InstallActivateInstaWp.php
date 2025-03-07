@@ -22,10 +22,10 @@ class InstallActivateInstaWp extends AbstractStep {
 
 	/**
 	 * Construct. Init basic parameters.
-	 * 
-	 * @param Tracker $tracker
+	 *
+	 * @param Tracker $tracker Tracker instance.
 	 */
-	public function __construct( Tracker $tracker) {
+	public function __construct( Tracker $tracker ) {
 		$this->set_step_slug( 'InstallInstaWp' );
 		$this->set_max_retries( 2 );
 		$this->set_tracker( $tracker );
