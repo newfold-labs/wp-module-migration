@@ -1,12 +1,13 @@
 {
   "name": "@newfold-labs/wp-module-migration",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "prepublishOnly": "npm run build",
     "build": "wp-scripts build ./src/index.js --config ./scripts/webpack.config.js",
     "lint": "wp-scripts lint-js ./src/index.js",
+    "prepublishOnly": "npm run build",
+    "set-version-bump": "node ./set-version-bump.js && composer install && npm i && npm run build && composer run i18n",
     "start": "wp-scripts start ./src/index.js --config ./scripts/webpack.config.js"
   },
   "engines": {
