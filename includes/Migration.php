@@ -60,7 +60,7 @@ class Migration {
 		add_filter(
 			'newfold_data_listeners',
 			function ( $listeners ) {
-				$listeners[] = '\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\Wonder_Start';
+				$listeners[] = '\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\InstaWpOptionsUpdates';
 				return $listeners;
 			}
 		);
