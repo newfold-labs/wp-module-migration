@@ -208,7 +208,6 @@ class Migration {
 		$dir        = $this->container->plugin()->url . 'vendor/newfold-labs/wp-module-migration/';
 
 		if ( file_exists( $asset_file ) ) {
-			error_log( 'welcome' );
 			$asset = require $asset_file;
 			\wp_register_script(
 				self::$handle,

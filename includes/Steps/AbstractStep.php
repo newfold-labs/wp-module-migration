@@ -1,6 +1,8 @@
 <?php
 namespace NewfoldLabs\WP\Module\Migration\Steps;
 
+use NewfoldLabs\WP\Module\Migration\Services\Tracker;
+
 /**
  * Abstract class representing a step in the migration process.
  *
@@ -33,13 +35,6 @@ abstract class AbstractStep {
 	protected $status;
 
 	/**
-	 * Name of the option to track the migration steps.
-	 *
-	 * @var string $track_option_name.
-	 */
-	protected static $track_option_name = 'nfd-migration-steps-status';
-
-	/**
 	 * The current step slug.
 	 *
 	 * @var string $step_slug
@@ -54,6 +49,13 @@ abstract class AbstractStep {
 	protected $response = array();
 
 	/**
+	 * Tracker class instance.
+	 *
+	 * @var Tracker $tracker
+	 */
+	protected $tracker;
+
+	/**
 	 * Run the main code for.
 	 */
 	protected function run() {}
@@ -64,14 +66,14 @@ abstract class AbstractStep {
 	protected function success() {
 		$this->set_status( 'success' );
 		$this->set_retry_count( 0 );
-		$this->track_step( $this->step_slug, 'success' );
+		$this->tracker->update_track( array( $this->step_slug => array( 'status' => 'success' ) ) );
 	}
 	/**
 	 * Set the step status as failed & reset the retry count to 0 and print failed log.
 	 */
 	protected function failure() {
 		$this->set_status( 'failed' );
-		$this->track_step( $this->step_slug, 'failed' );
+		$this->tracker->update_track( array( $this->step_slug => array( 'status' => 'failed' ) ) );
 	}
 
 	/**
@@ -91,31 +93,6 @@ abstract class AbstractStep {
 		$this->set_retry_count( $count );
 
 		$this->run();
-	}
-
-	/**
-	 * Track the step status to nfd-migration-steps-status option.
-	 *
-	 * @param string $step the step slug.
-	 * @param string $status the status of the current step.
-	 * @param string $message the message to be stored if needed.
-	 * @param array  $data the data to be stored if needed.
-	 */
-	protected function track_step( $step, $status, $message = '', $data = array() ) {
-		$tracks        = get_option( $this::get_tracking_option_name(), array() );
-		$step          = empty( $step ) ? $this->step_slug : $step;
-		$status        = empty( $status ) ? $this->status : $status;
-		$intents       = $this->get_retry_count() + 1;
-		$current       = array(
-			$step => array(
-				'status'  => $status,
-				'intents' => $intents,
-				'message' => $message,
-				'data'    => $data,
-			),
-		);
-		$updated_track = array_replace( $tracks, $current );
-		update_option( $this::get_tracking_option_name(), $updated_track );
 	}
 
 	/**
@@ -185,14 +162,7 @@ abstract class AbstractStep {
 	public function set_status( $status ) {
 		$this->status = $status;
 	}
-	/**
-	 * Get the tracking option name
-	 *
-	 * @return string
-	 */
-	public static function get_tracking_option_name() {
-		return self::$track_option_name;
-	}
+
 	/**
 	 * Get the response
 	 *
@@ -209,5 +179,11 @@ abstract class AbstractStep {
 	public function set_response( $response ) {
 		$response       = empty( $response ) || ! is_array( $response ) ? array() : $response;
 		$this->response = $response;
+	}
+	/**
+	 * Set the tracker instance for the step
+	 */
+	public function set_tracker( Tracker $tracker ) {
+		$this->tracker = $tracker;
 	}
 }
