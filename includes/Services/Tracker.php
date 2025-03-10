@@ -37,7 +37,7 @@ class Tracker {
 			$track_content = $wp_filesystem->get_contents( $file_path );
 			$track_content = json_decode( $track_content, true );
 
-			if ( ! is_array( $track_content ) ) {
+			if ( ! is_array( $track_content ) || empty( $track_content ) ) {
 				$track_content = array();
 			}
 		} else {
