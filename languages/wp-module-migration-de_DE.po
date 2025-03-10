@@ -23,27 +23,27 @@ msgstr ""
 msgid "Migration"
 msgstr "Migration"
 
-#: includes/Migration.php:132
+#: includes/Migration.php:129
 msgid "NFD migration Options"
 msgstr "NFD-Migrationsoptionen"
 
-#: includes/Migration.php:144
+#: includes/Migration.php:141
 msgid "WordPress Migration Tool"
 msgstr "WordPress-Migrations-Tool"
 
-#: includes/Migration.php:145
+#: includes/Migration.php:142
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migrieren Sie eine bestehende WordPress-Seite zu dieser WordPress-Instanz. Dieses Tool wird eine Kopie einer existierenden Site erstellen und automatisch in diese WordPress-Instanz <strong>importieren. Dies wird den gesamten Inhalt überschreiben.</strong>"
 
-#: includes/Migration.php:178
+#: includes/Migration.php:187
 msgid "Preparing your site"
 msgstr "Ihre Seite wird vorbereitet"
 
-#: includes/Migration.php:179
+#: includes/Migration.php:188
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Bitte warten Sie ein paar Sekunden, während wir Ihr neues Konto bereit, um Ihre bestehende WordPress-Seite zu importieren."
 
-#: includes/Migration.php:180
+#: includes/Migration.php:189
 msgid "WordPress Content"
 msgstr "WordPress-Inhalt"
 
