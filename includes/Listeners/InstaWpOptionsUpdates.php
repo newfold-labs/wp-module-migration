@@ -2,11 +2,12 @@
 namespace NewfoldLabs\WP\Module\Migration\Listeners;
 
 use NewfoldLabs\WP\Module\Data\Listeners\Listener;
+use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 
 /**
- * Monitors generic Wonder_Start events
+ * Monitors InstaWp options update
  */
-class Wonder_Start extends Listener {
+class InstaWpOptionsUpdates extends Listener {
 	/**
 	 * Register the hooks for the listener
 	 *
@@ -14,6 +15,7 @@ class Wonder_Start extends Listener {
 	 */
 	public function register_hooks() {
 		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 2 );
+		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
 	}
 
 	/**
@@ -34,6 +36,25 @@ class Wonder_Start extends Listener {
 			}
 		}
 
+		return $new_option;
+	}
+
+	/**
+	 * Listen instaWp option update to intercept the Push step and track it
+	 *
+	 * @param array $new_option status of migration
+	 * @param array $old_value previous status of migration
+	 * @return array
+	 */
+	public function on_update_instawp_migration_details( $new_option, $old_value ) {
+		if ( $old_value !== $new_option ) {
+			$tracker = new Tracker();
+			$mode    = isset( $new_option['mode'] ) ? $new_option['mode'] : '';
+			$status  = isset( $new_option['status'] ) ? $new_option['status'] : '';
+			if ( 'push' === $mode && 'initiated' === $status ) {
+				$tracker->update_track( array( 'pushingStep' => array( 'status' => 'running' ) ) );
+			}
+		}
 		return $new_option;
 	}
 }

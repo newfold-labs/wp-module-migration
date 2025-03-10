@@ -2,7 +2,6 @@
 namespace NewfoldLabs\WP\Module\Migration\Services;
 
 use InstaWP\Connect\Helpers\Helper;
-use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 use NewfoldLabs\WP\Module\Migration\Steps\GetInstaWpApiKey;
 use NewfoldLabs\WP\Module\Migration\Steps\InstallActivateInstaWp;
 use NewfoldLabs\WP\Module\Migration\Steps\ConnectToInstaWp;
@@ -25,13 +24,6 @@ class InstaMigrateService {
 	 * @var Tracker $tracker
 	 */
 	private $tracker;
-
-	/**
-	 * Retry count
-	 *
-	 * @var int $count
-	 */
-	private $count = 0;
 
 	/**
 	 * Set required api keys for insta to initiate the migration

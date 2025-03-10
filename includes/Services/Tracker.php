@@ -37,7 +37,7 @@ class Tracker {
 			$track_content = $wp_filesystem->get_contents( $file_path );
 			$track_content = json_decode( $track_content, true );
 
-			if ( ! is_array( $track_content ) ) {
+			if ( ! is_array( $track_content ) || empty( $track_content ) ) {
 				$track_content = array();
 			}
 		} else {
@@ -63,8 +63,10 @@ class Tracker {
 		$updated       = false;
 		$track_content = $this->get_track_content();
 		if ( count( $step ) > 0 ) {
-			$updated_track = array_replace( $track_content, $step );
-			$updated       = $wp_filesystem->put_contents( $this->get_full_path(), wp_json_encode( $updated_track ) );
+			$currentKey                  = array_key_first( $step );
+			$step[ $currentKey ]['time'] = current_time( 'mysql', 1 );
+			$updated_track               = array_replace( $track_content, $step );
+			$updated                     = $wp_filesystem->put_contents( $this->get_full_path(), wp_json_encode( $updated_track ) );
 		}
 
 		return $updated;
