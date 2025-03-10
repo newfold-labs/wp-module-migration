@@ -26,13 +26,17 @@ class InstaWpOptionsUpdates extends Listener {
 	 */
 	public function on_update_instawp_last_migration_details( $new_option, $old_value ) {
 		if ( $old_value !== $new_option ) {
+			$tracker = new Tracker();
 			$value_updated = $new_option['status'];
 			if ( 'completed' === $value_updated ) {
 				$this->push( 'migration_completed', array() );
+				$tracker->update_track( array( 'lastMigrationDetails' => array( 'status' => 'completed' ) ) );
 			} elseif ( 'failed' === $value_updated ) {
 				$this->push( 'migration_failed', array() );
+				$tracker->update_track( array( 'lastMigrationDetails' => array( 'status' => 'failed' ) ) );
 			} elseif ( 'aborted' === $value_updated ) {
 				$this->push( 'migration_aborted', array() );
+				$tracker->update_track( array( 'lastMigrationDetails' => array( 'status' => 'aborted' ) ) );
 			}
 		}
 
