@@ -24,7 +24,7 @@ class Tracker {
 	 *
 	 * @return array
 	 */
-	private function get_track_content() {
+	public function get_track_content() {
 		global $wp_filesystem;
 
 		// Make sure that the above variable is properly setup.

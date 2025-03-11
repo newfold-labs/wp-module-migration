@@ -3,6 +3,7 @@ namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
+use NewfoldLabs\WP\Module\Migration\Services\UIReport;
 
 /**
  * Class Migration
@@ -72,7 +73,7 @@ class Migration {
 			add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list
 			add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 		}
-		\add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
+		add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
 		add_filter(
 			'load_script_translation_file',
 			array( $this, 'load_script_translation_file' ),
@@ -80,6 +81,8 @@ class Migration {
 			3
 		);
 		add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
+
+		$report = new UIReport();
 	}
 
 	/**
@@ -164,7 +167,7 @@ class Migration {
 	 * Changes the text WordPress to WordPress content in import page
 	 */
 	public function set_import_tools() {
-		\wp_enqueue_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js', array( 'jquery' ), '1.0', true );
 		wp_enqueue_style( 'nfd_migration_tool', NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css', array(), '1.0', 'all' );
 		$migration_data = array(
 			'migration_title'       => __( 'Preparing your site', 'wp-module-migration' ),
@@ -173,7 +176,7 @@ class Migration {
 		);
 		wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
 
-		\wp_set_script_translations(
+		wp_set_script_translations(
 			'nfd_migration_tool',
 			'wp-module-migration',
 			NFD_MIGRATION_DIR . '/languages'

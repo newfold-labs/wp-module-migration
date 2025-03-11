@@ -30,13 +30,13 @@ class InstaWpOptionsUpdates extends Listener {
 			$value_updated = $new_option['status'];
 			if ( 'completed' === $value_updated ) {
 				$this->push( 'migration_completed', array() );
-				$tracker->update_track( array( 'lastMigrationDetails' => array( 'status' => 'completed' ) ) );
+				$tracker->update_track( array( 'LastMigrationDetails' => array( 'status' => 'completed' ) ) );
 			} elseif ( 'failed' === $value_updated ) {
 				$this->push( 'migration_failed', array() );
-				$tracker->update_track( array( 'lastMigrationDetails' => array( 'status' => 'failed' ) ) );
+				$tracker->update_track( array( 'LastMigrationDetails' => array( 'status' => 'failed' ) ) );
 			} elseif ( 'aborted' === $value_updated ) {
 				$this->push( 'migration_aborted', array() );
-				$tracker->update_track( array( 'lastMigrationDetails' => array( 'status' => 'aborted' ) ) );
+				$tracker->update_track( array( 'LastMigrationDetails' => array( 'status' => 'aborted' ) ) );
 			}
 		}
 
@@ -56,7 +56,7 @@ class InstaWpOptionsUpdates extends Listener {
 			$mode    = isset( $new_option['mode'] ) ? $new_option['mode'] : '';
 			$status  = isset( $new_option['status'] ) ? $new_option['status'] : '';
 			if ( 'push' === $mode && 'initiated' === $status ) {
-				$tracker->update_track( array( 'pushingStep' => array( 'status' => 'running' ) ) );
+				$tracker->update_track( array( 'PushingStep' => array( 'status' => 'running' ) ) );
 			}
 		}
 		return $new_option;
