@@ -1,7 +1,7 @@
 import { GetPluginId } from '../wp-module-support/pluginID.cy';
 import { wpLogin } from '../wp-module-support/utils.cy';
 
-const COMMAND_TIMEOUT = 120000;
+const COMMAND_TIMEOUT = 60000;
 const pluginId = GetPluginId();
 
 if ( pluginId === 'bluehost' ) {
@@ -13,6 +13,9 @@ if ( pluginId === 'bluehost' ) {
 				wpLogin();
 				cy.exec(
 					`npx wp-env run cli wp option set nfd_migrate_site "true"`
+				);
+				cy.exec(
+					`npx wp-env run cli wp option update _transient_nfd_site_capabilities '{"canMigrateSite": true}' --format=json`
 				);
 				cy.reload();
 			} );
@@ -36,6 +39,16 @@ if ( pluginId === 'bluehost' ) {
 
 				// Ensure the URL is correct
 				cy.url().should( 'include', 'migrate/bluehost?d_id=' );
+			} );
+
+			after( () => {
+				// Cleanup options and transients
+				cy.exec(
+					`npx wp-env run cli wp option delete nfd_migrate_site`
+				);
+				cy.exec(
+					`npx wp-env run cli wp option delete _transient_nfd_site_capabilities`
+				);
 			} );
 		}
 	);
