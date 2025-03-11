@@ -118,3 +118,12 @@
 .nfd-migration-report strong {
 	color: #555;
 }
+.nfd-migration-report .no-report {
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	margin-bottom: 10px;
+	padding: 15px;
+	font-size: 20px;
+	border-radius: 5px;
+	text-align: center;
+ }

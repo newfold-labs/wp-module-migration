@@ -70,7 +70,7 @@ class UIReport {
 					}
 					echo '</ul>';
 				} else {
-					echo '<p>' . esc_html__( 'No report available.', 'wp-module-migration' ) . '</p>';
+					echo '<p class="no-report">' . esc_html__( 'No report available.', 'wp-module-migration' ) . '</p>';
 				}
 				?>
 			</div>
