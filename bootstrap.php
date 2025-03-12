@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }
 
-
 if ( function_exists( 'add_action' ) ) {
 	add_action(
 		'plugins_loaded',
@@ -20,10 +19,6 @@ if ( function_exists( 'add_action' ) ) {
 					'name'     => 'migration',
 					'label'    => __( 'Migration', 'wp-module-migration' ),
 					'callback' => function ( Container $container ) {
-
-						if ( ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
-							define( 'NFD_MIGRATION_MODULE_VERSION', '1.2.3' );
-						}
 						$brand = $container->plugin()->id;
 						if ( 'atomic' === getContext( 'platform' ) ) {
 							$brand = 'bh-cloud';
