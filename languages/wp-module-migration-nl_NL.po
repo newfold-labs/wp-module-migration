@@ -62,23 +62,3 @@ msgstr "Verbindingsplugin is geïnstalleerd en klaar om de migratie te starten."
 #: includes/Services/InstaMigrateService.php:103
 msgid "Migration might be finished."
 msgstr "Migratie kan worden voltooid."
-
-#: build/index.js:1
-msgid "Let's migrate your existing site to your new account"
-msgstr "Laten we je bestaande site migreren naar je nieuwe account"
-
-#: build/index.js:1
-msgid "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
-msgstr "Het overzetten van je site is eenvoudig met onze gratis site import tool. Of, je kunt betalen om onze Migratie Team experts voor je te laten overgaan."
-
-#: build/index.js:1
-msgid "Learn more"
-msgstr "Meer informatie"
-
-#: build/index.js:1
-msgid "Dismiss this card"
-msgstr "Deze kaart verwijderen"
-
-#: build/index.js:1
-msgid "Migrate your site"
-msgstr "Migreer je site"

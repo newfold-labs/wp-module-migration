@@ -62,23 +62,3 @@ msgstr "Das Connect-Plugin ist installiert und kann die Migration starten."
 #: includes/Services/InstaMigrateService.php:103
 msgid "Migration might be finished."
 msgstr "Die Migration könnte beendet werden."
-
-#: build/index.js:1
-msgid "Let's migrate your existing site to your new account"
-msgstr "Lass uns deine bestehende Seite auf dein neues Konto migrieren"
-
-#: build/index.js:1
-msgid "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
-msgstr "Die Migration Ihrer Website ist mit unserem kostenlosen Import-Tool einfach. Oder Sie können dafür bezahlen, dass unsere Migrations-Team-Experten Ihren Transfer für Sie erledigen."
-
-#: build/index.js:1
-msgid "Learn more"
-msgstr "Mehr erfahren"
-
-#: build/index.js:1
-msgid "Dismiss this card"
-msgstr "Diese Karte verwerfen"
-
-#: build/index.js:1
-msgid "Migrate your site"
-msgstr "Website migrieren"
