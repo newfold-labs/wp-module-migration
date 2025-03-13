@@ -34,10 +34,10 @@ class InstaWpOptionsUpdates extends Listener {
 				$this->push( 'migration_completed', wp_json_encode( $tracker->get_track_content() ) );
 			} elseif ( 'failed' === $value_updated ) {
 				$tracker->update_track( array( 'LastMigrationDetails' => array( 'status' => 'failed' ) ) );
-				$this->push( 'migration_failed',  wp_json_encode( $tracker->get_track_content() ) );
+				$this->push( 'migration_failed', wp_json_encode( $tracker->get_track_content() ) );
 			} elseif ( 'aborted' === $value_updated ) {
 				$tracker->update_track( array( 'LastMigrationDetails' => array( 'status' => 'aborted' ) ) );
-				$this->push( 'migration_aborted',  wp_json_encode( $tracker->get_track_content() ) );
+				$this->push( 'migration_aborted', wp_json_encode( $tracker->get_track_content() ) );
 			}
 		}
 
