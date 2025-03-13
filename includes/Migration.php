@@ -3,6 +3,7 @@ namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
+use NewfoldLabs\WP\Module\Migration\Services\UIReport;
 
 /**
  * Class Migration
@@ -59,7 +60,7 @@ class Migration {
 		add_filter(
 			'newfold_data_listeners',
 			function ( $listeners ) {
-				$listeners[] = '\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\Wonder_Start';
+				$listeners[] = '\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\InstaWpOptionsUpdates';
 				return $listeners;
 			}
 		);
@@ -78,6 +79,8 @@ class Migration {
 			3
 		);
 		add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
+
+		$report = new UIReport();
 	}
 
 	/**
@@ -151,7 +154,7 @@ class Migration {
 		$this->insta_service = new InstaMigrateService();
 		$response            = $this->insta_service->install_instawp_connect();
 		if ( ! is_wp_error( $response ) ) {
-			wp_redirect( $response['redirect_url'] );
+			wp_safe_redirect( $response['redirect_url'] );
 		} else {
 			wp_safe_redirect( admin_url( 'import.php' ) );
 		}
@@ -164,14 +167,14 @@ class Migration {
 	public function set_import_tools() {
 		global $pagenow;
 
-		\wp_register_script(
+		wp_register_script(
 			'nfd_migration_tool',
 			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js',
 			array( 'jquery' ),
 			'1.0',
 			true
 		);
-		\wp_register_style(
+		wp_register_style(
 			'nfd_migration_tool',
 			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css',
 			array(),
@@ -180,8 +183,8 @@ class Migration {
 		);
 
 		if ( 'import.php' === $pagenow ) {
-			\wp_enqueue_script( 'nfd_migration_tool' );
-			\wp_enqueue_style( 'nfd_migration_tool' );
+			wp_enqueue_script( 'nfd_migration_tool' );
+			wp_enqueue_style( 'nfd_migration_tool' );
 
 			$migration_data = array(
 				'migration_title'       => __( 'Preparing your site', 'wp-module-migration' ),
@@ -190,9 +193,9 @@ class Migration {
 				'restApiUrl'            => \esc_url_raw( \get_home_url() . '/index.php?rest_route=' ),
 				'restApiNonce'          => \wp_create_nonce( 'wp_rest' ),
 			);
-			\wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
+			wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
 
-			\wp_set_script_translations(
+			wp_set_script_translations(
 				'nfd_migration_tool',
 				'wp-module-migration',
 				NFD_MIGRATION_DIR . '/languages'
@@ -228,19 +231,19 @@ class Migration {
 		// $asset_file = NFD_MIGRATION_DIR . '/build/index.asset.php';
 		// $dir        = $this->container->plugin()->url . 'vendor/newfold-labs/wp-module-migration/';
 		// if ( file_exists( $asset_file ) ) {
-		// 	$asset = require $asset_file;
-		// 	\wp_register_script(
-		// 		self::$handle,
-		// 		$dir . 'build/index.js',
-		// 		array_merge( $asset['dependencies'], array() ),
-		// 		$asset['version'],
-		// 		true
-		// 	);
+		// $asset = require $asset_file;
+		// \wp_register_script(
+		// self::$handle,
+		// $dir . 'build/index.js',
+		// array_merge( $asset['dependencies'], array() ),
+		// $asset['version'],
+		// true
+		// );
 		// }
 		// \wp_set_script_translations(
-		// 	self::$handle,
-		// 	'wp-module-migration',
-		// 	NFD_MIGRATION_DIR . '/languages'
+		// self::$handle,
+		// 'wp-module-migration',
+		// NFD_MIGRATION_DIR . '/languages'
 		// );
 		// \wp_enqueue_script( self::$handle );
 	}
