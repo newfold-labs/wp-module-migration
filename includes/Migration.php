@@ -171,14 +171,14 @@ class Migration {
 			'nfd_migration_tool',
 			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js',
 			array( 'jquery' ),
-			'1.0',
+			NFD_MIGRATION_MODULE_VERSION,
 			true
 		);
 		wp_register_style(
 			'nfd_migration_tool',
 			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css',
 			array(),
-			'1.0',
+			NFD_MIGRATION_MODULE_VERSION,
 			'all'
 		);
 
