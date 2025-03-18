@@ -80,7 +80,7 @@ class Migration {
 		);
 		add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
 
-		$report = new UIReport();
+		new UIReport();
 	}
 
 	/**
@@ -182,7 +182,9 @@ class Migration {
 			'all'
 		);
 
-		if ( 'import.php' === $pagenow ) {
+		$is_ui_tracking_page = isset( $_GET['page'] ) && 'nfd-migration' === $_GET['page'] && 'admin.php' === $pagenow;
+
+		if ( 'import.php' === $pagenow || $is_ui_tracking_page ) {
 			wp_enqueue_script( 'nfd_migration_tool' );
 			wp_enqueue_style( 'nfd_migration_tool' );
 
