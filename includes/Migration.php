@@ -71,12 +71,6 @@ class Migration {
 			add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 		}
 		add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
-		add_filter(
-			'load_script_translation_file',
-			array( $this, 'load_script_translation_file' ),
-			10,
-			3
-		);
 		add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
 	}
 
@@ -228,47 +222,20 @@ class Migration {
 		// $asset_file = NFD_MIGRATION_DIR . '/build/index.asset.php';
 		// $dir        = $this->container->plugin()->url . 'vendor/newfold-labs/wp-module-migration/';
 		// if ( file_exists( $asset_file ) ) {
-		// 	$asset = require $asset_file;
-		// 	\wp_register_script(
-		// 		self::$handle,
-		// 		$dir . 'build/index.js',
-		// 		array_merge( $asset['dependencies'], array() ),
-		// 		$asset['version'],
-		// 		true
-		// 	);
+		// $asset = require $asset_file;
+		// \wp_register_script(
+		// self::$handle,
+		// $dir . 'build/index.js',
+		// array_merge( $asset['dependencies'], array() ),
+		// $asset['version'],
+		// true
+		// );
 		// }
 		// \wp_set_script_translations(
-		// 	self::$handle,
-		// 	'wp-module-migration',
-		// 	NFD_MIGRATION_DIR . '/languages'
+		// self::$handle,
+		// 'wp-module-migration',
+		// NFD_MIGRATION_DIR . '/languages'
 		// );
 		// \wp_enqueue_script( self::$handle );
-	}
-
-	/**
-	 * Filters the file path for the JS translation JSON.
-	 *
-	 * If the script handle matches the module's handle, builds a custom path using
-	 * the languages directory, current locale, text domain, and a hash of the script.
-	 *
-	 * @param string $file   Default translation file path.
-	 * @param string $handle Script handle.
-	 * @param string $domain Text domain.
-	 * @return string Modified file path for the translation JSON.
-	 */
-	public function load_script_translation_file( $file, $handle, $domain ) {
-		if ( $handle === self::$handle ) {
-			$path   = NFD_MIGRATION_DIR . '/languages/';
-			$locale = determine_locale();
-
-			$file_base = 'default' === $domain
-				? $locale
-				: $domain . '-' . $locale;
-			$file      = $path . $file_base . '-' . md5( 'build/index.js' )
-						. '.json';
-
-		}
-
-		return $file;
 	}
 }

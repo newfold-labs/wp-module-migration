@@ -55,23 +55,3 @@ msgstr ""
 #: includes/Services/InstaMigrateService.php:103
 msgid "Migration might be finished."
 msgstr ""
-
-#: build/index.js:1
-msgid "Let's migrate your existing site to your new account"
-msgstr ""
-
-#: build/index.js:1
-msgid "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
-msgstr ""
-
-#: build/index.js:1
-msgid "Learn more"
-msgstr ""
-
-#: build/index.js:1
-msgid "Dismiss this card"
-msgstr ""
-
-#: build/index.js:1
-msgid "Migrate your site"
-msgstr ""
