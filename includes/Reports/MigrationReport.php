@@ -2,13 +2,20 @@
 namespace NewfoldLabs\WP\Module\Migration\Reports;
 
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
-
+use NewfoldLabs\WP\Module\Migration\Permissions;
 /**
  * Class to add a page report to see the tracking informations.
  *
  * @package wp-module-migration
  */
 class MigrationReport {
+	/**
+	 * Identifier for page and assets.
+	 *
+	 * @var string
+	 */
+	public static $slug = 'nfd-migration';
+
 	/**
 	 * The tracker instance.
 	 *
@@ -31,11 +38,11 @@ class MigrationReport {
 	 */
 	public function add_page() {
 		$hook = add_submenu_page(
-			'nfd-migration',
+			self::$slug,
 			__( 'Migration Report', 'wp-module-migration' ),
 			'',
-			'manage_options',
-			'nfd-migration',
+			Permissions::ADMIN,
+			self::$slug,
 			array( $this, 'get_report_page' ),
 		);
 
@@ -73,6 +80,7 @@ class MigrationReport {
 								}
 								echo '</ul>';
 								echo '</li>';
+								echo '</ul>';
 							}
 						}
 						echo '</li>';

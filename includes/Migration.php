@@ -53,7 +53,6 @@ class Migration {
 			new MigrationReport();
 
 			add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
-			add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
 
 			if ( $container->plugin()->id === 'bluehost' ) {
 				add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list.
@@ -137,8 +136,10 @@ class Migration {
 		);
 
 		$is_ui_tracking_page = isset( $_GET['page'] ) && 'nfd-migration' === $_GET['page'] && 'admin.php' === $pagenow; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-		if ( 'import.php' === $pagenow || $is_ui_tracking_page ) {
+		if ( $is_ui_tracking_page ) {
+			wp_enqueue_style( 'nfd_migration_tool' );
+		}
+		if ( 'import.php' === $pagenow ) {
 			wp_enqueue_script( 'nfd_migration_tool' );
 			wp_enqueue_style( 'nfd_migration_tool' );
 
