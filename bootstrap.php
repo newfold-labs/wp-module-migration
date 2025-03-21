@@ -22,7 +22,7 @@ if ( function_exists( 'add_action' ) ) {
 						if ( ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
 							define( 'NFD_MIGRATION_MODULE_VERSION', '1.2.3' );
 						}
-						
+
 						$brand = $container->plugin()->id;
 						if ( 'atomic' === getContext( 'platform' ) ) {
 							$brand = 'bh-cloud';
