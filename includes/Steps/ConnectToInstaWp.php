@@ -21,7 +21,7 @@ class ConnectToInstaWp extends AbstractStep {
 	/**
 	 * Construct. Init basic parameters.
 	 *
-	 * @param string  $insta_api_key instawp api key.
+	 * @param string $insta_api_key instawp api key.
 	 */
 	public function __construct( $insta_api_key ) {
 		$this->set_step_slug( 'ConnectToInstaWp' );

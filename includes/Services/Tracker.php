@@ -52,10 +52,10 @@ class Tracker {
 	/**
 	 * Update the tracking file with the current step status
 	 *
-	 * @param Class $step the step to update.
+	 * @param AbstractStep $step the step to update.
 	 * @return bool
 	 */
-	public function update_track( AbstractStep $step  ) {
+	public function update_track( AbstractStep $step ) {
 		global $wp_filesystem;
 
 		// Make sure that the above variable is properly setup.
@@ -65,7 +65,7 @@ class Tracker {
 		$updated       = false;
 		$track_content = $this->get_track_content();
 		if ( $step && is_array( $track_content ) ) {
-			$datas = array(
+			$datas         = array(
 				$step->get_step_slug() => array(
 					'status'  => $step->get_status(),
 					'intents' => $step->get_retry_count() + 1,

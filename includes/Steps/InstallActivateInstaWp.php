@@ -67,4 +67,3 @@ class InstallActivateInstaWp extends AbstractStep {
 		}
 	}
 }
-

@@ -71,8 +71,8 @@ class InstaWpOptionsUpdates extends Listener {
 	 */
 	public function on_update_instawp_migration_details( $new_value, $old_value ) {
 		if ( $old_value !== $new_value ) {
-			$mode    = isset( $new_value['mode'] ) ? $new_value['mode'] : '';
-			$status  = isset( $new_value['status'] ) ? $new_value['status'] : '';
+			$mode   = isset( $new_value['mode'] ) ? $new_value['mode'] : '';
+			$status = isset( $new_value['status'] ) ? $new_value['status'] : '';
 			if ( 'push' === $mode && 'initiated' === $status ) {
 				$push = new Push();
 				$this->tracker->update_track( $push );

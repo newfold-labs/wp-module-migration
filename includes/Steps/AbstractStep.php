@@ -36,7 +36,7 @@ abstract class AbstractStep {
 		'running'   => 'running',
 		'completed' => 'completed',
 		'failed'    => 'failed',
-		'aborted'   => 'aborted'
+		'aborted'   => 'aborted',
 	);
 
 	/**

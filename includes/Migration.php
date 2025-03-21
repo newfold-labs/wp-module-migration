@@ -131,7 +131,7 @@ class Migration {
 			'all'
 		);
 
-		$is_ui_tracking_page = isset( $_GET['page'] ) && 'nfd-migration' === $_GET['page'] && 'admin.php' === $pagenow;
+		$is_ui_tracking_page = isset( $_GET['page'] ) && 'nfd-migration' === $_GET['page'] && 'admin.php' === $pagenow; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		if ( 'import.php' === $pagenow || $is_ui_tracking_page ) {
 			wp_enqueue_script( 'nfd_migration_tool' );

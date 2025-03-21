@@ -17,5 +17,4 @@ class Push extends AbstractStep {
 		$this->set_step_slug( 'Push' );
 		$this->set_status( $this->statuses['running'] );
 	}
-
 }
