@@ -47,17 +47,22 @@ class Migration {
 				return $listeners;
 			}
 		);
-		new RestAPI();
+
+		if ( Permissions::rest_is_authorized_admin() ) {
+			new RestApi();
+			new MigrationReport();
+
+			add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
+			add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
+
+			if ( $container->plugin()->id === 'bluehost' ) {
+				add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list.
+				add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
+			}
+		}
+
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
-		if ( $container->plugin()->id === 'bluehost' ) {
-			add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list.
-			add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
-		}
-		add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
-		add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
-
-		new MigrationReport();
 	}
 
 	/**
