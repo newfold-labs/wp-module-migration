@@ -21,7 +21,7 @@ final class RestApi {
 	 * @var array
 	 */
 	protected $controllers = array(
-		'NewfoldLabs\\WP\\Module\\Migration\\RestApi\\MigrateController'
+		'NewfoldLabs\\WP\\Module\\Migration\\RestApi\\MigrateController',
 	);
 
 	/**
