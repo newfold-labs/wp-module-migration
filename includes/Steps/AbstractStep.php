@@ -28,6 +28,18 @@ abstract class AbstractStep {
 	protected $max_retries = 0;
 
 	/**
+	 * The possible statuses for the step.
+	 *
+	 * @var array $statuses
+	 */
+	public $statuses = array(
+		'running'   => 'running',
+		'completed' => 'completed',
+		'failed'    => 'failed',
+		'aborted'   => 'aborted'
+	);
+
+	/**
 	 * Status of the current step, it could be success, running or failed
 	 *
 	 * @var string $status
@@ -49,6 +61,13 @@ abstract class AbstractStep {
 	protected $response = array();
 
 	/**
+	 * Collect datas for the step if any.
+	 *
+	 * @var array $response
+	 */
+	protected $datas = array();
+
+	/**
 	 * Tracker class instance.
 	 *
 	 * @var Tracker $tracker
@@ -64,18 +83,24 @@ abstract class AbstractStep {
 	 * Set the step status as successful & reset the retry count to 0 and print success log.
 	 */
 	protected function success() {
-		$this->set_status( 'success' );
+		$this->set_status( $this->statuses['completed'] );
 		$this->set_retry_count( 0 );
-		$this->tracker->update_track( array( $this->step_slug => array( 'status' => 'success' ) ) );
 	}
 	/**
 	 * Set the step status as failed & reset the retry count to 0 and print failed log.
 	 */
 	protected function failure() {
-		$this->set_status( 'failed' );
-		$this->tracker->update_track( array( $this->step_slug => array( 'status' => 'failed' ) ) );
+		$this->set_status( $this->statuses['failed'] );
+		$this->tracker->update_track( $this );
 	}
-
+	/**
+	 * Check if the step is completed.
+	 *
+	 * @return bool
+	 */
+	public function failed() {
+		return $this->get_status() === 'failed';
+	}
 	/**
 	 * Retry the run method.
 	 *
@@ -83,7 +108,7 @@ abstract class AbstractStep {
 	 */
 	protected function retry() {
 		$count = $this->retry_count + 1;
-		if ( $count > $this->get_max_retries() ) {
+		if ( $count >= $this->get_max_retries() ) {
 			$this->failure();
 			return false;
 		}
@@ -109,7 +134,7 @@ abstract class AbstractStep {
 	 *
 	 * @return string
 	 */
-	protected function get_step_slug() {
+	public function get_step_slug() {
 		return $this->step_slug;
 	}
 
@@ -135,7 +160,7 @@ abstract class AbstractStep {
 	 *
 	 * @return int
 	 */
-	protected function get_retry_count() {
+	public function get_retry_count() {
 		return (int) $this->retry_count;
 	}
 	/**
@@ -143,7 +168,7 @@ abstract class AbstractStep {
 	 *
 	 * @return int
 	 */
-	protected function get_max_retries() {
+	public function get_max_retries() {
 		return (int) $this->max_retries;
 	}
 	/**
@@ -187,5 +212,33 @@ abstract class AbstractStep {
 	 */
 	public function set_tracker( Tracker $tracker ) {
 		$this->tracker = $tracker;
+	}
+	/**
+	 * Get the data by data key.
+	 *
+	 * @param string $data_key the data key to set.
+	 * @param mixed  $data_value the data value to set.
+	 * @return void
+	 */
+	protected function set_data( $data_key, $data_value ) {
+		if ( ! empty( $data_key ) && is_string( $data_key ) ) {
+			$this->datas[ $data_key ] = $data_value;
+		}
+	}
+	/**
+	 * Get the data by data key, or empty string if not isset, or all datas if param is empty.
+	 *
+	 * @param string $data_key the data key to get.
+	 * @return string
+	 */
+	public function get_data( $data_key = '' ) {
+		if ( isset( $this->datas[ $data_key ] ) ) {
+			return $this->datas[ $data_key ];
+		}
+
+		if ( empty( $data_key ) ) {
+			return $this->datas;
+		}
+		return '';
 	}
 }

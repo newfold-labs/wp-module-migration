@@ -5,7 +5,6 @@ namespace NewfoldLabs\WP\Module\Migration\Steps;
 use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 use NewfoldLabs\WP\Module\Data\Helpers\Encryption;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
-use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 
 /**
  * Get InstaWp api key step.
@@ -29,14 +28,13 @@ class GetInstaWpApiKey extends AbstractStep {
 
 	/**
 	 * Construct. Init basic parameters.
-	 *
-	 * @param Tracker $tracker Tracker instance.
 	 */
-	public function __construct( Tracker $tracker ) {
+	public function __construct() {
 		$this->set_step_slug( 'GetInstaWpApiKey' );
 		$this->set_max_retries( 2 );
 		$this->encrypter = new Encryption();
-		$this->set_tracker( $tracker );
+		$this->set_status( $this->statuses['running'] );
+		$this->run();
 	}
 
 	/**
@@ -45,11 +43,11 @@ class GetInstaWpApiKey extends AbstractStep {
 	 * @return void
 	 */
 	protected function run() {
-		$this->tracker->update_track( array( $this->get_step_slug() => array( 'status' => 'running' ) ) );
 		$this->insta_api_key = $this->encrypter->decrypt( get_option( 'newfold_insta_api_key', false ) );
 		if ( ! $this->insta_api_key ) {
 			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
 			if ( $this->insta_api_key ) {
+				$this->set_data( 'insta_api_key', $this->insta_api_key );
 				update_option( 'newfold_insta_api_key', $this->encrypter->encrypt( $this->insta_api_key ) );
 				$this->success();
 			} else {
@@ -61,27 +59,8 @@ class GetInstaWpApiKey extends AbstractStep {
 				);
 			}
 		} else {
+			$this->set_data( 'insta_api_key', $this->insta_api_key );
 			$this->success();
 		}
-	}
-
-	/**
-	 * Get the InstaWP API key.
-	 *
-	 * @return string
-	 */
-	public function get_api_key() {
-		$this->run();
-		$message = isset( $this->get_response()['message'] ) ? $this->get_response()['message'] : '';
-		$current = array(
-			$this->get_step_slug() => array(
-				'status'  => $this->get_status(),
-				'intents' => $this->get_retry_count() + 1,
-				'message' => $message,
-				'data'    => '',
-			),
-		);
-		$this->tracker->update_track( $current );
-		return $this->insta_api_key;
 	}
 }

@@ -30,26 +30,32 @@ class InstaMigrateService {
 	 */
 	public function __construct() {
 		$this->tracker = new Tracker();
-		$this->tracker->reset_track_file();
-		$instawp_get_key_step = new GetInstaWpApiKey( $this->tracker );
-		$instawp_get_key_step->set_status( 'running' );
-		$this->insta_api_key = $instawp_get_key_step->get_api_key();
+		$this->tracker->reset();
 	}
 
 	/**
-	 * Install InstaWP plugin
+	 * Get Insta Wp api key, Install InstaWP plugin and connect to it
 	 */
-	public function install_instawp_connect() {
-		$install_activate = new InstallActivateInstaWp( $this->tracker );
-		$install_activate->set_status( 'running' );
-		$installed_activated = $install_activate->install();
+	public function run() {
 
-		if ( 'success' === $installed_activated ) {
-			// Connect the website with InstaWP server
-			$connectToInstaWp = new ConnectToInstaWp( $this->insta_api_key, $this->tracker );
-			$connectToInstaWp->set_status( 'running' );
-			$connected = $connectToInstaWp->connect();
-			if ( 'success' === $connected ) {
+		$instawp_get_key_step = new GetInstaWpApiKey();
+		$this->tracker->update_track( $instawp_get_key_step );
+		if ( ! $instawp_get_key_step->failed() ) {
+			$this->insta_api_key = $instawp_get_key_step->get_data( 'insta_api_key' );
+		} else {
+			return new \WP_Error(
+				'Bad request',
+				esc_html__( 'Cannot get api key.', 'wp-module-migration' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$install_activate = new InstallActivateInstaWp();
+		$this->tracker->update_track( $install_activate );
+		if ( ! $install_activate->failed() ) {
+			$connectToInstaWp = new ConnectToInstaWp( $this->insta_api_key );
+			$this->tracker->update_track( $connectToInstaWp );
+			if ( ! $connectToInstaWp->failed() ) {
 				return array(
 					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
 					'response'     => true,

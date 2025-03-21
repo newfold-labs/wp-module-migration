@@ -60,10 +60,19 @@ class UIReport {
 						echo '<li>';
 						echo '<h3>' . esc_html( $step ) . '</h3>';
 						foreach ( $values as $key => $value ) {
-							if ( ! empty( $value ) ) {
+							if ( ! empty( $value ) && ! is_array( $value ) ) {
 								echo '<ul>';
 								echo '<li><strong>' . esc_html( $key ) . '</strong>: ' . esc_html( $value ) . '</li>';
 								echo '</ul>';
+							} elseif ( is_array( $value ) && ! empty( $value ) ) {
+								echo '<ul>';
+								echo '<li><strong>' . esc_html( $key ) . '</strong>: ';
+								echo '<ul>';
+								foreach ( $value as $sub_key => $sub_value ) {
+									echo '<li>' . esc_html( $sub_key ) . ': ' . esc_html( $sub_value ) . '</li>';
+								}
+								echo '</ul>';
+								echo '</li>';
 							}
 						}
 						echo '</li>';

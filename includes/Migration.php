@@ -2,6 +2,7 @@
 namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\ModuleLoader\Container;
+use NewfoldLabs\WP\Module\Migration\RestApi\RestApi;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
 use NewfoldLabs\WP\Module\Migration\Services\UIReport;
 
@@ -26,24 +27,6 @@ class Migration {
 	protected $insta_service;
 
 	/**
-	 * Array map of API controllers.
-	 *
-	 * @var array
-	 */
-	protected $controllers = array(
-		'NewfoldLabs\\WP\\Module\\Migration\\RestApi\\MigrateController',
-	);
-
-	/**
-	 * Option settings
-	 *
-	 * @var array
-	 */
-	protected $options = array(
-		'nfd_migrate_site' => 'boolean',
-	);
-
-	/**
 	 * Identifier for script handle.
 	 *
 	 * @var string
@@ -64,7 +47,7 @@ class Migration {
 				return $listeners;
 			}
 		);
-		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		new RestAPI();
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
 		if ( $container->plugin()->id === 'bluehost' ) {
@@ -84,24 +67,13 @@ class Migration {
 	}
 
 	/**
-	 * Registering the rest routes
-	 */
-	public function register_routes() {
-		foreach ( $this->controllers as $controller ) {
-			$rest_api = new $controller();
-			$rest_api->register_routes();
-		}
-		self::register_settings();
-	}
-
-	/**
 	 * Triggers on instawp connect installation
 	 *
 	 * @param boolean $option status of migration.
 	 */
 	public function on_update_nfd_migrate_site( $option ) {
 		$this->insta_service = new InstaMigrateService();
-		$this->insta_service->install_instawp_connect();
+		$this->insta_service->run();
 		return $option;
 	}
 
@@ -116,23 +88,6 @@ class Migration {
 			update_option( 'nfd_show_migration_steps', true );
 		}
 		return $new_option;
-	}
-
-	/**
-	 * Register settings.
-	 */
-	public function register_settings() {
-		foreach ( $this->options as $option => $type ) {
-			\register_setting(
-				'general',
-				$option,
-				array(
-					'show_in_rest' => true,
-					'type'         => $type,
-					'description'  => __( 'NFD migration Options', 'wp-module-migration' ),
-				)
-			);
-		}
 	}
 
 	/**
@@ -152,7 +107,7 @@ class Migration {
 	 */
 	public function wordpress_migration_tool() {
 		$this->insta_service = new InstaMigrateService();
-		$response            = $this->insta_service->install_instawp_connect();
+		$response            = $this->insta_service->run();
 		if ( ! is_wp_error( $response ) ) {
 			wp_safe_redirect( $response['redirect_url'] );
 		} else {

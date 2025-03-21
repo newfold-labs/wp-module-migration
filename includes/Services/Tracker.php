@@ -1,6 +1,8 @@
 <?php
 namespace NewfoldLabs\WP\Module\Migration\Services;
 
+use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
+
 /**
  * Class to track migrations steps.
  *
@@ -50,10 +52,10 @@ class Tracker {
 	/**
 	 * Update the tracking file with the current step status
 	 *
-	 * @param array $step the step to update.
+	 * @param Class $step the step to update.
 	 * @return bool
 	 */
-	public function update_track( $step = array() ) {
+	public function update_track( AbstractStep $step  ) {
 		global $wp_filesystem;
 
 		// Make sure that the above variable is properly setup.
@@ -62,11 +64,18 @@ class Tracker {
 
 		$updated       = false;
 		$track_content = $this->get_track_content();
-		if ( count( $step ) > 0 ) {
-			$currentKey                  = array_key_first( $step );
-			$step[ $currentKey ]['time'] = current_time( 'mysql', 1 );
-			$updated_track               = array_replace( $track_content, $step );
-			$updated                     = $wp_filesystem->put_contents( $this->get_full_path(), wp_json_encode( $updated_track ) );
+		if ( $step && is_array( $track_content ) ) {
+			$datas = array(
+				$step->get_step_slug() => array(
+					'status'  => $step->get_status(),
+					'intents' => $step->get_retry_count() + 1,
+					'message' => $step->get_response()['message'] ?? '',
+					'data'    => $step->get_data(),
+					'time'    => current_time( 'mysql', 1 ),
+				),
+			);
+			$updated_track = array_replace( $track_content, $datas );
+			$updated       = $wp_filesystem->put_contents( $this->get_full_path(), wp_json_encode( $updated_track ) );
 		}
 
 		return $updated;
@@ -96,7 +105,7 @@ class Tracker {
 	 *
 	 * @return bool
 	 */
-	public function reset_track_file() {
+	public function reset() {
 		global $wp_filesystem;
 
 		// Make sure that the above variable is properly setup.

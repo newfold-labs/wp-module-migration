@@ -3,17 +3,26 @@ namespace NewfoldLabs\WP\Module\Migration\Listeners;
 
 use NewfoldLabs\WP\Module\Data\Listeners\Listener;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
+use NewfoldLabs\WP\Module\Migration\Steps\Push;
+use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
 
 /**
  * Monitors InstaWp options update
  */
 class InstaWpOptionsUpdates extends Listener {
 	/**
+	 * Tracker class instance.
+	 *
+	 * @var Tracker $tracker
+	 */
+	public $tracker;
+	/**
 	 * Register the hooks for the listener
 	 *
 	 * @return void
 	 */
 	public function register_hooks() {
+		$this->tracker = new Tracker();
 		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 2 );
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
 	}
@@ -21,45 +30,54 @@ class InstaWpOptionsUpdates extends Listener {
 	/**
 	 * Triggers events
 	 *
-	 * @param array $new_option status of migration
+	 * @param array $new_value status of migration
 	 * @param array $old_value previous status of migration
 	 */
-	public function on_update_instawp_last_migration_details( $new_option, $old_value ) {
-		if ( $old_value !== $new_option ) {
-			$tracker       = new Tracker();
-			$value_updated = $new_option['status'];
+	public function on_update_instawp_last_migration_details( $new_value, $old_value ) {
+		if ( $old_value !== $new_value ) {
+			$value_updated = $new_value['status'];
 
 			if ( 'completed' === $value_updated ) {
-				$tracker->update_track( array( 'LastMigrationDetails' => array( 'status' => 'completed' ) ) );
-				$this->push( 'migration_completed', wp_json_encode( $tracker->get_track_content() ) );
+				$migration_complete = new LastStep();
+				$migration_complete->set_status( $migration_complete->statuses['completed'] );
+				$this->tracker->update_track( $migration_complete );
+				$this->push( 'migration_completed', wp_json_encode( $this->tracker->get_track_content() ) );
 			} elseif ( 'failed' === $value_updated ) {
-				$tracker->update_track( array( 'LastMigrationDetails' => array( 'status' => 'failed' ) ) );
-				$this->push( 'migration_failed', wp_json_encode( $tracker->get_track_content() ) );
+				$migration_complete = new LastStep();
+				$migration_complete->set_status( $migration_complete->statuses['failed'] );
+				$this->tracker->update_track( $migration_complete );
+				$this->push( 'migration_failed', wp_json_encode( $this->tracker->get_track_content() ) );
 			} elseif ( 'aborted' === $value_updated ) {
-				$tracker->update_track( array( 'LastMigrationDetails' => array( 'status' => 'aborted' ) ) );
-				$this->push( 'migration_aborted', wp_json_encode( $tracker->get_track_content() ) );
+				$migration_complete = new LastStep();
+				$migration_complete->set_status( $migration_complete->statuses['aborted'] );
+				$this->tracker->update_track( $migration_complete );
+				$this->push( 'migration_aborted', wp_json_encode( $this->tracker->get_track_content() ) );
 			}
+
+			$push = new Push();
+			$push->set_status( $push->statuses['completed'] );
+			$this->tracker->update_track( $push );
 		}
 
-		return $new_option;
+		return $new_value;
 	}
 
 	/**
 	 * Listen instaWp option update to intercept the Push step and track it
 	 *
-	 * @param array $new_option status of migration
+	 * @param array $new_value status of migration
 	 * @param array $old_value previous status of migration
 	 * @return array
 	 */
-	public function on_update_instawp_migration_details( $new_option, $old_value ) {
-		if ( $old_value !== $new_option ) {
-			$tracker = new Tracker();
-			$mode    = isset( $new_option['mode'] ) ? $new_option['mode'] : '';
-			$status  = isset( $new_option['status'] ) ? $new_option['status'] : '';
+	public function on_update_instawp_migration_details( $new_value, $old_value ) {
+		if ( $old_value !== $new_value ) {
+			$mode    = isset( $new_value['mode'] ) ? $new_value['mode'] : '';
+			$status  = isset( $new_value['status'] ) ? $new_value['status'] : '';
 			if ( 'push' === $mode && 'initiated' === $status ) {
-				$tracker->update_track( array( 'PushingStep' => array( 'status' => 'running' ) ) );
+				$push = new Push();
+				$this->tracker->update_track( $push );
 			}
 		}
-		return $new_option;
+		return $new_value;
 	}
 }
