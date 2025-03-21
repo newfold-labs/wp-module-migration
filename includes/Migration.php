@@ -4,7 +4,7 @@ namespace NewfoldLabs\WP\Module\Migration;
 use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\RestApi\RestApi;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
-use NewfoldLabs\WP\Module\Migration\Services\UIReport;
+use NewfoldLabs\WP\Module\Migration\Reports\MigrationReport;
 
 /**
  * Class Migration
@@ -57,7 +57,7 @@ class Migration {
 		add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
 		add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
 
-		new UIReport();
+		new MigrationReport();
 	}
 
 	/**

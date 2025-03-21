@@ -1,5 +1,5 @@
 <?php
-namespace NewfoldLabs\WP\Module\Migration\Services;
+namespace NewfoldLabs\WP\Module\Migration\Reports;
 
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 
@@ -8,7 +8,7 @@ use NewfoldLabs\WP\Module\Migration\Services\Tracker;
  *
  * @package wp-module-migration
  */
-class UIReport {
+class MigrationReport {
 	/**
 	 * The tracker instance.
 	 *
