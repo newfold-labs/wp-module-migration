@@ -5,6 +5,7 @@ use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\RestApi\RestApi;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
 use NewfoldLabs\WP\Module\Migration\Reports\MigrationReport;
+use NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener;
 
 /**
  * Class Migration
@@ -40,13 +41,8 @@ class Migration {
 	 */
 	public function __construct( Container $container ) {
 		$this->container = $container;
-		add_filter(
-			'newfold_data_listeners',
-			function ( $listeners ) {
-				$listeners[] = '\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\InstaWpOptionsUpdates';
-				return $listeners;
-			}
-		);
+
+		new InstaWpOptionsUpdatesListener();
 
 		if ( Permissions::rest_is_authorized_admin() ) {
 			new RestApi();
@@ -178,30 +174,5 @@ class Migration {
 			'wp-module-migration',
 			NFD_MIGRATION_DIR . '/languages'
 		);
-	}
-
-	/**
-	 * Load WP dependencies into the page.
-	 */
-	public function register_assets() {
-		// don't enqueue build file until completed and needed
-		// $asset_file = NFD_MIGRATION_DIR . '/build/index.asset.php';
-		// $dir        = $this->container->plugin()->url . 'vendor/newfold-labs/wp-module-migration/';
-		// if ( file_exists( $asset_file ) ) {
-		// $asset = require $asset_file;
-		// \wp_register_script(
-		// self::$handle,
-		// $dir . 'build/index.js',
-		// array_merge( $asset['dependencies'], array() ),
-		// $asset['version'],
-		// true
-		// );
-		// }
-		// \wp_set_script_translations(
-		// self::$handle,
-		// 'wp-module-migration',
-		// NFD_MIGRATION_DIR . '/languages'
-		// );
-		// \wp_enqueue_script( self::$handle );
 	}
 }
