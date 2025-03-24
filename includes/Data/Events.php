@@ -10,7 +10,7 @@ final class Events {
 	 *
 	 * @var array
 	 */
-	protected static $category = array( 'nfd_migration' );
+	protected static $category = array( 'WP\Module\Migration\Listeners\Wonder_Start' );
 
 	/**
 	 * List of valid actions that an event can perform.
