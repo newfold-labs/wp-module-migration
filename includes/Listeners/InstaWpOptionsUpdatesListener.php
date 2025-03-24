@@ -39,9 +39,10 @@ class InstaWpOptionsUpdatesListener {
 	 *
 	 * @param string $action action/key for the event.
 	 * @param array  $data   data to be sent with the event.
+	 * @return WP_REST_Response|WP_Error
 	 */
 	public function push( $action, $data ) {
-		EventService::send(
+		return EventService::send(
 			array(
 				'category' => Events::get_category()[0],
 				'action'   => $action,
@@ -68,17 +69,17 @@ class InstaWpOptionsUpdatesListener {
 				$migration_complete = new LastStep();
 				$migration_complete->set_status( $migration_complete->statuses['completed'] );
 				$this->tracker->update_track( $migration_complete );
-				$this->push( 'migration_completed', wp_json_encode( $this->tracker->get_track_content() ) );
+				$this->push( 'migration_completed', $this->tracker->get_track_content() );
 			} elseif ( 'failed' === $value_updated ) {
 				$migration_complete = new LastStep();
 				$migration_complete->set_status( $migration_complete->statuses['failed'] );
 				$this->tracker->update_track( $migration_complete );
-				$this->push( 'migration_failed', wp_json_encode( $this->tracker->get_track_content() ) );
+				$this->push( 'migration_failed', $this->tracker->get_track_content() );
 			} elseif ( 'aborted' === $value_updated ) {
 				$migration_complete = new LastStep();
 				$migration_complete->set_status( $migration_complete->statuses['aborted'] );
 				$this->tracker->update_track( $migration_complete );
-				$this->push( 'migration_aborted', wp_json_encode( $this->tracker->get_track_content() ) );
+				$this->push( 'migration_aborted', $this->tracker->get_track_content() );
 			}
 		}
 
