@@ -46,6 +46,9 @@ class Migration {
 
 		if ( Permissions::rest_is_authorized_admin() ) {
 			new RestApi();
+		}
+
+		if ( Permissions::is_authorized_admin() ) {
 			new MigrationReport();
 
 			add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
