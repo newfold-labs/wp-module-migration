@@ -10,7 +10,7 @@ final class Events {
 	 *
 	 * @var array
 	 */
-	protected static $category = array( 'WP\Module\Migration\Listeners\Wonder_Start' );
+	protected static $category = array( 'Wonder_Start' );
 
 	/**
 	 * List of valid actions that an event can perform.
