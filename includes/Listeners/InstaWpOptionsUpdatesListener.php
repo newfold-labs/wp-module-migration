@@ -3,9 +3,12 @@ namespace NewfoldLabs\WP\Module\Migration\Listeners;
 
 use NewfoldLabs\WP\Module\Migration\Data\Events;
 use NewfoldLabs\WP\Module\Migration\Services\EventService;
+use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 use NewfoldLabs\WP\Module\Migration\Steps\Push;
+use NewfoldLabs\WP\Module\Migration\Steps\PageSpeed;
 use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
+
 
 /**
  * Monitors InstaWp options update
@@ -33,6 +36,7 @@ class InstaWpOptionsUpdatesListener {
 		$this->tracker = new Tracker();
 		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 2 );
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
+		add_action( 'add_option_instawp_last_migration_details', array( $this, 'after_migration_steps' ), 10, 2 );
 	}
 	/**
 	 * Push event with tracking file content.
@@ -58,6 +62,7 @@ class InstaWpOptionsUpdatesListener {
 	 * @param array $old_value previous status of migration
 	 */
 	public function on_update_instawp_last_migration_details( $new_value, $old_value ) {
+		return $new_value;
 		if ( $old_value !== $new_value ) {
 			$value_updated = $new_value['status'];
 			if ( 'completed' === $value_updated || 'failed' === $value_updated || 'aborted' === $value_updated ) {
@@ -103,5 +108,45 @@ class InstaWpOptionsUpdatesListener {
 			}
 		}
 		return $new_value;
+	}
+
+	public function after_migration_steps( $option, $new_value ) {
+		$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
+		if ( ! empty( $migrate_group_uuid ) ) {
+			$token = UtilityService::get_insta_api_key( BRAND_PLUGIN );
+			if ( $token && $migrate_group_uuid ) {
+				error_log( 'calling instawp api' );
+				$response = wp_remote_get(
+					'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
+					array(
+						'headers' => array(
+							'Authorization' => 'Bearer ' . $token,
+						)
+					)
+				);
+
+				if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
+					$body = wp_remote_retrieve_body( $response );
+					$data = json_decode( $body, true );
+					if ( $data && is_array( $data ) ) {
+						if ( isset( $data['status'] ) && $data['status'] && isset( $data['data']['source_site_url'] ) ) {
+							$source_site_url = $data['data']['source_site_url'];
+
+							//speedindex source site
+							//domainhost
+							//speedindex destination site
+
+						}
+					} else {
+						error_log( 'Error decoding response: ' . json_last_error_msg() );
+					}
+				} else {
+					error_log( 'Error in response: ' . $response->get_error_message() );
+				}
+			}
+
+			
+		}
+
 	}
 }
