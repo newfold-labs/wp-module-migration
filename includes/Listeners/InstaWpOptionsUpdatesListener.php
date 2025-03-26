@@ -88,6 +88,7 @@ class InstaWpOptionsUpdatesListener {
 								$source_hosting_info = new SourceHostingInfo( $data['data']['source_site_url'] );
 								$push->set_status( $push->statuses[ $migration_status ] );
 								$this->tracker->update_track( $push );
+                                $this->tracker->update_track( $source_hosting_info );
 							}
 
 							if ( 'completed' === $migration_status ) {
