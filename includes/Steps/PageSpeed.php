@@ -3,6 +3,7 @@
 namespace NewfoldLabs\WP\Module\Migration\Steps;
 
 use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
+use NewfoldLabs\WP\Module\Migration\Services\PageSpeedService;
 
 /**
  * Get Speed Index by PageSpeed api for url.
@@ -37,6 +38,20 @@ class PageSpeed extends AbstractStep {
 	 * @return void
 	 */
 	protected function run() {
-		error_log( $this->get_step_slug() . ' running for ' . $this->url );
+		$pagespeed_service = new PageSpeedService( $this->url );
+		$pagespeed         = $pagespeed_service->get_pagespeed();
+		$this->set_data( 'url', $this->url );
+		if ( isset( $pagespeed['speedIndex'] ) ) {
+			$this->set_data( 'speedIndex', $pagespeed['speedIndex'] );
+			$this->success();
+		} else {
+			$this->set_response(
+				array(
+					'message' => $pagespeed['message'],
+				)
+			);
+			$this->retry();
+
+		}
 	}
 }

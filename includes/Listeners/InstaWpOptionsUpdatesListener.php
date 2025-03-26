@@ -36,6 +36,8 @@ class InstaWpOptionsUpdatesListener {
 		$this->tracker = new Tracker();
 		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 2 );
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
+		add_action( 'nfd_migration_page_speed_source', array( $this, 'page_speed_source' ), 10 );
+		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10 );
 	}
 	/**
 	 * Push event with tracking file content.
@@ -66,13 +68,12 @@ class InstaWpOptionsUpdatesListener {
 			if ( ! empty( $migrate_group_uuid ) ) {
 				$token = UtilityService::get_insta_api_key( BRAND_PLUGIN );
 				if ( $token && $migrate_group_uuid ) {
-					error_log( 'calling instawp api' );
 					$response = wp_remote_get(
 						'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
 						array(
 							'headers' => array(
 								'Authorization' => 'Bearer ' . $token,
-							)
+							),
 						)
 					);
 
@@ -90,13 +91,15 @@ class InstaWpOptionsUpdatesListener {
 
 							if ( isset( $data['data']['source_site_url'] ) ) {
 								$source_site_url = $data['data']['source_site_url'];
-	
-								error_log( 'get source url' );
-								//domain_host
-								//speedindex source site
-								//speedindex destination site
+
+								if ( ! wp_next_scheduled( 'nfd_migration_page_speed_source' ) ) {
+									wp_schedule_single_event( time() + 60, 'nfd_migration_page_speed_source', array( 'source_site_url' => $source_site_url ) );
+								}
+								if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
+									wp_schedule_single_event( time() + 120, 'nfd_migration_page_speed_destination' );
+								}
 							}
-				
+
 							if ( 'completed' === $migration_status ) {
 								$migration_complete = new LastStep();
 								$migration_complete->set_status( $migration_complete->statuses['completed'] );
@@ -113,12 +116,7 @@ class InstaWpOptionsUpdatesListener {
 								$this->tracker->update_track( $migration_complete );
 								$this->push( 'migration_aborted', $this->tracker->get_track_content() );
 							}
-							
-						} else {
-							error_log( 'Error decoding response: ' . json_last_error_msg() );
 						}
-					} else {
-						error_log( 'Error in response: ' . $response->get_error_message() );
 					}
 				}
 			}
@@ -145,44 +143,31 @@ class InstaWpOptionsUpdatesListener {
 		}
 		return $new_value;
 	}
-
-	public function after_migration_steps( $option, $new_value ) {
-		$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
-		if ( ! empty( $migrate_group_uuid ) ) {
-			$token = UtilityService::get_insta_api_key( BRAND_PLUGIN );
-			if ( $token && $migrate_group_uuid ) {
-				error_log( 'calling instawp api' );
-				$response = wp_remote_get(
-					'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
-					array(
-						'headers' => array(
-							'Authorization' => 'Bearer ' . $token,
-						)
-					)
-				);
-
-				if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
-					$body = wp_remote_retrieve_body( $response );
-					$data = json_decode( $body, true );
-					if ( $data && is_array( $data ) ) {
-						if ( isset( $data['status'] ) && $data['status'] && isset( $data['data']['source_site_url'] ) ) {
-							$source_site_url = $data['data']['source_site_url'];
-
-							//speedindex source site
-							//speedindex destination site
-							$source_url_pagespeed = new PageSpeed( $source_site_url, 'source' );
-
-						}
-					} else {
-						error_log( 'Error decoding response: ' . json_last_error_msg() );
-					}
-				} else {
-					error_log( 'Error in response: ' . $response->get_error_message() );
-				}
-			}
-
-			
+	/**
+	 * Get page speed for source site.
+	 *
+	 * @param string $source_site_url source site url.
+	 * @return void
+	 */
+	public function page_speed_source( $source_site_url ) {
+		$source_url_pagespeed = new PageSpeed( $source_site_url, 'source' );
+		if ( ! $source_url_pagespeed->failed() ) {
+			$source_url_pagespeed->set_status( $source_url_pagespeed->statuses['completed'] );
 		}
 
+		$this->tracker->update_track( $source_url_pagespeed );
+	}
+	/**
+	 * Get page speed for source site.
+	 *
+	 * @return void
+	 */
+	public function page_speed_destination() {
+		$source_url_pagespeed = new PageSpeed( site_url(), 'destination' );
+		if ( ! $source_url_pagespeed->failed() ) {
+			$source_url_pagespeed->set_status( $source_url_pagespeed->statuses['completed'] );
+		}
+
+		$this->tracker->update_track( $source_url_pagespeed );
 	}
 }
