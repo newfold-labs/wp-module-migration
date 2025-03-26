@@ -8,6 +8,7 @@ use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 use NewfoldLabs\WP\Module\Migration\Steps\Push;
 use NewfoldLabs\WP\Module\Migration\Steps\PageSpeed;
 use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
+use NewfoldLabs\WP\Module\Migration\Steps\SourceHostingInfo;
 
 
 /**
@@ -63,16 +64,16 @@ class InstaWpOptionsUpdatesListener {
 	public function on_update_instawp_last_migration_details( $new_value, $old_value ) {
 		if ( $old_value !== $new_value ) {
 			$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
+
 			if ( ! empty( $migrate_group_uuid ) ) {
 				$token = UtilityService::get_insta_api_key( BRAND_PLUGIN );
 				if ( $token && $migrate_group_uuid ) {
-					error_log( 'calling instawp api' );
 					$response = wp_remote_get(
 						'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
 						array(
 							'headers' => array(
 								'Authorization' => 'Bearer ' . $token,
-							)
+							),
 						)
 					);
 
@@ -83,20 +84,12 @@ class InstaWpOptionsUpdatesListener {
 							$migration_status = $data['data']['status'];
 
 							if ( 'completed' === $migration_status || 'failed' === $migration_status || 'aborted' === $migration_status ) {
-								$push = new Push();
-								$push->set_status( $push->statuses['completed'] );
+								$push                = new Push();
+								$source_hosting_info = new SourceHostingInfo( $data['data']['source_site_url'] );
+								$push->set_status( $push->statuses[ $migration_status ] );
 								$this->tracker->update_track( $push );
 							}
 
-							if ( isset( $data['data']['source_site_url'] ) ) {
-								$source_site_url = $data['data']['source_site_url'];
-	
-								error_log( 'get source url' );
-								//domain_host
-								//speedindex source site
-								//speedindex destination site
-							}
-				
 							if ( 'completed' === $migration_status ) {
 								$migration_complete = new LastStep();
 								$migration_complete->set_status( $migration_complete->statuses['completed'] );
@@ -113,12 +106,11 @@ class InstaWpOptionsUpdatesListener {
 								$this->tracker->update_track( $migration_complete );
 								$this->push( 'migration_aborted', $this->tracker->get_track_content() );
 							}
-							
 						} else {
-							error_log( 'Error decoding response: ' . json_last_error_msg() );
+							//error_log( 'Error decoding response: ' . json_last_error_msg() );
 						}
 					} else {
-						error_log( 'Error in response: ' . $response->get_error_message() );
+						//error_log( 'Error in response: ' . $response->get_error_message() );
 					}
 				}
 			}
@@ -151,13 +143,13 @@ class InstaWpOptionsUpdatesListener {
 		if ( ! empty( $migrate_group_uuid ) ) {
 			$token = UtilityService::get_insta_api_key( BRAND_PLUGIN );
 			if ( $token && $migrate_group_uuid ) {
-				error_log( 'calling instawp api' );
+				//error_log( 'calling instawp api' );
 				$response = wp_remote_get(
 					'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
 					array(
 						'headers' => array(
 							'Authorization' => 'Bearer ' . $token,
-						)
+						),
 					)
 				);
 
@@ -168,21 +160,18 @@ class InstaWpOptionsUpdatesListener {
 						if ( isset( $data['status'] ) && $data['status'] && isset( $data['data']['source_site_url'] ) ) {
 							$source_site_url = $data['data']['source_site_url'];
 
-							//speedindex source site
-							//speedindex destination site
+							// speedindex source site
+							// speedindex destination site
 							$source_url_pagespeed = new PageSpeed( $source_site_url, 'source' );
 
 						}
 					} else {
-						error_log( 'Error decoding response: ' . json_last_error_msg() );
+						//error_log( 'Error decoding response: ' . json_last_error_msg() );
 					}
 				} else {
-					error_log( 'Error in response: ' . $response->get_error_message() );
+					//error_log( 'Error in response: ' . $response->get_error_message() );
 				}
 			}
-
-			
 		}
-
 	}
 }

@@ -37,6 +37,5 @@ class PageSpeed extends AbstractStep {
 	 * @return void
 	 */
 	protected function run() {
-		error_log( $this->get_step_slug() . ' running for ' . $this->url );
 	}
 }
