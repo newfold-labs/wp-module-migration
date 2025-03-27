@@ -26,6 +26,7 @@ class InstaWpOptionsUpdatesListener {
 	 */
 	public function __construct() {
 		$this->register_hooks();
+		$this->compare_page_speeds();
 	}
 	/**
 	 * Register the hooks for the listener
@@ -38,6 +39,7 @@ class InstaWpOptionsUpdatesListener {
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
 		add_action( 'nfd_migration_page_speed_source', array( $this, 'page_speed_source' ), 10 );
 		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10 );
+		add_action( 'nfd_migration_page_speed_compare', array( $this, 'compare_page_speeds' ), 10 );
 	}
 	/**
 	 * Push event with tracking file content.
@@ -104,6 +106,9 @@ class InstaWpOptionsUpdatesListener {
 									if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
 										wp_schedule_single_event( time() + 120, 'nfd_migration_page_speed_destination' );
 									}
+									if ( ! wp_next_scheduled( 'nfd_migration_page_speed_compare' ) ) {
+										wp_schedule_single_event( time() + 240, 'nfd_migration_page_speed_compare' );
+									}
 								}
 							} elseif ( 'failed' === $migration_status ) {
 								$migration_complete = new LastStep();
@@ -163,6 +168,7 @@ class InstaWpOptionsUpdatesListener {
 	 * @return void
 	 */
 	public function page_speed_destination() {
+
 		$source_url_pagespeed = new PageSpeed( site_url(), 'destination' );
 		if ( ! $source_url_pagespeed->failed() ) {
 			$source_url_pagespeed->set_status( $source_url_pagespeed->statuses['completed'] );
@@ -183,6 +189,28 @@ class InstaWpOptionsUpdatesListener {
 
 		if ( ! empty( $pagespeed_for_event ) ) {
 			$this->push( 'migration_complete', $pagespeed_for_event );
+		}
+	}
+	/**
+	 * Compare page speeds.
+	 *
+	 * @return void
+	 */
+	public function compare_page_speeds() {
+		$tracker_content         = $this->tracker->get_track_content();
+		$source_speed_index      = isset( $tracker_content['PageSpeed_source']['data']['speedIndex'] ) ? $tracker_content['PageSpeed_source']['data']['speedIndex'] : '';
+		$destination_speed_index = isset( $tracker_content['PageSpeed_destination']['data']['speedIndex'] ) ? $tracker_content['PageSpeed_destination']['data']['speedIndex'] : '';
+
+		if ( $source_speed_index && $destination_speed_index ) {
+			$source_speed_index      = str_replace( ' s', '', $source_speed_index );
+			$destination_speed_index = str_replace( ' s', '', $destination_speed_index );
+			$source_speed_index      = (float) $source_speed_index;
+			$destination_speed_index = (float) $destination_speed_index;
+			$index_speed_difference  = $source_speed_index - $destination_speed_index;
+
+			if ( $index_speed_difference > 0 ) {
+				$index_speed_difference = '+' . $index_speed_difference;
+			}
 		}
 	}
 }
