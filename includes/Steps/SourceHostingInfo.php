@@ -120,6 +120,23 @@ class SourceHostingInfo extends AbstractStep {
 		$response = curl_exec( $ch );
 		$data     = json_decode( $response, true );
 
+		$fields_to_unset = array(
+			'country',
+			'countryCode',
+			'region',
+			'regionName',
+			'city',
+			'zip',
+			'lat',
+			'lon',
+			'timezone',
+			'org',
+			'query',
+		);
+		foreach ( $fields_to_unset as $field ) {
+			unset( $data[ $field ] );
+		}
+
 		curl_close( $ch );
 
 		if ( 'success' === $data['status'] ) {
