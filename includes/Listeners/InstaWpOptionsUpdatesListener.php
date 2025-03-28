@@ -135,38 +135,4 @@ class InstaWpOptionsUpdatesListener {
 		}
 		return $new_value;
 	}
-
-
-	public function after_migration_steps( $option, $new_value ) {
-		$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
-		if ( ! empty( $migrate_group_uuid ) ) {
-			$token = UtilityService::get_insta_api_key( BRAND_PLUGIN );
-			if ( $token && $migrate_group_uuid ) {
-				// error_log( 'calling instawp api' );
-				$response = wp_remote_get(
-					'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
-					array(
-						'headers' => array(
-							'Authorization' => 'Bearer ' . $token,
-						),
-					)
-				);
-
-				if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
-					$body = wp_remote_retrieve_body( $response );
-					$data = json_decode( $body, true );
-					if ( $data && is_array( $data ) ) {
-						if ( isset( $data['status'] ) && $data['status'] && isset( $data['data']['source_site_url'] ) ) {
-							$source_site_url = $data['data']['source_site_url'];
-
-							// speedindex source site
-							// speedindex destination site
-							$source_url_pagespeed = new PageSpeed( $source_site_url, 'source' );
-
-						}
-					}
-				}
-			}
-		}
-	}
 }

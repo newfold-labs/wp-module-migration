@@ -29,7 +29,7 @@ class SourceHostingInfo extends AbstractStep {
 	/**
 	 * Construct. Init basic parameters.
 	 *
-	 * @param string $insta_api_key instawp api key.
+	 * @param string $source_host_url Source host url.
 	 */
 	public function __construct( $source_host_url ) {
 		$this->source_host_url = $source_host_url;
@@ -70,6 +70,12 @@ class SourceHostingInfo extends AbstractStep {
 		$this->set_data( 'SourceHostingData', $this->hosting_info );
 	}
 
+	/**
+	 * Get IP address from domain.
+	 *
+	 * @param string $domain
+	 * @return string The IP Address.
+	 */
 	public function get_ip_from_domain( string $domain ): string {
 		$domain = $this->get_plain_domain( $domain );
 
@@ -99,7 +105,7 @@ class SourceHostingInfo extends AbstractStep {
 	}
 
 	/**
-	 * Get the informations from an IP address
+	 * Get the informations from an IP address.
 	 *
 	 * @param string $ip The IP address to get the informations from.
 	 * @return array The informations.
@@ -166,7 +172,7 @@ class SourceHostingInfo extends AbstractStep {
 	}
 
 	/**
-	 * Get the plain domain from a domain
+	 * Get the plain domain from a domain.
 	 *
 	 * @param string $domain The domain to get the plain domain from.
 	 * @return string The plain domain.
