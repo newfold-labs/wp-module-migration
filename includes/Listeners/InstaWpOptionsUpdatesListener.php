@@ -25,7 +25,6 @@ class InstaWpOptionsUpdatesListener {
 	 */
 	public function __construct() {
 		$this->register_hooks();
-		$this->compare_page_speeds();
 	}
 	/**
 	 * Register the hooks for the listener
