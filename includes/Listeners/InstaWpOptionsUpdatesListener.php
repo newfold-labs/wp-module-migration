@@ -5,7 +5,6 @@ use NewfoldLabs\WP\Module\Migration\Data\Events;
 use NewfoldLabs\WP\Module\Migration\Services\EventService;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
-use NewfoldLabs\WP\Module\Migration\Services\EmailService;
 use NewfoldLabs\WP\Module\Migration\Steps\Push;
 use NewfoldLabs\WP\Module\Migration\Steps\PageSpeed;
 use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
@@ -39,7 +38,6 @@ class InstaWpOptionsUpdatesListener {
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
 		add_action( 'nfd_migration_page_speed_source', array( $this, 'page_speed_source' ), 10 );
 		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10 );
-		add_action( 'nfd_migration_page_speed_compare', array( $this, 'compare_page_speeds' ), 10 );
 	}
 	/**
 	 * Push event with tracking file content.
@@ -105,9 +103,6 @@ class InstaWpOptionsUpdatesListener {
 									}
 									if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
 										wp_schedule_single_event( time() + 120, 'nfd_migration_page_speed_destination' );
-									}
-									if ( ! wp_next_scheduled( 'nfd_migration_page_speed_compare' ) ) {
-										wp_schedule_single_event( time() + 240, 'nfd_migration_page_speed_compare' );
 									}
 								}
 							} elseif ( 'failed' === $migration_status ) {
@@ -176,55 +171,8 @@ class InstaWpOptionsUpdatesListener {
 
 		$this->tracker->update_track( $source_url_pagespeed );
 
-		$tracker_content     = $this->tracker->get_track_content();
-		$pagespeed_for_event = array();
-
-		if ( isset( $tracker_content['PageSpeed_source'] ) ) {
-			$pagespeed_for_event['PageSpeed_source'] = $tracker_content['PageSpeed_source'];
-		}
-
-		if ( isset( $tracker_content['PageSpeed_destination'] ) ) {
-			$pagespeed_for_event['PageSpeed_destination'] = $tracker_content['PageSpeed_destination'];
-		}
-
 		if ( ! empty( $pagespeed_for_event ) ) {
 			$this->push( 'migration_complete', $pagespeed_for_event );
-		}
-	}
-	/**
-	 * Compare page speeds.
-	 *
-	 * @return void
-	 */
-	public function compare_page_speeds() {
-		$tracker_content         = $this->tracker->get_track_content();
-		$source_speed_index      = isset( $tracker_content['PageSpeed_source']['data']['speedIndex'] ) ? $tracker_content['PageSpeed_source']['data']['speedIndex'] : '';
-		$destination_speed_index = isset( $tracker_content['PageSpeed_destination']['data']['speedIndex'] ) ? $tracker_content['PageSpeed_destination']['data']['speedIndex'] : '';
-
-		if ( $source_speed_index && $destination_speed_index ) {
-			$source_speed_index      = str_replace( ' s', '', $source_speed_index );
-			$destination_speed_index = str_replace( ' s', '', $destination_speed_index );
-			$source_speed_index      = (float) $source_speed_index;
-			$destination_speed_index = (float) $destination_speed_index;
-			$index_speed_difference  = $source_speed_index - $destination_speed_index;
-
-			if ( $index_speed_difference > 0 ) {
-				$email_settings = array(
-					'to'      => get_option( 'admin_email' ),
-					'subject' => __( 'Migration - Speed Index Improvement', 'wp-module-migration' ),
-					'body'    => sprintf(
-						// translators: %s is the speed index difference.
-						__( 'The speed index of the destination site is <strong>%s</strong> seconds faster than the source site.', 'wp-module-migration' ),
-						$index_speed_difference
-					),
-					'header'  => 'Content-Type: text/html' . "\r\n",
-				);
-
-				if ( ! empty( $email_settings['to'] ) ) {
-					$email = new EmailService( $email_settings );
-					$email->send();
-				}
-			}
 		}
 	}
 }
