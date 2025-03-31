@@ -5,6 +5,7 @@ use NewfoldLabs\WP\Module\Migration\Data\Events;
 use NewfoldLabs\WP\Module\Migration\Services\EventService;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
+use NewfoldLabs\WP\Module\Migration\Services\EmailService;
 use NewfoldLabs\WP\Module\Migration\Steps\Push;
 use NewfoldLabs\WP\Module\Migration\Steps\PageSpeed;
 use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
@@ -25,6 +26,7 @@ class InstaWpOptionsUpdatesListener {
 	 */
 	public function __construct() {
 		$this->register_hooks();
+		$this->compare_page_speeds();
 	}
 	/**
 	 * Register the hooks for the listener
@@ -207,17 +209,20 @@ class InstaWpOptionsUpdatesListener {
 			$index_speed_difference  = $source_speed_index - $destination_speed_index;
 
 			if ( $index_speed_difference > 0 ) {
-				$admin_email = get_option( 'admin_email' );
-				$subject     = __( 'InstaWP Migration - Speed Index Improvement', 'wp-module-migration' );
-				$message     = sprintf(
-					// translators: %s is the speed index difference.
-					__( 'The speed index of the destination site is <strong>%s</strong> seconds faster than the source site.', 'wp-module-migration' ),
-					$index_speed_difference
+				$email_settings = array(
+					'to'      => get_option( 'admin_email' ),
+					'subject' => __( 'Migration - Speed Index Improvement', 'wp-module-migration' ),
+					'body'    => sprintf(
+						// translators: %s is the speed index difference.
+						__( 'The speed index of the destination site is <strong>%s</strong> seconds faster than the source site.', 'wp-module-migration' ),
+						$index_speed_difference
+					),
+					'header'  => 'Content-Type: text/html' . "\r\n",
 				);
-				$header = 'Content-Type: text/html' . "\r\n";
 
-				if ( $admin_email ) {
-					wp_mail( $admin_email, $subject, $message, $header );
+				if ( ! empty( $email_settings['to'] ) ) {
+					$email = new EmailService( $email_settings );
+					$email->send();
 				}
 			}
 		}
