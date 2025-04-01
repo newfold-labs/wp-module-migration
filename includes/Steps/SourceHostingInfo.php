@@ -73,7 +73,7 @@ class SourceHostingInfo extends AbstractStep {
 	/**
 	 * Get IP address from domain.
 	 *
-	 * @param string $domain
+	 * @param string $domain Domain url.
 	 * @return string The IP Address.
 	 */
 	public function get_ip_from_domain( string $domain ): string {
