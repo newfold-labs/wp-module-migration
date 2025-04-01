@@ -62,56 +62,56 @@ class InstaWpOptionsUpdatesListener {
 	 */
 	public function on_update_instawp_last_migration_details( $new_value, $old_value ) {
 
-        if ( $old_value !== $new_value ) {
-            $migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
-            if ( ! empty( $migrate_group_uuid ) ) {
-                $token = UtilityService::get_insta_api_key( BRAND_PLUGIN );
-                if ( $token && $migrate_group_uuid ) {
-                    $response = wp_remote_get(
-                        'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
-                        array(
-                            'headers' => array(
-                                'Authorization' => 'Bearer ' . $token,
-                            ),
-                        )
-                    );
+		if ( $old_value !== $new_value ) {
+			$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
+			if ( ! empty( $migrate_group_uuid ) ) {
+				$token = UtilityService::get_insta_api_key( BRAND_PLUGIN );
+				if ( $token && $migrate_group_uuid ) {
+					$response = wp_remote_get(
+						'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
+						array(
+							'headers' => array(
+								'Authorization' => 'Bearer ' . $token,
+							),
+						)
+					);
 
-                    if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
-                        $body = wp_remote_retrieve_body( $response );
-                        $data = json_decode( $body, true );
+					if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
+						$body = wp_remote_retrieve_body( $response );
+						$data = json_decode( $body, true );
 
-                        if ( $data && is_array( $data ) && isset( $data['status'] ) && $data['status'] ) {
-                            $migration_status = $data['data']['status'];
+						if ( $data && is_array( $data ) && isset( $data['status'] ) && $data['status'] ) {
+							$migration_status = $data['data']['status'];
 
-                            if ( 'completed' === $migration_status || 'failed' === $migration_status || 'aborted' === $migration_status ) {
-                                $push                = new Push();
-                                $source_hosting_info = new SourceHostingInfo( $data['data']['source_site_url'] );
-                                $push->set_status( $push->statuses[ $migration_status ] );
-                                $this->tracker->update_track( $push );
-                                $this->tracker->update_track( $source_hosting_info );
-                            }
+							if ( 'completed' === $migration_status || 'failed' === $migration_status || 'aborted' === $migration_status ) {
+								$push                = new Push();
+								$source_hosting_info = new SourceHostingInfo( $data['data']['source_site_url'] );
+								$push->set_status( $push->statuses[ $migration_status ] );
+								$this->tracker->update_track( $push );
+								$this->tracker->update_track( $source_hosting_info );
+							}
 
-                            if ( 'completed' === $migration_status ) {
-                                $migration_complete = new LastStep();
-                                $migration_complete->set_status( $migration_complete->statuses['completed'] );
-                                $this->tracker->update_track( $migration_complete );
-                                $this->push( 'migration_completed', $this->tracker->get_track_content() );
-                            } elseif ( 'failed' === $migration_status ) {
-                                $migration_complete = new LastStep();
-                                $migration_complete->set_status( $migration_complete->statuses['failed'] );
-                                $this->tracker->update_track( $migration_complete );
-                                $this->push( 'migration_failed', $this->tracker->get_track_content() );
-                            } elseif ( 'aborted' === $migration_status ) {
-                                $migration_complete = new LastStep();
-                                $migration_complete->set_status( $migration_complete->statuses['aborted'] );
-                                $this->tracker->update_track( $migration_complete );
-                                $this->push( 'migration_aborted', $this->tracker->get_track_content() );
-                            }
-                        }
-                    }
-                }
-            }
-        }
+							if ( 'completed' === $migration_status ) {
+								$migration_complete = new LastStep();
+								$migration_complete->set_status( $migration_complete->statuses['completed'] );
+								$this->tracker->update_track( $migration_complete );
+								$this->push( 'migration_completed', $this->tracker->get_track_content() );
+							} elseif ( 'failed' === $migration_status ) {
+								$migration_complete = new LastStep();
+								$migration_complete->set_status( $migration_complete->statuses['failed'] );
+								$this->tracker->update_track( $migration_complete );
+								$this->push( 'migration_failed', $this->tracker->get_track_content() );
+							} elseif ( 'aborted' === $migration_status ) {
+								$migration_complete = new LastStep();
+								$migration_complete->set_status( $migration_complete->statuses['aborted'] );
+								$this->tracker->update_track( $migration_complete );
+								$this->push( 'migration_aborted', $this->tracker->get_track_content() );
+							}
+						}
+					}
+				}
+			}
+		}
 
 		return $new_value;
 	}
