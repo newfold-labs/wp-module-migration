@@ -87,7 +87,6 @@ class InstaWpOptionsUpdatesListener {
 								$push->set_status( $push->statuses['completed'] );
 								$this->tracker->update_track( $push );
 							}
-
 							if ( 'completed' === $migration_status ) {
 								$migration_complete = new LastStep();
 								$migration_complete->set_status( $migration_complete->statuses['completed'] );
@@ -120,7 +119,6 @@ class InstaWpOptionsUpdatesListener {
 				}
 			}
 		}
-
 		return $new_value;
 	}
 
