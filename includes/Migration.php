@@ -2,7 +2,10 @@
 namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\ModuleLoader\Container;
+use NewfoldLabs\WP\Module\Migration\RestApi\RestApi;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
+use NewfoldLabs\WP\Module\Migration\Reports\MigrationReport;
+use NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener;
 
 /**
  * Class Migration
@@ -25,24 +28,6 @@ class Migration {
 	protected $insta_service;
 
 	/**
-	 * Array map of API controllers.
-	 *
-	 * @var array
-	 */
-	protected $controllers = array(
-		'NewfoldLabs\\WP\\Module\\Migration\\RestApi\\MigrateController',
-	);
-
-	/**
-	 * Option settings
-	 *
-	 * @var array
-	 */
-	protected $options = array(
-		'nfd_migrate_site' => 'boolean',
-	);
-
-	/**
 	 * Identifier for script handle.
 	 *
 	 * @var string
@@ -56,39 +41,26 @@ class Migration {
 	 */
 	public function __construct( Container $container ) {
 		$this->container = $container;
-		add_filter(
-			'newfold_data_listeners',
-			function ( $listeners ) {
-				$listeners[] = '\\NewfoldLabs\\WP\\Module\\Migration\\Listeners\\Wonder_Start';
-				return $listeners;
+
+		new InstaWpOptionsUpdatesListener();
+
+		if ( Permissions::rest_is_authorized_admin() ) {
+			new RestApi();
+		}
+
+		if ( Permissions::is_authorized_admin() ) {
+			new MigrationReport();
+
+			add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
+
+			if ( $container->plugin()->id === 'bluehost' ) {
+				add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list.
+				add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 			}
-		);
-		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		}
+
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
-		if ( $container->plugin()->id === 'bluehost' ) {
-			add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list.
-			add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
-		}
-		add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
-		add_filter(
-			'load_script_translation_file',
-			array( $this, 'load_script_translation_file' ),
-			10,
-			3
-		);
-		add_action( 'load-toplevel_page_' . $container->plugin()->id, array( $this, 'register_assets' ) );
-	}
-
-	/**
-	 * Registering the rest routes
-	 */
-	public function register_routes() {
-		foreach ( $this->controllers as $controller ) {
-			$rest_api = new $controller();
-			$rest_api->register_routes();
-		}
-		self::register_settings();
 	}
 
 	/**
@@ -98,7 +70,7 @@ class Migration {
 	 */
 	public function on_update_nfd_migrate_site( $option ) {
 		$this->insta_service = new InstaMigrateService();
-		$this->insta_service->install_instawp_connect();
+		$this->insta_service->run();
 		return $option;
 	}
 
@@ -113,23 +85,6 @@ class Migration {
 			update_option( 'nfd_show_migration_steps', true );
 		}
 		return $new_option;
-	}
-
-	/**
-	 * Register settings.
-	 */
-	public function register_settings() {
-		foreach ( $this->options as $option => $type ) {
-			\register_setting(
-				'general',
-				$option,
-				array(
-					'show_in_rest' => true,
-					'type'         => $type,
-					'description'  => __( 'NFD migration Options', 'wp-module-migration' ),
-				)
-			);
-		}
 	}
 
 	/**
@@ -149,9 +104,9 @@ class Migration {
 	 */
 	public function wordpress_migration_tool() {
 		$this->insta_service = new InstaMigrateService();
-		$response            = $this->insta_service->install_instawp_connect();
+		$response            = $this->insta_service->run();
 		if ( ! is_wp_error( $response ) ) {
-			wp_redirect( $response['redirect_url'] );
+			wp_safe_redirect( $response['redirect_url'] );
 		} else {
 			wp_safe_redirect( admin_url( 'import.php' ) );
 		}
@@ -164,24 +119,28 @@ class Migration {
 	public function set_import_tools() {
 		global $pagenow;
 
-		\wp_register_script(
+		wp_register_script(
 			'nfd_migration_tool',
 			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js',
 			array( 'jquery' ),
-			'1.0',
+			NFD_MIGRATION_MODULE_VERSION,
 			true
 		);
-		\wp_register_style(
+		wp_register_style(
 			'nfd_migration_tool',
 			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css',
 			array(),
-			'1.0',
+			NFD_MIGRATION_MODULE_VERSION,
 			'all'
 		);
 
+		$is_ui_tracking_page = isset( $_GET['page'] ) && 'nfd-migration' === $_GET['page'] && 'admin.php' === $pagenow; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( $is_ui_tracking_page ) {
+			wp_enqueue_style( 'nfd_migration_tool' );
+		}
 		if ( 'import.php' === $pagenow ) {
-			\wp_enqueue_script( 'nfd_migration_tool' );
-			\wp_enqueue_style( 'nfd_migration_tool' );
+			wp_enqueue_script( 'nfd_migration_tool' );
+			wp_enqueue_style( 'nfd_migration_tool' );
 
 			$migration_data = array(
 				'migration_title'       => __( 'Preparing your site', 'wp-module-migration' ),
@@ -190,9 +149,9 @@ class Migration {
 				'restApiUrl'            => \esc_url_raw( \get_home_url() . '/index.php?rest_route=' ),
 				'restApiNonce'          => \wp_create_nonce( 'wp_rest' ),
 			);
-			\wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
+			wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
 
-			\wp_set_script_translations(
+			wp_set_script_translations(
 				'nfd_migration_tool',
 				'wp-module-migration',
 				NFD_MIGRATION_DIR . '/languages'
@@ -218,57 +177,5 @@ class Migration {
 			'wp-module-migration',
 			NFD_MIGRATION_DIR . '/languages'
 		);
-	}
-
-	/**
-	 * Load WP dependencies into the page.
-	 */
-	public function register_assets() {
-		// don't enqueue build file until completed and needed
-		// $asset_file = NFD_MIGRATION_DIR . '/build/index.asset.php';
-		// $dir        = $this->container->plugin()->url . 'vendor/newfold-labs/wp-module-migration/';
-		// if ( file_exists( $asset_file ) ) {
-		// 	$asset = require $asset_file;
-		// 	\wp_register_script(
-		// 		self::$handle,
-		// 		$dir . 'build/index.js',
-		// 		array_merge( $asset['dependencies'], array() ),
-		// 		$asset['version'],
-		// 		true
-		// 	);
-		// }
-		// \wp_set_script_translations(
-		// 	self::$handle,
-		// 	'wp-module-migration',
-		// 	NFD_MIGRATION_DIR . '/languages'
-		// );
-		// \wp_enqueue_script( self::$handle );
-	}
-
-	/**
-	 * Filters the file path for the JS translation JSON.
-	 *
-	 * If the script handle matches the module's handle, builds a custom path using
-	 * the languages directory, current locale, text domain, and a hash of the script.
-	 *
-	 * @param string $file   Default translation file path.
-	 * @param string $handle Script handle.
-	 * @param string $domain Text domain.
-	 * @return string Modified file path for the translation JSON.
-	 */
-	public function load_script_translation_file( $file, $handle, $domain ) {
-		if ( $handle === self::$handle ) {
-			$path   = NFD_MIGRATION_DIR . '/languages/';
-			$locale = determine_locale();
-
-			$file_base = 'default' === $domain
-				? $locale
-				: $domain . '-' . $locale;
-			$file      = $path . $file_base . '-' . md5( 'build/index.js' )
-						. '.json';
-
-		}
-
-		return $file;
 	}
 }

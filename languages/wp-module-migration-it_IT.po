@@ -19,66 +19,64 @@ msgstr ""
 "X-Crowdin-File: wp-module-migration.pot\n"
 "X-Crowdin-File-ID: 36\n"
 
-#: bootstrap.php:21
+#: bootstrap.php:20
 msgid "Migration"
 msgstr "Migrazione"
 
-#: includes/Migration.php:129
+#: includes/RestApi/RestApi.php:60
 msgid "NFD migration Options"
 msgstr "Opzioni di migrazione NFD"
 
-#: includes/Migration.php:141
+#: includes/Migration.php:98
 msgid "WordPress Migration Tool"
 msgstr "Strumento Di Migrazione Wordpress"
 
-#: includes/Migration.php:142
+#: includes/Migration.php:99
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migrare un sito WordPress esistente a questa istanza WordPress. Questo strumento farà una copia di un sito esistente e automaticamente importarlo in questa istanza WordPress <strong>Questo sovrascriverà tutti i contenuti.</strong>"
 
-#: includes/Migration.php:187
+#: includes/Migration.php:148
 msgid "Preparing your site"
 msgstr "Preparazione del tuo sito"
 
-#: includes/Migration.php:188
+#: includes/Migration.php:149
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Si prega di attendere alcuni secondi mentre otteniamo il tuo nuovo account pronto per importare il tuo sito WordPress esistente."
 
-#: includes/Migration.php:189
+#: includes/Migration.php:150
 msgid "WordPress Content"
 msgstr "Contenuto WordPress"
 
-#: includes/Services/InstaMigrateService.php:75
+#: includes/Services/InstaMigrateService.php:67
+#: includes/Steps/ConnectToInstaWp.php:48
 msgid "Website could not connect successfully."
 msgstr "Impossibile connettersi con successo."
 
-#: includes/Services/InstaMigrateService.php:90
-msgid "Connect plugin is installed but no connect ID."
-msgstr "Il plugin di connessione è installato ma nessun ID di connessione."
-
-#: includes/Services/InstaMigrateService.php:95
+#: includes/Services/InstaMigrateService.php:60
 msgid "Connect plugin is installed and ready to start the migration."
 msgstr "Il plugin di connessione è installato e pronto per avviare la migrazione."
 
-#: includes/Services/InstaMigrateService.php:103
-msgid "Migration might be finished."
-msgstr "La migrazione potrebbe essere terminata."
+#: includes/Reports/MigrationReport.php:42
+#: includes/Reports/MigrationReport.php:60
+msgid "Migration Report"
+msgstr ""
 
-#: build/index.js:1
-msgid "Let's migrate your existing site to your new account"
-msgstr "Migriamo il tuo sito esistente al tuo nuovo account"
+#: includes/Reports/MigrationReport.php:90
+msgid "No report available."
+msgstr ""
 
-#: build/index.js:1
-msgid "Migrating your site is easy with our free site import tool. Or, you can pay to have our Migrations Team experts handle your transfer for you."
-msgstr "Migrare il tuo sito è facile con il nostro strumento di importazione sito gratuito. Oppure, puoi pagare per avere i nostri esperti del Team Migrazioni a gestire il tuo trasferimento per te."
+#: includes/Services/InstaMigrateService.php:48
+msgid "Cannot get api key."
+msgstr ""
 
-#: build/index.js:1
-msgid "Learn more"
-msgstr "Scopri di più"
+#: includes/Services/InstaMigrateService.php:74
+msgid "Migration service could not be started."
+msgstr ""
 
-#: build/index.js:1
-msgid "Dismiss this card"
-msgstr "Ignora questa carta"
+#: includes/Steps/GetInstaWpApiKey.php:57
+msgid "Cannot get Api key."
+msgstr ""
 
-#: build/index.js:1
-msgid "Migrate your site"
-msgstr "Migra il tuo sito"
+#: includes/Steps/InstallActivateInstaWp.php:57
+msgid "Failed to install and activate the plugin"
+msgstr ""
