@@ -49,7 +49,7 @@ class MigrateController {
 	 */
 	public function connect_instawp() {
 		$insta_service = new InstaMigrateService();
-		$response      = $insta_service->install_instawp_connect();
+		$response      = $insta_service->run();
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
