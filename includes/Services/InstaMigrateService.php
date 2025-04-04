@@ -14,7 +14,7 @@ class InstaMigrateService {
 	/**
 	 * InstaWP Connect plugin API key used for connecting the instaWP plugin
 	 *
-	 * @var $insta_api_key
+	 * @var string $insta_api_key
 	 */
 	private $insta_api_key = '';
 
@@ -26,7 +26,7 @@ class InstaMigrateService {
 	private $tracker;
 
 	/**
-	 * Set required api keys for insta to initiate the migration
+	 * Set required API keys for insta to initiate the migration
 	 */
 	public function __construct() {
 		$this->tracker = new Tracker();
@@ -53,9 +53,9 @@ class InstaMigrateService {
 		$install_activate = new InstallActivateInstaWp();
 		$this->tracker->update_track( $install_activate );
 		if ( ! $install_activate->failed() ) {
-			$connectToInstaWp = new ConnectToInstaWp( $this->insta_api_key );
-			$this->tracker->update_track( $connectToInstaWp );
-			if ( ! $connectToInstaWp->failed() ) {
+			$connect_to_instawp = new ConnectToInstaWp( $this->insta_api_key );
+			$this->tracker->update_track( $connect_to_instawp );
+			if ( ! $connect_to_instawp->failed() ) {
 				return array(
 					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
 					'response'     => true,
@@ -63,7 +63,7 @@ class InstaMigrateService {
 				);
 			} else {
 				return new \WP_Error(
-					'Bad request',
+					'bad_request',
 					esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
 					array( 'status' => 400 )
 				);

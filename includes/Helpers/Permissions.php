@@ -1,5 +1,5 @@
 <?php
-namespace NewfoldLabs\WP\Module\Migration;
+namespace NewfoldLabs\WP\Module\Migration\Helpers;
 
 /**
  * Permissions and Authorization constants and utilities.

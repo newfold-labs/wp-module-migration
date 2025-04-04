@@ -4,7 +4,7 @@ import { wpLogin } from '../wp-module-support/utils.cy';
 const COMMAND_TIMEOUT = 60000;
 const pluginId = GetPluginId();
 
-if ( pluginId === 'bluehost' ) {
+if ( pluginId === 'bluehost' || pluginId === 'hostgator' ) {
 	describe(
 		'Migration Flow - Emulating AM Flow',
 		{ testIsolation: true },
@@ -21,10 +21,12 @@ if ( pluginId === 'bluehost' ) {
 			} );
 
 			it( 'Should load the Migration page successfully', () => {
+				const migrationDomain = `migrate.${ pluginId }.com`;
+
 				// Intercept API call to migration service
 				cy.intercept(
 					'GET',
-					'https://migrate.bluehost.com/api/v2/initial-data'
+					`https://${ migrationDomain }/api/v2/initial-data`
 				).as( 'migrationInit' );
 
 				// Visit the migration page
@@ -38,7 +40,7 @@ if ( pluginId === 'bluehost' ) {
 					.should( 'eq', 200 );
 
 				// Ensure the URL is correct
-				cy.url().should( 'include', 'migrate/bluehost?d_id=' );
+				cy.url().should( 'include', `migrate/${ pluginId }?d_id=` );
 			} );
 
 			after( () => {

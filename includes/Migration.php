@@ -1,6 +1,9 @@
 <?php
 namespace NewfoldLabs\WP\Module\Migration;
 
+use NewfoldLabs\WP\Module\Migration\Data\Constants;
+use NewfoldLabs\WP\Module\Migration\Helpers\BrandHelper;
+use NewfoldLabs\WP\Module\Migration\Helpers\Permissions;
 use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\RestApi\RestApi;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
@@ -13,6 +16,7 @@ use NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener;
  * @package NewfoldLabs\WP\Module\Migration
  */
 class Migration {
+
 	/**
 	 * Container loaded from the brand plugin.
 	 *
@@ -42,6 +46,7 @@ class Migration {
 	public function __construct( Container $container ) {
 		$this->container = $container;
 
+		new Constants( $container );
 		new InstaWpOptionsUpdatesListener();
 
 		if ( Permissions::rest_is_authorized_admin() ) {
@@ -50,11 +55,9 @@ class Migration {
 
 		if ( Permissions::is_authorized_admin() ) {
 			new MigrationReport();
-
 			add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
-
-			if ( $container->plugin()->id === 'bluehost' ) {
-				add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) ); // Adds WordPress Migration tool to imports list.
+			if ( BrandHelper::is_whitelisted( $container->plugin()->id ) ) {
+				add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 			}
 		}
