@@ -2,8 +2,8 @@
 namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\Module\Migration\Data\Constants;
-use NewfoldLabs\WP\Module\Migration\Helpers\Brands;
 use NewfoldLabs\WP\Module\Migration\Helpers\Permissions;
+use NewfoldLabs\WP\Module\Migration\Helpers\SiteCapabilityHelper;
 use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\RestApi\RestApi;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
@@ -56,7 +56,7 @@ class Migration {
 		if ( Permissions::is_authorized_admin() ) {
 			new MigrationReport();
 			add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
-			if ( Brands::is_whitelisted( $container->plugin()->id ) ) {
+			if ( SiteCapabilityHelper::can_migrate_site() ) {
 				add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 			}

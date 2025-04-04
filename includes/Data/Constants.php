@@ -31,6 +31,5 @@ class Constants {
 		defined( 'NFD_MIGRATION_PROXY_WORKER' ) || define( 'NFD_MIGRATION_PROXY_WORKER', 'https://migrate.' . $proxy_brand . '.com' );
 		defined( 'BRAND_PLUGIN' ) || define( 'BRAND_PLUGIN', $plugin_brand );
 		defined( 'INSTAWP_MIGRATE_ENDPOINT' ) || define( 'INSTAWP_MIGRATE_ENDPOINT', 'migrate/' . $plugin_brand );
-		defined( 'NFD_MIGRATION_BRAND_WHITELIST' ) || define( 'NFD_MIGRATION_BRAND_WHITELIST', array( 'bluehost', 'hostgator' ) );
 	}
 }
