@@ -119,18 +119,26 @@ class Migration {
 	public function set_import_tools() {
 		global $pagenow;
 
+		$script_subpath = 'includes/import-tools-changes.js';
+		$style_subpath  = 'includes/styles.css';
+		$script_path    = NFD_MIGRATION_DIR . $script_subpath;
+		$style_path     = NFD_MIGRATION_DIR . $style_subpath;
+		$script_version = file_exists( $script_path ) ? filemtime( $script_path ) : '1.0';
+		$style_version  = file_exists( $style_path ) ? filemtime( $style_path ) : '1.0';
+
 		wp_register_script(
 			'nfd_migration_tool',
-			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/import-tools-changes.js',
+			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/' . $script_subpath,
 			array( 'jquery' ),
-			NFD_MIGRATION_MODULE_VERSION,
+			$script_version,
 			true
 		);
+
 		wp_register_style(
 			'nfd_migration_tool',
-			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/includes/styles.css',
+			NFD_MIGRATION_PLUGIN_URL . 'vendor/newfold-labs/wp-module-migration/' . $style_subpath,
 			array(),
-			NFD_MIGRATION_MODULE_VERSION,
+			$style_version,
 			'all'
 		);
 
