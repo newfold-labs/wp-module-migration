@@ -19,16 +19,15 @@ if ( function_exists( 'add_action' ) ) {
 					'name'     => 'migration',
 					'label'    => __( 'Migration', 'wp-module-migration' ),
 					'callback' => function ( Container $container ) {
-						if ( ! defined( 'NFD_MIGRATION_MODULE_VERSION' ) ) {
-							define( 'NFD_MIGRATION_MODULE_VERSION', '1.2.3' );
-						}
 
 						$brand = $container->plugin()->id;
 						if ( 'atomic' === getContext( 'platform' ) ) {
 							$brand = 'bh-cloud';
 						}
 						define( 'NFD_MIGRATION_PLUGIN_URL', $container->plugin()->url );
-
+						if ( ! defined( 'NFD_MIGRATION_DIR' ) ) {
+							define( 'NFD_MIGRATION_DIR', __DIR__ );
+						}
 						defined( 'NFD_PROXY_ACCESS_WORKER' ) || define( 'NFD_PROXY_ACCESS_WORKER', 'https://hiive.cloud/workers/migration-token-proxy' );
 						defined( 'NFD_MIGRATION_PROXY_WORKER' ) || define( 'NFD_MIGRATION_PROXY_WORKER', 'https://migrate.bluehost.com' );
 
