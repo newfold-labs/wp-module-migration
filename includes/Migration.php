@@ -2,6 +2,7 @@
 namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\Module\Migration\Data\Constants;
+use NewfoldLabs\WP\Module\Migration\Helpers\BrandHelper;
 use NewfoldLabs\WP\Module\Migration\Helpers\Permissions;
 use NewfoldLabs\WP\Module\Migration\Helpers\SiteCapabilityHelper;
 use NewfoldLabs\WP\ModuleLoader\Container;
@@ -56,7 +57,7 @@ class Migration {
 		if ( Permissions::is_authorized_admin() ) {
 			new MigrationReport();
 			add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
-			if ( SiteCapabilityHelper::can_migrate_site() ) {
+			if ( BrandHelper::is_whitelisted( $container->plugin()->id ) ) {
 				add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
 			}
