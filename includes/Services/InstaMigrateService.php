@@ -53,9 +53,9 @@ class InstaMigrateService {
 		$install_activate = new InstallActivateInstaWp();
 		$this->tracker->update_track( $install_activate );
 		if ( ! $install_activate->failed() ) {
-			$connectToInstaWp = new ConnectToInstaWp( $this->insta_api_key );
-			$this->tracker->update_track( $connectToInstaWp );
-			if ( ! $connectToInstaWp->failed() ) {
+			$connect_to_instawp = new ConnectToInstaWp( $this->insta_api_key );
+			$this->tracker->update_track( $connect_to_instawp );
+			if ( ! $connect_to_instawp->failed() ) {
 				return array(
 					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
 					'response'     => true,
