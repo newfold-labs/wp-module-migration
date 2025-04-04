@@ -4,7 +4,6 @@ namespace NewfoldLabs\WP\Module\Migration;
 use NewfoldLabs\WP\Module\Migration\Data\Constants;
 use NewfoldLabs\WP\Module\Migration\Helpers\BrandHelper;
 use NewfoldLabs\WP\Module\Migration\Helpers\Permissions;
-use NewfoldLabs\WP\Module\Migration\Helpers\SiteCapabilityHelper;
 use NewfoldLabs\WP\ModuleLoader\Container;
 use NewfoldLabs\WP\Module\Migration\RestApi\RestApi;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
