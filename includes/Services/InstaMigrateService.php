@@ -2,21 +2,14 @@
 namespace NewfoldLabs\WP\Module\Migration\Services;
 
 use InstaWP\Connect\Helpers\Helper;
-use InstaWP\Connect\Helpers\Installer;
-use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
-use NewfoldLabs\WP\Module\Data\Helpers\Encryption;
-
+use NewfoldLabs\WP\Module\Migration\Steps\GetInstaWpApiKey;
+use NewfoldLabs\WP\Module\Migration\Steps\InstallActivateInstaWp;
+use NewfoldLabs\WP\Module\Migration\Steps\ConnectToInstaWp;
+use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 /**
  * Class InstaMigrateService
  */
 class InstaMigrateService {
-
-	/**
-	 * InstaWP Connect plugin slug used for installing the instaWP plugin once
-	 *
-	 * @var string $connect_plugin_slug
-	 */
-	private $connect_plugin_slug = 'instawp-connect';
 
 	/**
 	 * InstaWP Connect plugin API key used for connecting the instaWP plugin
@@ -26,94 +19,61 @@ class InstaMigrateService {
 	private $insta_api_key = '';
 
 	/**
-	 * Retry count
+	 * Tracker class instance.
 	 *
-	 * @var int $count
+	 * @var Tracker $tracker
 	 */
-	private $count = 0;
+	private $tracker;
 
 	/**
 	 * Set required API keys for insta to initiate the migration
 	 */
 	public function __construct() {
-		$encrypt             = new Encryption();
-		$this->insta_api_key = $encrypt->decrypt( get_option( 'newfold_insta_api_key', false ) );
-		if ( ! $this->insta_api_key ) {
-			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
-			update_option( 'newfold_insta_api_key', $encrypt->encrypt( $this->insta_api_key ) );
-		}
+		$this->tracker = new Tracker();
+		$this->tracker->reset();
 	}
 
 	/**
-	 * Install InstaWP plugin
+	 * Get Insta Wp api key, Install InstaWP plugin and connect to it
 	 */
-	public function install_instawp_connect() {
-		if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'get_mu_plugins' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
+	public function run() {
 
-		// Install and activate the plugin
-		if ( ! is_plugin_active( sprintf( '%1$s/%1$s.php', $this->connect_plugin_slug ) ) ) {
-			$params    = array(
-				array(
-					'slug'     => 'instawp-connect',
-					'type'     => 'plugin',
-					'activate' => true,
-				),
+		$instawp_get_key_step = new GetInstaWpApiKey();
+		$this->tracker->update_track( $instawp_get_key_step );
+		if ( ! $instawp_get_key_step->failed() ) {
+			$this->insta_api_key = $instawp_get_key_step->get_data( 'insta_api_key' );
+		} else {
+			return new \WP_Error(
+				'Bad request',
+				esc_html__( 'Cannot get api key.', 'wp-module-migration' ),
+				array( 'status' => 400 )
 			);
-			$installer = new Installer( $params );
-			$installer->start();
 		}
 
-		// Connect the website with InstaWP server
-		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
-			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
-			$connect_response = Helper::instawp_generate_api_key( $api_key, '', false );
-
-			if ( ! $connect_response ) {
+		$install_activate = new InstallActivateInstaWp();
+		$this->tracker->update_track( $install_activate );
+		if ( ! $install_activate->failed() ) {
+			$connectToInstaWp = new ConnectToInstaWp( $this->insta_api_key );
+			$this->tracker->update_track( $connectToInstaWp );
+			if ( ! $connectToInstaWp->failed() ) {
+				return array(
+					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
+					'response'     => true,
+					'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
+				);
+			} else {
 				return new \WP_Error(
 					'bad_request',
 					esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
 					array( 'status' => 400 )
 				);
 			}
-		}
-
-		// Ready to start the migration
-		if ( function_exists( 'instawp' ) ) {
-			// Check if there is a connect ID
-			if ( empty( Helper::get_connect_id() ) ) {
-				if ( $this->count < 3 ) {
-					++$this->count;
-					delete_option( 'instawp_api_options' ); // delete the connection to plugin and website
-					sleep( 1 );
-					self::install_instawp_connect();
-				} else {
-					return new \WP_Error( 'bad_request', esc_html__( 'Connect plugin is installed but no connect ID.', 'wp-module-migration' ), array( 'status' => 400 ) );
-				}
-			}
-
-			// Add the current WordPress locale to the redirect URL
-			$locale = get_locale();
-			return array(
-				'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
-				'response'     => true,
-				'redirect_url' => esc_url_raw(
-					sprintf(
-						'%s/%s?d_id=%s&locale=%s',
-						NFD_MIGRATION_PROXY_WORKER,
-						INSTAWP_MIGRATE_ENDPOINT,
-						Helper::get_connect_uuid(),
-						$locale
-					)
-				),
+		} else {
+			return new \WP_Error(
+				'Error',
+				esc_html__( 'Migration service could not be started.', 'wp-module-migration' ),
+				array( 'status' => 400 )
 			);
 		}
-
-		return new \WP_Error(
-			'bad_request',
-			esc_html__( 'Migration might be finished.', 'wp-module-migration' ),
-			array( 'status' => 400 )
-		);
 	}
 }
