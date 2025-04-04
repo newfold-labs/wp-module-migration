@@ -3,10 +3,12 @@ namespace NewfoldLabs\WP\Module\Migration\Listeners;
 
 use NewfoldLabs\WP\Module\Migration\Data\Events;
 use NewfoldLabs\WP\Module\Migration\Services\EventService;
-use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
+use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Migration\Steps\Push;
 use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
+use NewfoldLabs\WP\Module\Migration\Steps\SourceHostingInfo;
+
 
 /**
  * Monitors InstaWp options update
@@ -59,6 +61,7 @@ class InstaWpOptionsUpdatesListener {
 	 * @param array $old_value previous status of migration
 	 */
 	public function on_update_instawp_last_migration_details( $new_value, $old_value ) {
+
 		if ( $old_value !== $new_value ) {
 			$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
 			if ( ! empty( $migrate_group_uuid ) ) {
@@ -76,14 +79,18 @@ class InstaWpOptionsUpdatesListener {
 					if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
 						$body = wp_remote_retrieve_body( $response );
 						$data = json_decode( $body, true );
+
 						if ( $data && is_array( $data ) && isset( $data['status'] ) && $data['status'] ) {
 							$migration_status = $data['data']['status'];
 
 							if ( 'completed' === $migration_status || 'failed' === $migration_status || 'aborted' === $migration_status ) {
-								$push = new Push();
-								$push->set_status( $push->statuses['completed'] );
+								$push                = new Push();
+								$source_hosting_info = new SourceHostingInfo( $data['data']['source_site_url'] );
+								$push->set_status( $push->statuses[ $migration_status ] );
 								$this->tracker->update_track( $push );
+								$this->tracker->update_track( $source_hosting_info );
 							}
+
 							if ( 'completed' === $migration_status ) {
 								$migration_complete = new LastStep();
 								$migration_complete->set_status( $migration_complete->statuses['completed'] );
@@ -105,6 +112,7 @@ class InstaWpOptionsUpdatesListener {
 				}
 			}
 		}
+
 		return $new_value;
 	}
 

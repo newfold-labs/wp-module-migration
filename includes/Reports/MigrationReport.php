@@ -76,7 +76,11 @@ class MigrationReport {
 								echo '<li><strong>' . esc_html( $key ) . '</strong>: ';
 								echo '<ul>';
 								foreach ( $value as $sub_key => $sub_value ) {
-									echo '<li>' . esc_html( $sub_key ) . ': ' . esc_html( $sub_value ) . '</li>';
+									if ( is_array( $sub_value ) ) {
+										print_r( $sub_value );
+									} else {
+										echo '<li>' . esc_html( $sub_key ) . ': ' . esc_html( $sub_value ) . '</li>';
+									}
 								}
 								echo '</ul>';
 								echo '</li>';
