@@ -6,6 +6,7 @@ use NewfoldLabs\WP\Module\Migration\Services\EventService;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 use NewfoldLabs\WP\Module\Migration\Steps\Push;
+use NewfoldLabs\WP\Module\Migration\Steps\PageSpeed;
 use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
 
 /**
@@ -34,6 +35,8 @@ class InstaWpOptionsUpdatesListener {
 		$this->tracker = new Tracker();
 		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 2 );
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
+		add_action( 'nfd_migration_page_speed_source', array( $this, 'page_speed_source' ), 10 );
+		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10 );
 	}
 	/**
 	 * Push event with tracking file content.
@@ -89,6 +92,17 @@ class InstaWpOptionsUpdatesListener {
 								$migration_complete->set_status( $migration_complete->statuses['completed'] );
 								$this->tracker->update_track( $migration_complete );
 								$this->push( 'migration_completed', $this->tracker->get_track_content() );
+
+								if ( isset( $data['data']['source_site_url'] ) ) {
+									$source_site_url = $data['data']['source_site_url'];
+
+									if ( ! wp_next_scheduled( 'nfd_migration_page_speed_source' ) ) {
+										wp_schedule_single_event( time() + 60, 'nfd_migration_page_speed_source', array( 'source_site_url' => $source_site_url ) );
+									}
+									if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
+										wp_schedule_single_event( time() + 120, 'nfd_migration_page_speed_destination' );
+									}
+								}
 							} elseif ( 'failed' === $migration_status ) {
 								$migration_complete = new LastStep();
 								$migration_complete->set_status( $migration_complete->statuses['failed'] );
@@ -125,5 +139,37 @@ class InstaWpOptionsUpdatesListener {
 			}
 		}
 		return $new_value;
+	}
+	/**
+	 * Track page speed for source site.
+	 *
+	 * @param string $source_site_url source site url.
+	 * @return void
+	 */
+	public function page_speed_source( $source_site_url ) {
+		$source_url_pagespeed = new PageSpeed( $source_site_url, 'source' );
+		if ( ! $source_url_pagespeed->failed() ) {
+			$source_url_pagespeed->set_status( $source_url_pagespeed->statuses['completed'] );
+		}
+
+		$this->tracker->update_track( $source_url_pagespeed );
+	}
+	/**
+	 * Track page speed for source site.
+	 *
+	 * @return void
+	 */
+	public function page_speed_destination() {
+
+		$source_url_pagespeed = new PageSpeed( site_url(), 'destination' );
+		if ( ! $source_url_pagespeed->failed() ) {
+			$source_url_pagespeed->set_status( $source_url_pagespeed->statuses['completed'] );
+		}
+
+		$this->tracker->update_track( $source_url_pagespeed );
+
+		if ( ! empty( $pagespeed_for_event ) ) {
+			$this->push( 'migration_complete', $pagespeed_for_event );
+		}
 	}
 }
