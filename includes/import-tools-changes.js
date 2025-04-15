@@ -1,31 +1,31 @@
 //Changes the text of the wordpress to wordpress content in import
-const importerTitles = document.getElementsByClassName('importer-title');
-if (importerTitles) {
-	[...importerTitles].forEach((val, index) => {
-		if (val?.outerText === 'WordPress') {
-			document.getElementsByClassName('importer-title')[
+const importerTitles = document.getElementsByClassName( 'importer-title' );
+if ( importerTitles ) {
+	[ ...importerTitles ].forEach( ( val, index ) => {
+		if ( val?.outerText === 'WordPress' ) {
+			document.getElementsByClassName( 'importer-title' )[
 				index
 			].innerText = migration.wordpress_title;
 		}
-	});
+	} );
 }
 
 class MigrationModal {
 	constructor() {
 		this.create();
-		this.modal = document.getElementById('migration-progress-modal');
-		this.closeBtn = document.querySelector('.nfd-migration-close');
-		this.closeBtn.addEventListener('click', this.hide.bind(this));
+		this.modal = document.getElementById( 'migration-progress-modal' );
+		this.closeBtn = document.querySelector( '.nfd-migration-close' );
+		this.closeBtn.addEventListener( 'click', this.hide.bind( this ) );
 	}
 	create() {
 		// designs a modal for migration tool
-		const node = document.createElement('div');
+		const node = document.createElement( 'div' );
 		node.innerHTML = `<div class='migrate-screen'> 
 		<div class='nfd-migration-loading'>
 		<span class='nfd-migration-loader'></span>
 		<span class='nfd-migration-error'>X</span>
-		<h2 class='nfd-migration-title'>${migration.migration_title}</h2></div> 
-		<p class='nfd-migration-description'>${migration.migration_description}</p> 
+		<h2 class='nfd-migration-title'>${ migration.migration_title }</h2></div> 
+		<p class='nfd-migration-description'>${ migration.migration_description }</p> 
 		<button class="nfd-migration-close">x</button>
 		</div>`;
 
@@ -38,31 +38,31 @@ class MigrationModal {
 		node.style.display = 'none';
 		node.style.alignItems = 'center';
 		node.style.justifyContent = 'center';
-		node.setAttribute('id', 'migration-progress-modal');
+		node.setAttribute( 'id', 'migration-progress-modal' );
 
-		document.getElementById('wpbody-content').appendChild(node);
+		document.getElementById( 'wpbody-content' ).appendChild( node );
 	}
-	update(title = '', description = '') {
+	update( title = '', description = '' ) {
 		title = '' === title ? migration.migration_title : title;
 		description =
 			'' === description ? migration.migration_description : description;
-		document.querySelector('.nfd-migration-title').innerText = title;
-		document.querySelector('.nfd-migration-description').innerHTML =
+		document.querySelector( '.nfd-migration-title' ).innerText = title;
+		document.querySelector( '.nfd-migration-description' ).innerHTML =
 			description;
 	}
-	show(withClose = false, icon = 'loading') {
+	show( withClose = false, icon = 'loading' ) {
 		withClose
-			? (this.closeBtn.style.display = 'block')
-			: (this.closeBtn.style.display = 'none');
-		if (icon === 'error') {
-			document.querySelector('.nfd-migration-error').style.display =
+			? ( this.closeBtn.style.display = 'block' )
+			: ( this.closeBtn.style.display = 'none' );
+		if ( icon === 'error' ) {
+			document.querySelector( '.nfd-migration-error' ).style.display =
 				'block';
-			document.querySelector('.nfd-migration-loader').style.display =
+			document.querySelector( '.nfd-migration-loader' ).style.display =
 				'none';
 		} else {
-			document.querySelector('.nfd-migration-error').style.display =
+			document.querySelector( '.nfd-migration-error' ).style.display =
 				'none';
-			document.querySelector('.nfd-migration-loader').style.display =
+			document.querySelector( '.nfd-migration-loader' ).style.display =
 				'block';
 		}
 		this.modal.style.display = 'flex';
@@ -76,15 +76,15 @@ const MModal = new MigrationModal();
 
 // load a pop up when user clicks on run importer for wordpress migration tool
 document
-	.querySelector('a[href*="import=site_migration_wordpress_importer"]')
-	?.addEventListener('click', function (e) {
+	.querySelector( 'a[href*="import=site_migration_wordpress_importer"]' )
+	?.addEventListener( 'click', function ( e ) {
 		e.preventDefault();
 		MModal.update();
 		MModal.show();
 
 		fetch(
 			nfdplugin.restApiUrl +
-			'/newfold-migration/v1/migrate/connect&_locale=user',
+				'/newfold-migration/v1/migrate/connect&_locale=user',
 			{
 				credentials: 'same-origin',
 				headers: {
@@ -93,11 +93,11 @@ document
 				},
 			}
 		)
-			.then((response) => response.json())
-			.then((res) => {
+			.then( ( response ) => response.json() )
+			.then( ( res ) => {
 				fetch(
 					nfdplugin.restApiUrl +
-					'/newfold-data/v1/events&_locale=user',
+						'/newfold-data/v1/events&_locale=user',
 					{
 						credentials: 'same-origin',
 						method: 'post',
@@ -105,22 +105,22 @@ document
 							'Content-Type': 'application/json',
 							'X-WP-Nonce': nfdplugin.restApiNonce,
 						},
-						body: JSON.stringify({
+						body: JSON.stringify( {
 							action: 'migration_initiated_tools',
 							category: 'user_action',
 							data: {
 								page: window.location.href,
 							},
-						}),
+						} ),
 					}
 				);
-				if (res?.success) {
+				if ( res?.success ) {
 					MModal.hide();
-					window.open(res?.data?.redirect_url, '_self');
+					window.open( res?.data?.redirect_url, '_self' );
 				} else {
-					MModal.update(res?.code, res?.message);
-					MModal.show(true, 'error');
+					MModal.update( res?.code, res?.message );
+					MModal.show( true, 'error' );
 				}
-			})
-			.catch((err) => console.error(err));
-	});
+			} )
+			.catch( ( err ) => console.error( err ) );
+	} );
