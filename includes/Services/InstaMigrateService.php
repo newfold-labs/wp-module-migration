@@ -56,10 +56,20 @@ class InstaMigrateService {
 			$connect_to_instawp = new ConnectToInstaWp( $this->insta_api_key );
 			$this->tracker->update_track( $connect_to_instawp );
 			if ( ! $connect_to_instawp->failed() ) {
+				// Add the current WordPress locale to the redirect URL
+				$locale = get_locale();
 				return array(
 					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
 					'response'     => true,
-					'redirect_url' => esc_url( NFD_MIGRATION_PROXY_WORKER . '/' . INSTAWP_MIGRATE_ENDPOINT . '?d_id=' . Helper::get_connect_uuid() ),
+					'redirect_url' => esc_url_raw(
+						sprintf(
+							'%s/%s?d_id=%s&locale=%s',
+							NFD_MIGRATION_PROXY_WORKER,
+							INSTAWP_MIGRATE_ENDPOINT,
+							Helper::get_connect_uuid(),
+							$locale
+						)
+					),
 				);
 			} else {
 				return new \WP_Error(
