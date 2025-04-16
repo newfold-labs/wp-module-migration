@@ -29,4 +29,32 @@ class UtilityService {
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 		return $insta_response ? base64_decode( $insta_response->data ) : '';
 	}
+
+	/**
+	 * Get migration status and source url by instaWp api
+	 *
+	 * @param string $migrate_group_uuid migration group id (it is stored in instawp_last_migration_details option).
+	 * @return array
+	 */
+	public static function get_migration_data( $migrate_group_uuid ) {
+		if ( ! empty( $migrate_group_uuid ) ) {
+			$token = self::get_insta_api_key( BRAND_PLUGIN );
+			if ( $token ) {
+				$response = wp_remote_get(
+					'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
+					array(
+						'headers' => array(
+							'Authorization' => 'Bearer ' . $token,
+						),
+					)
+				);
+				if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
+					$body = wp_remote_retrieve_body( $response );
+					return json_decode( $body, true );
+				}
+			}
+		}
+
+		return array();
+	}
 }

@@ -6,6 +6,7 @@ use NewfoldLabs\WP\Module\Migration\RestApi\RestApi;
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
 use NewfoldLabs\WP\Module\Migration\Reports\MigrationReport;
 use NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener;
+use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 
 /**
  * Class Migration
@@ -80,9 +81,15 @@ class Migration {
 	 * @param array $new_option status of migration.
 	 */
 	public function on_update_instawp_last_migration_details( $new_option ) {
-		$value_updated = $new_option['status'];
-		if ( 'completed' === $value_updated ) {
-			update_option( 'nfd_show_migration_steps', true );
+		$migrate_group_uuid = isset( $new_option['migrate_group_uuid'] ) ? $new_option['migrate_group_uuid'] : '';
+		if ( ! empty( $migrate_group_uuid ) ) {
+			$data = UtilityService::get_migration_data( $migrate_group_uuid );
+			if ( $data && is_array( $data ) && isset( $data['status'] ) && $data['status'] ) {
+				$migration_status = $data['data']['status'];
+				if ( 'completed' === $migration_status ) {
+					update_option( 'nfd_show_migration_steps', true );
+				}
+			}
 		}
 		return $new_option;
 	}
