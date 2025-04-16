@@ -177,7 +177,8 @@ class SourceHostingInfo extends AbstractStep {
 	 * @param string $domain The domain to get the plain domain from.
 	 * @return string The plain domain.
 	 */
-	public function get_plain_domain( string $domain ): string {
-		return preg_replace( '#^https?://|/$#', '', $domain );
-	}
+    public function get_plain_domain( string $domain ): string {
+        $parsed = parse_url( $domain );
+        return $parsed['host'] ?? preg_replace( '#^https?://|/.*$#', '', $domain );
+    }
 }
