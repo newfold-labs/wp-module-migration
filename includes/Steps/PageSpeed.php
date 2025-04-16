@@ -38,20 +38,20 @@ class PageSpeed extends AbstractStep {
 	 * @return void
 	 */
 	protected function run() {
-        $pagespeed_service = new PageSpeedService( $this->url );
-        $pagespeed         = $pagespeed_service->get_pagespeed();
-        $this->set_data( 'url', $this->url );
-        if ( isset( $pagespeed['speedIndex'] ) ) {
-            $this->set_data( 'speedIndex', $pagespeed['speedIndex'] );
-            $this->success();
-        } else {
-            $this->set_response(
-                array(
-                    'message' => $pagespeed['message'],
-                )
-            );
-            $this->retry();
+		$pagespeed_service = new PageSpeedService( $this->url );
+		$pagespeed         = $pagespeed_service->get_pagespeed();
+		$this->set_data( 'url', $this->url );
+		if ( isset( $pagespeed['speedIndex'] ) ) {
+			$this->set_data( 'speedIndex', $pagespeed['speedIndex'] );
+			$this->success();
+		} else {
+			$this->set_response(
+				array(
+					'message' => $pagespeed['message'],
+				)
+			);
+			$this->retry();
 
-        }
+		}
 	}
 }
