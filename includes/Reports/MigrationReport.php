@@ -77,7 +77,7 @@ class MigrationReport {
 								echo '<ul>';
 								foreach ( $value as $sub_key => $sub_value ) {
 									if ( is_array( $sub_value ) ) {
-										print_r( $sub_value );
+										print_r( $sub_value, true ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 									} else {
 										echo '<li>' . esc_html( $sub_key ) . ': ' . esc_html( $sub_value ) . '</li>';
 									}
