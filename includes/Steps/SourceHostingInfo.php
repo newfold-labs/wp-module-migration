@@ -54,6 +54,7 @@ class SourceHostingInfo extends AbstractStep {
 
 			if ( isset( $hosting_info['status'] ) && 'success' === $hosting_info['status'] ) {
 				$this->hosting_info = $hosting_info;
+				$this->success();
 			} else {
 				$this->set_response( array( 'message' => 'Source hosting details not retrieved correctly' ) );
 				$this->failure();
