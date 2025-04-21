@@ -9,7 +9,6 @@ use NewfoldLabs\WP\Module\Migration\Steps\Push;
 use NewfoldLabs\WP\Module\Migration\Steps\PageSpeed;
 use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
 use NewfoldLabs\WP\Module\Migration\Steps\SourceHostingInfo;
-use PhpParser\Node\Stmt\TryCatch;
 
 /**
  * Monitors InstaWp options update
