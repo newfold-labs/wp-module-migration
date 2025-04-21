@@ -93,7 +93,6 @@ class InstaWpOptionsUpdatesListener {
 						$migration_complete = new LastStep();
 						$migration_complete->set_status( $migration_complete->statuses['completed'] );
 						$this->tracker->update_track( $migration_complete );
-						$this::push( 'migration_completed', $this->tracker->get_track_content() );
 					} elseif ( 'failed' === $migration_status ) {
 						$migration_complete = new LastStep();
 						$migration_complete->set_status( $migration_complete->statuses['failed'] );
@@ -158,19 +157,7 @@ class InstaWpOptionsUpdatesListener {
 
 			$this->tracker->update_track( $source_url_pagespeed );
 		} finally {
-			$tracker_content     = $this->tracker->get_track_content();
-			$pagespeed_for_event = array();
-
-			if ( isset( $tracker_content['PageSpeed_source'] ) ) {
-				$pagespeed_for_event['PageSpeed_source'] = $tracker_content['PageSpeed_source'];
-			}
-			if ( isset( $tracker_content['PageSpeed_destination'] ) ) {
-				$pagespeed_for_event['PageSpeed_destination'] = $tracker_content['PageSpeed_destination'];
-			}
-
-			if ( ! empty( $pagespeed_for_event ) ) {
-				self::push( 'migration_complete', $pagespeed_for_event );
-			}
+			self::push( 'migration_completed', $this->tracker->get_track_content() );		
 		}
 	}
 }
