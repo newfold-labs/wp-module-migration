@@ -38,6 +38,7 @@ class InstaWpOptionsUpdatesListener {
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
 		add_action( 'nfd_migration_page_speed_source', array( $this, 'page_speed_source' ), 10 );
 		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10 );
+		add_action( 'nfd_migration_source_hosting_info', array( $this, 'source_hosting_info' ), 10 );
 	}
 	/**
 	 * Push event with tracking file content.
@@ -72,16 +73,17 @@ class InstaWpOptionsUpdatesListener {
 					$migration_status = $response['data']['status'];
 
 					if ( 'completed' === $migration_status || 'failed' === $migration_status || 'aborted' === $migration_status ) {
-						$push                = new Push();
-						$source_hosting_info = new SourceHostingInfo( $response['data']['source_site_url'] );
+						$push = new Push();
 						$push->set_status( $push->statuses[ $migration_status ] );
 						$this->tracker->update_track( $push );
-						$this->tracker->update_track( $source_hosting_info );
 
 						if ( isset( $response['data']['source_site_url'] ) ) {
 							$source_site_url = $response['data']['source_site_url'];
+							if ( ! wp_next_scheduled( 'nfd_migration_source_hosting_info' ) ) {
+								wp_schedule_single_event( time() + 60, 'nfd_migration_source_hosting_info', array( 'source_site_url' => $source_site_url ) );
+							}
 							if ( ! wp_next_scheduled( 'nfd_migration_page_speed_source' ) ) {
-								wp_schedule_single_event( time() + 60, 'nfd_migration_page_speed_source', array( 'source_site_url' => $source_site_url ) );
+								wp_schedule_single_event( time() + 90, 'nfd_migration_page_speed_source', array( 'source_site_url' => $source_site_url ) );
 							}
 							if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
 								wp_schedule_single_event( time() + 120, 'nfd_migration_page_speed_destination' );
@@ -128,6 +130,22 @@ class InstaWpOptionsUpdatesListener {
 			}
 		}
 		return $new_value;
+	}
+	/**
+	 * Get source site hosting informations.
+	 *
+	 * @param string $source_site_url source site url.
+	 * @return void
+	 */
+	public function source_hosting_info( $source_site_url ) {
+		$source_hosting_info = new SourceHostingInfo( $source_site_url );
+		$this->tracker->update_track( $source_hosting_info );
+
+		if ( ! $source_hosting_info->failed() ) {
+			$source_hosting_info->set_status( $source_hosting_info->statuses['completed'] );
+		}
+
+		$this->tracker->update_track( $source_hosting_info );
 	}
 	/**
 	 * Track page speed for source site.
