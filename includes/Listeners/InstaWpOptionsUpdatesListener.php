@@ -157,7 +157,7 @@ class InstaWpOptionsUpdatesListener {
 
 			$this->tracker->update_track( $source_url_pagespeed );
 		} finally {
-			self::push( 'migration_completed', $this->tracker->get_track_content() );		
+			self::push( 'migration_completed', $this->tracker->get_track_content() );
 		}
 	}
 }

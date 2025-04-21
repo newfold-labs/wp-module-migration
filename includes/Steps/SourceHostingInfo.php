@@ -2,6 +2,7 @@
 
 namespace NewfoldLabs\WP\Module\Migration\Steps;
 
+use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 use NewfoldLabs\WP\Module\Migration\Services\HostingInfoService;
 
 /**
