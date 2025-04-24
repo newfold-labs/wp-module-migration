@@ -57,7 +57,7 @@ class SourceHostingInfo extends AbstractStep {
 				$this->success();
 			} else {
 				$this->set_response( array( 'message' => 'Source hosting details not retrieved correctly' ) );
-				$this->failure();
+				$this->retry();
 			}
 		}
 	}

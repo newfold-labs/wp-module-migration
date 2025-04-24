@@ -26,7 +26,7 @@ class PageSpeed extends AbstractStep {
 	public function __construct( $url, $type = 'source' ) {
 		$step_slug = 'PageSpeed_' . $type;
 		$this->set_step_slug( $step_slug );
-		$this->set_max_retries( 1 );
+		$this->set_max_retries( 2 );
 		$this->url = $url;
 		$this->set_status( $this->statuses['running'] );
 		$this->run();
