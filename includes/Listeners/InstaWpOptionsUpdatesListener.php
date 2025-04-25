@@ -86,7 +86,7 @@ class InstaWpOptionsUpdatesListener {
 								wp_schedule_single_event( time() + 90, 'nfd_migration_page_speed_source', array( 'source_site_url' => $source_site_url ) );
 							}
 							if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
-								wp_schedule_single_event( time() + 120, 'nfd_migration_page_speed_destination' );
+								wp_schedule_single_event( time() + 120, 'nfd_migration_page_speed_destination', array( 'migrate_group_uuid' => $migrate_group_uuid ) );
 							}
 						}
 					}
@@ -164,9 +164,10 @@ class InstaWpOptionsUpdatesListener {
 	/**
 	 * Track page speed for source site.
 	 *
+	 * @param string $migrate_group_uuid migrate group uuid.
 	 * @return void
 	 */
-	public function page_speed_destination() {
+	public function page_speed_destination( $migrate_group_uuid) {
 		try {
 			$source_url_pagespeed = new PageSpeed( site_url(), 'destination' );
 			if ( ! $source_url_pagespeed->failed() ) {
@@ -175,7 +176,13 @@ class InstaWpOptionsUpdatesListener {
 
 			$this->tracker->update_track( $source_url_pagespeed );
 		} finally {
-			self::push( 'migration_completed', $this->tracker->get_track_content() );
+			$datas = array_merge(
+				array(
+					'migration_uuid' => $migrate_group_uuid,
+				),
+				$this->tracker->get_track_content(),
+			);
+			self::push( 'migration_completed', $datas );
 		}
 	}
 }
