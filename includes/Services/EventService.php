@@ -26,7 +26,7 @@ class EventService {
 				__( 'Bad event structure/value.', 'wp-module-migration' )
 			);
 		}
-		
+
 		if ( 'migration_completed' === $event['action'] ) {
 			$event_to_send = new Event(
 				$event['action'],
@@ -40,11 +40,11 @@ class EventService {
 				new HiiveConnection()
 			);
 			$event_manager->shutdown();
-	
-			return true; //maybe manage a response
+
+			return true;
 		}
 
- 		$event_data_request = new \WP_REST_Request(
+		$event_data_request = new \WP_REST_Request(
 			\WP_REST_Server::CREATABLE,
 			NFD_MODULE_DATA_EVENTS_API
 		);

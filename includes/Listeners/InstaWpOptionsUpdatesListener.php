@@ -167,7 +167,7 @@ class InstaWpOptionsUpdatesListener {
 	 * @param string $migrate_group_uuid migrate group uuid.
 	 * @return void
 	 */
-	public function page_speed_destination( $migrate_group_uuid) {
+	public function page_speed_destination( $migrate_group_uuid ) {
 		try {
 			$source_url_pagespeed = new PageSpeed( site_url(), 'destination' );
 			if ( ! $source_url_pagespeed->failed() ) {
