@@ -1,5 +1,5 @@
-import { GetPluginId } from '../wp-module-support/pluginID.cy';
-import { wpLogin } from '../wp-module-support/utils.cy';
+import { GetPluginId } from './wp-module-support/pluginID.cy';
+import { wpLogin } from './wp-module-support/utils.cy';
 
 const COMMAND_TIMEOUT = 60000;
 const pluginId = GetPluginId();
