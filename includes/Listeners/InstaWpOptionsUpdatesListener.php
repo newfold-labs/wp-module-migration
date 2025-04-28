@@ -37,7 +37,7 @@ class InstaWpOptionsUpdatesListener {
 		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 2 );
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
 		add_action( 'nfd_migration_page_speed_source', array( $this, 'page_speed_source' ), 10 );
-		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10 );
+		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10, 3 );
 		add_action( 'nfd_migration_source_hosting_info', array( $this, 'source_hosting_info' ), 10 );
 	}
 	/**
@@ -45,12 +45,14 @@ class InstaWpOptionsUpdatesListener {
 	 *
 	 * @param string $action action/key for the event.
 	 * @param array  $data   data to be sent with the event.
+	 * @param array  $category category of the event.
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public static function push( $action, $data ) {
+	public static function push( $action, $data, $category = '' ) {
+		$category = ! empty( $category ) ? $category : Events::get_category()[0];
 		return EventService::send(
 			array(
-				'category' => Events::get_category()[0],
+				'category' => $category,
 				'action'   => $action,
 				'data'     => $data,
 			)
@@ -86,7 +88,15 @@ class InstaWpOptionsUpdatesListener {
 								wp_schedule_single_event( time() + 90, 'nfd_migration_page_speed_source', array( 'source_site_url' => $source_site_url ) );
 							}
 							if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
-								wp_schedule_single_event( time() + 120, 'nfd_migration_page_speed_destination', array( 'migrate_group_uuid' => $migrate_group_uuid ) );
+								wp_schedule_single_event(
+									time() + 120,
+									'nfd_migration_page_speed_destination',
+									array(
+										'source_site_url' => $source_site_url,
+										'migrate_group_uuid' => $migrate_group_uuid,
+										'status'          => $migration_status,
+									),
+								);
 							}
 						}
 					}
@@ -164,10 +174,12 @@ class InstaWpOptionsUpdatesListener {
 	/**
 	 * Track page speed for source site.
 	 *
+	 * @param string $source_site_url    source site url.
 	 * @param string $migrate_group_uuid migrate group uuid.
+	 * @param string $status             status of migration.
 	 * @return void
 	 */
-	public function page_speed_destination( $migrate_group_uuid ) {
+	public function page_speed_destination( $source_site_url, $migrate_group_uuid, $status ) {
 		try {
 			$source_url_pagespeed = new PageSpeed( site_url(), 'destination' );
 			if ( ! $source_url_pagespeed->failed() ) {
@@ -176,13 +188,35 @@ class InstaWpOptionsUpdatesListener {
 
 			$this->tracker->update_track( $source_url_pagespeed );
 		} finally {
-			$datas = array_merge(
-				array(
-					'migration_uuid' => $migrate_group_uuid,
+			self::push(
+				'migration_completed',
+				array_merge(
+					array(
+						'migration_uuid' => $migrate_group_uuid,
+					),
+					$this->tracker->get_track_content()
 				),
-				$this->tracker->get_track_content(),
 			);
-			self::push( 'migration_completed', $datas );
+
+			// send specific data to the Migration Table Event
+			$tracked_datas           = $this->tracker->get_track_content();
+			$isp                     = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['isp'] ?? 'N/A';
+			$as                      = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['as'] ?? 'N/A';
+			$source_speed_index      = $tracked_datas['PageSpeed_source']['data']['speedIndex'] ?? '0';
+			$source_speed_index      = str_replace( ' s', '', $source_speed_index );
+			$destination_speed_index = $tracked_datas['PageSpeed_destination']['data']['speedIndex'] ?? 0;
+			$destination_speed_index = str_replace( ' s', '', $destination_speed_index );
+			$migration_infos         = array(
+				'migration_uuid'         => $migrate_group_uuid,
+				'status'                 => 'completed' === $status ? 'sucessful' : $status,
+				'origin_url'             => $source_site_url,
+				'origin_isp'             => $isp,
+				'origin_as'              => $as,
+				'origin_page_speed'      => $source_speed_index,
+				'destination_page_speed' => $destination_speed_index,
+			);
+
+			self::push( "migration_$status", $migration_infos, 'migration' );
 		}
 	}
 }

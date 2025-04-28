@@ -29,8 +29,8 @@ class EventService {
 
 		if ( 'migration_completed' === $event['action'] ) {
 			$event_to_send = new Event(
-				$event['action'],
 				$event['category'],
+				$event['action'],
 				$event['data']
 			);
 
