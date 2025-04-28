@@ -10,7 +10,10 @@ final class Events {
 	 *
 	 * @var array
 	 */
-	protected static $category = array( 'wonder_start' );
+	protected static $category = array(
+		'wonder_start',
+		'migration'
+	);
 
 	/**
 	 * List of valid actions that an event can perform.
