@@ -157,7 +157,7 @@ class Migration {
 				'migration_title'       => __( 'Preparing your site', 'wp-module-migration' ),
 				'migration_description' => __( 'Please wait a few seconds while we get your new account ready to import your existing WordPress site.', 'wp-module-migration' ),
 				'wordpress_title'       => __( 'WordPress Content', 'wp-module-migration' ),
-				'restApiUrl'            => \esc_url_raw( \get_home_url() . '/index.php?rest_route=' ),
+				'restApiUrl'            => \get_home_url( null, '/index.php?rest_route=' ),
 				'restApiNonce'          => \wp_create_nonce( 'wp_rest' ),
 			);
 			wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
