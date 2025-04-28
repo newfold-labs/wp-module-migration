@@ -12,7 +12,7 @@ final class Events {
 	 */
 	protected static $category = array(
 		'wonder_start',
-		'migration'
+		'migration',
 	);
 
 	/**
