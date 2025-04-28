@@ -20,27 +20,32 @@ if ( pluginId === 'bluehost' || pluginId === 'hostgator' ) {
 				cy.reload();
 			} );
 
-			it( 'Should load the Migration page successfully', () => {
+			it( 'Should redirect to correct Migration URL without errors', () => {
 				const migrationDomain = `migrate.${ pluginId }.com`;
-
-				// Intercept API call to migration service
-				cy.intercept(
-					'GET',
-					`https://${ migrationDomain }/api/v2/initial-data`
-				).as( 'migrationInit' );
 
 				// Visit the migration page
 				cy.visit(
 					'/wp-admin/index.php?page=nfd-onboarding#/sitegen/step/migration'
 				);
 
-				// Wait for API request to be made
-				cy.wait( '@migrationInit', { timeout: COMMAND_TIMEOUT } )
-					.its( 'response.statusCode' )
-					.should( 'eq', 200 );
+				// Confirm the redirect worked and URL is correct
+				cy.location( 'href', { timeout: COMMAND_TIMEOUT } ).should(
+					( href ) => {
+						const url = new URL( href );
+						expect( url.hostname ).to.eq( migrationDomain );
+						expect( url.searchParams.has( 'd_id' ) ).to.eq( true );
+						expect( url.searchParams.has( 'locale' ) ).to.eq(
+							true
+						);
+					}
+				);
 
-				// Ensure the URL is correct
-				cy.url().should( 'include', `migrate/${ pluginId }?d_id=` );
+				// Check that the page did not show a 404 or major error
+				cy.document()
+					.its( 'contentType' )
+					.should( 'include', 'text/html' );
+				cy.get( 'body' ).should( 'not.contain', '404' );
+				cy.get( 'body' ).should( 'not.contain', 'Error' );
 			} );
 
 			after( () => {
