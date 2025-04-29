@@ -208,7 +208,7 @@ class InstaWpOptionsUpdatesListener {
 			$destination_speed_index = str_replace( ' s', '', $destination_speed_index );
 			$migration_infos         = array(
 				'migration_uuid'         => $migrate_group_uuid,
-				'status'                 => 'completed' === $status ? 'sucessful' : $status,
+				'status'                 => 'completed' === $status ? 'successful' : $status,
 				'origin_url'             => $source_site_url,
 				'origin_isp'             => $isp,
 				'origin_as'              => $as,
