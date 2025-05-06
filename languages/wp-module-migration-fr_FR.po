@@ -27,23 +27,23 @@ msgstr "Migration"
 msgid "NFD migration Options"
 msgstr "Options de migration NFD"
 
-#: includes/Migration.php:98
+#: includes/Migration.php:103
 msgid "WordPress Migration Tool"
 msgstr "Outil de migration WordPress"
 
-#: includes/Migration.php:99
+#: includes/Migration.php:104
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migrer un site WordPress existant vers cette instance WordPress. Cet outil va faire une copie d'un site existant et l'importer automatiquement dans cette instance WordPress <strong>Cela écrasera tout le contenu.</strong>"
 
-#: includes/Migration.php:148
+#: includes/Migration.php:161
 msgid "Preparing your site"
 msgstr "Préparation de votre site"
 
-#: includes/Migration.php:149
+#: includes/Migration.php:162
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Veuillez patienter quelques secondes pendant que nous avons votre nouveau compte prêt à importer votre site WordPress existant."
 
-#: includes/Migration.php:150
+#: includes/Migration.php:163
 msgid "WordPress Content"
 msgstr "Contenu WordPress"
 
@@ -59,24 +59,37 @@ msgstr "Le plugin Connect est installé et prêt à démarrer la migration."
 #: includes/Reports/MigrationReport.php:42
 #: includes/Reports/MigrationReport.php:60
 msgid "Migration Report"
-msgstr ""
+msgstr "Rapport de Migration"
 
-#: includes/Reports/MigrationReport.php:90
+#: includes/Reports/MigrationReport.php:94
 msgid "No report available."
-msgstr ""
+msgstr "Aucun rapport disponible."
 
 #: includes/Services/InstaMigrateService.php:48
 msgid "Cannot get api key."
-msgstr ""
+msgstr "Impossible d'obtenir la clé API."
 
 #: includes/Services/InstaMigrateService.php:74
 msgid "Migration service could not be started."
-msgstr ""
+msgstr "Le service de migration n'a pas pu être démarré."
 
 #: includes/Steps/GetInstaWpApiKey.php:57
 msgid "Cannot get Api key."
-msgstr ""
+msgstr "Impossible d'obtenir la clé API."
 
 #: includes/Steps/InstallActivateInstaWp.php:57
 msgid "Failed to install and activate the plugin"
-msgstr ""
+msgstr "Échec de l'installation et de l'activation du plugin."
+
+#: includes/Services/EventService.php:26
+msgid "Bad event structure/value."
+msgstr "Mauvaise structure/valeur de l'événement."
+
+#: includes/Services/HostingInfoService.php:74
+#: includes/Services/PageSpeedService.php:67
+msgid "Error decoding response"
+msgstr "Erreur lors du décodage de la réponse."
+
+#: includes/Steps/SourceHostingInfo.php:59
+msgid "Source hosting details not retrieved correctly"
+msgstr "Les détails de l'hébergement source n'ont pas été récupérés correctement."

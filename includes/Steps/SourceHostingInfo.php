@@ -56,7 +56,7 @@ class SourceHostingInfo extends AbstractStep {
 				$this->hosting_info = $hosting_info;
 				$this->success();
 			} else {
-				$this->set_response( array( 'message' => 'Source hosting details not retrieved correctly' ) );
+				$this->set_response( array( 'message' => __( 'Source hosting details not retrieved correctly', 'wp-module-migration' ) ) );
 				$this->retry();
 			}
 		}
