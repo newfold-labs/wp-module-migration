@@ -27,23 +27,23 @@ msgstr "Migración"
 msgid "NFD migration Options"
 msgstr "Opciones de migración NFD"
 
-#: includes/Migration.php:98
+#: includes/Migration.php:103
 msgid "WordPress Migration Tool"
 msgstr "Herramienta de migración de WordPress"
 
-#: includes/Migration.php:99
+#: includes/Migration.php:104
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migra un sitio de WordPress existente a esta instancia de WordPress. Esta herramienta hará una copia de un sitio existente y lo importará automáticamente en esta instancia de WordPress. <strong>Esto sobrescribirá todo el contenido.</strong>"
 
-#: includes/Migration.php:148
+#: includes/Migration.php:161
 msgid "Preparing your site"
 msgstr "Preparando su sitio"
 
-#: includes/Migration.php:149
+#: includes/Migration.php:162
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Por favor, espere unos segundos mientras obtenemos su nueva cuenta lista para importar su sitio WordPress existente."
 
-#: includes/Migration.php:150
+#: includes/Migration.php:163
 msgid "WordPress Content"
 msgstr "Contenido de WordPress"
 
@@ -61,7 +61,7 @@ msgstr "Conecte el plugin está instalado y listo para iniciar la migración."
 msgid "Migration Report"
 msgstr ""
 
-#: includes/Reports/MigrationReport.php:90
+#: includes/Reports/MigrationReport.php:94
 msgid "No report available."
 msgstr ""
 
@@ -79,4 +79,13 @@ msgstr ""
 
 #: includes/Steps/InstallActivateInstaWp.php:57
 msgid "Failed to install and activate the plugin"
+msgstr ""
+
+#: includes/Services/EventService.php:26
+msgid "Bad event structure/value."
+msgstr ""
+
+#: includes/Services/HostingInfoService.php:74
+#: includes/Services/PageSpeedService.php:67
+msgid "Error decoding response"
 msgstr ""
