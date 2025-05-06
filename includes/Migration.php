@@ -184,13 +184,13 @@ class Migration {
 		\load_plugin_textdomain(
 			'wp-module-migration',
 			false,
-			NFD_MIGRATION_DIR . '/languages'
+			dirname( plugin_basename( NFD_MIGRATION_DIR ) ) . '/' . basename( NFD_MIGRATION_DIR ) . '/languages'
 		);
 
 		\load_script_textdomain(
 			'nfd_migration_tool',
 			'wp-module-migration',
-			NFD_MIGRATION_DIR . '/languages'
+			dirname( plugin_basename( NFD_MIGRATION_DIR ) ) . '/' . basename( NFD_MIGRATION_DIR ) . '/languages'
 		);
 	}
 }
