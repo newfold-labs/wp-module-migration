@@ -51,9 +51,7 @@ class MigrationModal {
 			description;
 	}
 	show( withClose = false, icon = 'loading' ) {
-		withClose
-			? ( this.closeBtn.style.display = 'block' )
-			: ( this.closeBtn.style.display = 'none' );
+		this.closeBtn.style.display = withClose ? 'block' : 'none';
 		if ( icon === 'error' ) {
 			document.querySelector( '.nfd-migration-error' ).style.display =
 				'block';
@@ -83,27 +81,27 @@ document
 		MModal.show();
 
 		fetch(
-			nfdplugin.restApiUrl +
+			migration.restApiUrl +
 				'/newfold-migration/v1/migrate/connect&_locale=user',
 			{
 				credentials: 'same-origin',
 				headers: {
 					'Content-Type': 'application/json',
-					'X-WP-Nonce': nfdplugin.restApiNonce,
+					'X-WP-Nonce': migration.restApiNonce,
 				},
 			}
 		)
 			.then( ( response ) => response.json() )
 			.then( ( res ) => {
 				fetch(
-					nfdplugin.restApiUrl +
+					migration.restApiUrl +
 						'/newfold-data/v1/events&_locale=user',
 					{
 						credentials: 'same-origin',
 						method: 'post',
 						headers: {
 							'Content-Type': 'application/json',
-							'X-WP-Nonce': nfdplugin.restApiNonce,
+							'X-WP-Nonce': migration.restApiNonce,
 						},
 						body: JSON.stringify( {
 							action: 'migration_initiated_tools',
