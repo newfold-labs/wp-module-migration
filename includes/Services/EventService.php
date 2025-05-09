@@ -105,4 +105,79 @@ class EventService {
 
 		return $event;
 	}
+
+	/**
+	 * Sends a Hiive event to the Cloudflare worker's /events endpoint.
+	 *
+	 * @param string $key  The event action key.
+	 * @param array  $data The event data payload (must include d_id and dest_url).
+	 * @return bool|WP_Error
+	 */
+	public static function send_application_event( $key, $data ) {
+		if ( ! is_string( $key ) || empty( $key ) || ! is_array( $data ) ) {
+			return new \WP_Error(
+				'nfd_module_migration_invalid_input',
+				__( 'Invalid input for event key or data.', 'wp-module-migration' )
+			);
+		}
+
+		$category = Events::get_category()[1];
+		$event    = array(
+			'action'   => $key,
+			'category' => $category,
+			'data'     => $data,
+		);
+		$event    = self::validate( $event );
+		if ( ! $event ) {
+			return new \WP_Error(
+				'nfd_module_migration_invalid_event',
+				__( 'Invalid event payload.', 'wp-module-migration' )
+			);
+		}
+
+		$url     = trailingslashit( NFD_MIGRATION_PROXY_WORKER ) . 'events';
+		$payload = array(
+			'key'      => $event['action'],
+			'category' => $event['category'],
+			'data'     => array_merge(
+				$event['data'],
+				array(
+					'dest_url' => get_site_url(),
+				)
+			),
+		);
+		$body    = wp_json_encode( $payload );
+		if ( false === $body ) {
+			return new \WP_Error(
+				'nfd_module_migration_encoding_failed',
+				__( 'Failed to encode event JSON.', 'wp-module-migration' )
+			);
+		}
+		$response = wp_remote_post(
+			$url,
+			array(
+				'headers' => array(
+					'Content-Type' => 'application/json',
+				),
+				'body'    => $body,
+				'timeout' => 10,
+			)
+		);
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+		$code = wp_remote_retrieve_response_code( $response );
+		if ( $code < 200 || $code >= 300 ) {
+			return new \WP_Error(
+				'nfd_module_migration_forward_failed',
+				__( 'Failed to forward event to Hiive.', 'wp-module-migration' ),
+				array(
+					'status_code' => $code,
+					'body'        => wp_remote_retrieve_body( $response ),
+				)
+			);
+		}
+
+		return true;
+	}
 }
