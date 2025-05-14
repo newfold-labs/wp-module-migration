@@ -47,12 +47,12 @@ msgstr "Veuillez patienter quelques secondes pendant que nous avons votre nouvea
 msgid "WordPress Content"
 msgstr "Contenu WordPress"
 
-#: includes/Services/InstaMigrateService.php:67
+#: includes/Services/InstaMigrateService.php:85
 #: includes/Steps/ConnectToInstaWp.php:48
 msgid "Website could not connect successfully."
 msgstr "Le site web n'a pas pu se connecter avec succès."
 
-#: includes/Services/InstaMigrateService.php:60
+#: includes/Services/InstaMigrateService.php:78
 msgid "Connect plugin is installed and ready to start the migration."
 msgstr "Le plugin Connect est installé et prêt à démarrer la migration."
 
@@ -65,11 +65,11 @@ msgstr "Rapport de Migration"
 msgid "No report available."
 msgstr "Aucun rapport disponible."
 
-#: includes/Services/InstaMigrateService.php:48
+#: includes/Services/InstaMigrateService.php:54
 msgid "Cannot get api key."
 msgstr "Impossible d'obtenir la clé API."
 
-#: includes/Services/InstaMigrateService.php:74
+#: includes/Services/InstaMigrateService.php:92
 msgid "Migration service could not be started."
 msgstr "Le service de migration n'a pas pu être démarré."
 
@@ -93,3 +93,19 @@ msgstr "Erreur lors du décodage de la réponse."
 #: includes/Steps/SourceHostingInfo.php:59
 msgid "Source hosting details not retrieved correctly"
 msgstr "Les détails de l'hébergement source n'ont pas été récupérés correctement."
+
+#: includes/Services/EventService.php:120
+msgid "Invalid input for event key or data."
+msgstr ""
+
+#: includes/Services/EventService.php:134
+msgid "Invalid event payload."
+msgstr ""
+
+#: includes/Services/EventService.php:153
+msgid "Failed to encode event JSON."
+msgstr ""
+
+#: includes/Services/EventService.php:173
+msgid "Failed to forward event to Hiive."
+msgstr ""

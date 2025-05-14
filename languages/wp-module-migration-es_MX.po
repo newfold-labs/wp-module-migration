@@ -59,20 +59,20 @@ msgstr "Estructura o valor del evento no válido."
 msgid "Error decoding response"
 msgstr "Error al decodificar la respuesta"
 
-#: includes/Services/InstaMigrateService.php:48
+#: includes/Services/InstaMigrateService.php:54
 msgid "Cannot get api key."
 msgstr "No se pudo obtener la clave API."
 
-#: includes/Services/InstaMigrateService.php:60
+#: includes/Services/InstaMigrateService.php:78
 msgid "Connect plugin is installed and ready to start the migration."
 msgstr "El plugin Connect está instalado y listo para iniciar la migración."
 
-#: includes/Services/InstaMigrateService.php:67
+#: includes/Services/InstaMigrateService.php:85
 #: includes/Steps/ConnectToInstaWp.php:48
 msgid "Website could not connect successfully."
 msgstr "No se pudo establecer conexión con el sitio web."
 
-#: includes/Services/InstaMigrateService.php:74
+#: includes/Services/InstaMigrateService.php:92
 msgid "Migration service could not be started."
 msgstr "No se pudo iniciar el servicio de migración."
 
@@ -87,3 +87,19 @@ msgstr "Error al instalar y activar el plugin"
 #: includes/Steps/SourceHostingInfo.php:59
 msgid "Source hosting details not retrieved correctly"
 msgstr "Los detalles del hosting de origen no se recuperaron correctamente"
+
+#: includes/Services/EventService.php:120
+msgid "Invalid input for event key or data."
+msgstr ""
+
+#: includes/Services/EventService.php:134
+msgid "Invalid event payload."
+msgstr ""
+
+#: includes/Services/EventService.php:153
+msgid "Failed to encode event JSON."
+msgstr ""
+
+#: includes/Services/EventService.php:173
+msgid "Failed to forward event to Hiive."
+msgstr ""
