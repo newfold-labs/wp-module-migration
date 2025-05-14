@@ -2,7 +2,7 @@
 namespace NewfoldLabs\WP\Module\Migration\Reports;
 
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
-use NewfoldLabs\WP\Module\Migration\Permissions;
+use NewfoldLabs\WP\Module\Migration\Helpers\Permissions;
 /**
  * Class to add a page report to see the tracking informations.
  *
