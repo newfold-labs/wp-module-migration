@@ -12,7 +12,7 @@ final class Events {
 	 */
 	protected static $category = array(
 		'wonder_start',
-		'migration',
+		'wp_migration',
 	);
 
 	/**
@@ -23,9 +23,12 @@ final class Events {
 	 * @var array
 	 */
 	protected static $valid_actions = array(
-		'migration_completed' => true,
-		'migration_failed'    => true,
-		'migration_aborted'   => true,
+		'migration_completed'              => true,
+		'migration_failed'                 => true,
+		'migration_aborted'                => true,
+		'migration_vendor_plugin_activate' => true,
+		'migration_vendor_plugin_connect'  => true,
+		'migration_get_vendor_api_key'     => true,
 	);
 
 	/**
