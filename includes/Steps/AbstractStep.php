@@ -91,7 +91,6 @@ abstract class AbstractStep {
 	 */
 	protected function failure() {
 		$this->set_status( $this->statuses['failed'] );
-		$this->tracker->update_track( $this );
 	}
 	/**
 	 * Check if the step is completed.
@@ -110,7 +109,7 @@ abstract class AbstractStep {
 		$count = $this->retry_count + 1;
 		if ( $count >= $this->get_max_retries() ) {
 			$this->failure();
-			return false;
+			return $this;
 		}
 
 		sleep( 1 );

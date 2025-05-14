@@ -6,7 +6,9 @@ use NewfoldLabs\WP\Module\Migration\Services\EventService;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 use NewfoldLabs\WP\Module\Migration\Steps\Push;
+use NewfoldLabs\WP\Module\Migration\Steps\PageSpeed;
 use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
+use NewfoldLabs\WP\Module\Migration\Steps\SourceHostingInfo;
 
 /**
  * Monitors InstaWp options update
@@ -34,18 +36,23 @@ class InstaWpOptionsUpdatesListener {
 		$this->tracker = new Tracker();
 		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 2 );
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
+		add_action( 'nfd_migration_page_speed_source', array( $this, 'page_speed_source' ), 10 );
+		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10, 3 );
+		add_action( 'nfd_migration_source_hosting_info', array( $this, 'source_hosting_info' ), 10 );
 	}
 	/**
 	 * Push event with tracking file content.
 	 *
 	 * @param string $action action/key for the event.
 	 * @param array  $data   data to be sent with the event.
+	 * @param array  $category category of the event.
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function push( $action, $data ) {
+	public static function push( $action, $data, $category = '' ) {
+		$category = ! empty( $category ) ? $category : Events::get_category()[0];
 		return EventService::send(
 			array(
-				'category' => Events::get_category()[0],
+				'category' => $category,
 				'action'   => $action,
 				'data'     => $data,
 			)
@@ -62,49 +69,57 @@ class InstaWpOptionsUpdatesListener {
 		if ( $old_value !== $new_value ) {
 			$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
 			if ( ! empty( $migrate_group_uuid ) ) {
-				$token = UtilityService::get_insta_api_key( BRAND_PLUGIN );
-				if ( $token && $migrate_group_uuid ) {
-					$response = wp_remote_get(
-						'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
-						array(
-							'headers' => array(
-								'Authorization' => 'Bearer ' . $token,
-							),
-						)
-					);
+				$response = UtilityService::get_migration_data( $migrate_group_uuid );
 
-					if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
-						$body = wp_remote_retrieve_body( $response );
-						$data = json_decode( $body, true );
-						if ( $data && is_array( $data ) && isset( $data['status'] ) && $data['status'] ) {
-							$migration_status = $data['data']['status'];
+				if ( $response && is_array( $response ) && isset( $response['status'] ) && $response['status'] ) {
+					$migration_status = $response['data']['status'];
 
-							if ( 'completed' === $migration_status || 'failed' === $migration_status || 'aborted' === $migration_status ) {
-								$push = new Push();
-								$push->set_status( $push->statuses['completed'] );
-								$this->tracker->update_track( $push );
+					if ( 'completed' === $migration_status || 'failed' === $migration_status || 'aborted' === $migration_status ) {
+						$push = new Push();
+						$push->set_status( $push->statuses[ $migration_status ] );
+						$this->tracker->update_track( $push );
+
+						if ( isset( $response['data']['source_site_url'] ) ) {
+							$source_site_url = $response['data']['source_site_url'];
+							if ( ! wp_next_scheduled( 'nfd_migration_source_hosting_info' ) ) {
+								wp_schedule_single_event( time() + 60, 'nfd_migration_source_hosting_info', array( 'source_site_url' => $source_site_url ) );
 							}
-							if ( 'completed' === $migration_status ) {
-								$migration_complete = new LastStep();
-								$migration_complete->set_status( $migration_complete->statuses['completed'] );
-								$this->tracker->update_track( $migration_complete );
-								$this->push( 'migration_completed', $this->tracker->get_track_content() );
-							} elseif ( 'failed' === $migration_status ) {
-								$migration_complete = new LastStep();
-								$migration_complete->set_status( $migration_complete->statuses['failed'] );
-								$this->tracker->update_track( $migration_complete );
-								$this->push( 'migration_failed', $this->tracker->get_track_content() );
-							} elseif ( 'aborted' === $migration_status ) {
-								$migration_complete = new LastStep();
-								$migration_complete->set_status( $migration_complete->statuses['aborted'] );
-								$this->tracker->update_track( $migration_complete );
-								$this->push( 'migration_aborted', $this->tracker->get_track_content() );
+							if ( ! wp_next_scheduled( 'nfd_migration_page_speed_source' ) ) {
+								wp_schedule_single_event( time() + 90, 'nfd_migration_page_speed_source', array( 'source_site_url' => $source_site_url ) );
+							}
+							if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
+								wp_schedule_single_event(
+									time() + 120,
+									'nfd_migration_page_speed_destination',
+									array(
+										'source_site_url' => $source_site_url,
+										'migrate_group_uuid' => $migrate_group_uuid,
+										'status'          => $migration_status,
+									),
+								);
 							}
 						}
+					}
+
+					if ( 'completed' === $migration_status ) {
+						$migration_complete = new LastStep();
+						$migration_complete->set_status( $migration_complete->statuses['completed'] );
+						$this->tracker->update_track( $migration_complete );
+					} elseif ( 'failed' === $migration_status ) {
+						$migration_complete = new LastStep();
+						$migration_complete->set_status( $migration_complete->statuses['failed'] );
+						$this->tracker->update_track( $migration_complete );
+						$this::push( 'migration_failed', $this->tracker->get_track_content() );
+					} elseif ( 'aborted' === $migration_status ) {
+						$migration_complete = new LastStep();
+						$migration_complete->set_status( $migration_complete->statuses['aborted'] );
+						$this->tracker->update_track( $migration_complete );
+						$this::push( 'migration_aborted', $this->tracker->get_track_content() );
 					}
 				}
 			}
 		}
+
 		return $new_value;
 	}
 
@@ -125,5 +140,83 @@ class InstaWpOptionsUpdatesListener {
 			}
 		}
 		return $new_value;
+	}
+	/**
+	 * Get source site hosting informations.
+	 *
+	 * @param string $source_site_url source site url.
+	 * @return void
+	 */
+	public function source_hosting_info( $source_site_url ) {
+		$source_hosting_info = new SourceHostingInfo( $source_site_url );
+		$this->tracker->update_track( $source_hosting_info );
+
+		if ( ! $source_hosting_info->failed() ) {
+			$source_hosting_info->set_status( $source_hosting_info->statuses['completed'] );
+		}
+
+		$this->tracker->update_track( $source_hosting_info );
+	}
+	/**
+	 * Track page speed for source site.
+	 *
+	 * @param string $source_site_url source site url.
+	 * @return void
+	 */
+	public function page_speed_source( $source_site_url ) {
+		$source_url_pagespeed = new PageSpeed( $source_site_url, 'source' );
+		if ( ! $source_url_pagespeed->failed() ) {
+			$source_url_pagespeed->set_status( $source_url_pagespeed->statuses['completed'] );
+		}
+
+		$this->tracker->update_track( $source_url_pagespeed );
+	}
+	/**
+	 * Track page speed for source site.
+	 *
+	 * @param string $source_site_url    source site url.
+	 * @param string $migrate_group_uuid migrate group uuid.
+	 * @param string $status             status of migration.
+	 * @return void
+	 */
+	public function page_speed_destination( $source_site_url, $migrate_group_uuid, $status ) {
+		try {
+			$source_url_pagespeed = new PageSpeed( site_url(), 'destination' );
+			if ( ! $source_url_pagespeed->failed() ) {
+				$source_url_pagespeed->set_status( $source_url_pagespeed->statuses['completed'] );
+			}
+
+			$this->tracker->update_track( $source_url_pagespeed );
+		} finally {
+			self::push(
+				'migration_completed',
+				array_merge(
+					array(
+						'migration_uuid' => $migrate_group_uuid,
+					),
+					$this->tracker->get_track_content()
+				),
+			);
+
+			// send specific data to the Migration Table Event
+			$tracked_datas           = $this->tracker->get_track_content();
+			$isp                     = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['isp'] ?? 'N/A';
+			$as                      = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['as'] ?? 'N/A';
+			$source_speed_index      = $tracked_datas['PageSpeed_source']['data']['speedIndex'] ?? '0';
+			$source_speed_index      = str_replace( ' s', '', $source_speed_index );
+			$destination_speed_index = $tracked_datas['PageSpeed_destination']['data']['speedIndex'] ?? 0;
+			$destination_speed_index = str_replace( ' s', '', $destination_speed_index );
+			$migration_infos         = array(
+				'migration_uuid'         => $migrate_group_uuid,
+				'status'                 => 'completed' === $status ? 'successful' : $status,
+				'origin_url'             => $source_site_url,
+				'origin_isp'             => $isp,
+				'origin_as'              => $as,
+				'origin_page_speed'      => $source_speed_index,
+				'destination_page_speed' => $destination_speed_index,
+			);
+
+			self::push( "migration_$status", $migration_infos, 'migration' );
+		}
 	}
 }

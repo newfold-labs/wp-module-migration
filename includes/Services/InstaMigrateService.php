@@ -39,6 +39,12 @@ class InstaMigrateService {
 	public function run() {
 
 		$instawp_get_key_step = new GetInstaWpApiKey();
+		EventService::send_application_event(
+			'migration_get_vendor_api_key',
+			array(
+				'status' => $instawp_get_key_step->get_status(),
+			)
+		);
 		$this->tracker->update_track( $instawp_get_key_step );
 		if ( ! $instawp_get_key_step->failed() ) {
 			$this->insta_api_key = $instawp_get_key_step->get_data( 'insta_api_key' );
@@ -52,9 +58,21 @@ class InstaMigrateService {
 
 		$install_activate = new InstallActivateInstaWp();
 		$this->tracker->update_track( $install_activate );
+		EventService::send_application_event(
+			'migration_vendor_plugin_activate',
+			array(
+				'status' => $install_activate->get_status(),
+			)
+		);
 		if ( ! $install_activate->failed() ) {
 			$connect_to_instawp = new ConnectToInstaWp( $this->insta_api_key );
 			$this->tracker->update_track( $connect_to_instawp );
+			EventService::send_application_event(
+				'migration_vendor_plugin_connect',
+				array(
+					'status' => $connect_to_instawp->get_status(),
+				)
+			);
 			if ( ! $connect_to_instawp->failed() ) {
 				// Add the current WordPress locale to the redirect URL
 				$locale = get_locale();

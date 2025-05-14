@@ -10,7 +10,7 @@ use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
  */
 class Tracker {
 	/**
-	 * Name of the option to track the migration steps.
+	 * Name of the tracking file.
 	 *
 	 * @var string $file_name.
 	 */
