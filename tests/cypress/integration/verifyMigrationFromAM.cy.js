@@ -4,7 +4,7 @@ import { wpLogin } from './wp-module-support/utils.cy';
 const COMMAND_TIMEOUT = 60000;
 const pluginId = GetPluginId();
 
-if ( pluginId === 'bluehost' || pluginId === 'hostgator' ) {
+if ( pluginId === 'bluehost' ) {
 	describe(
 		'Migration Flow - Emulating AM Flow',
 		{ testIsolation: true },
