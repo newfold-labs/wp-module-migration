@@ -13,27 +13,27 @@ msgstr ""
 "X-Generator: Poedit 3.6\n"
 "X-Domain: wp-module-migration\n"
 
-#: bootstrap.php:20
+#: bootstrap.php:19
 msgid "Migration"
 msgstr "Migração"
 
-#: includes/Migration.php:103
+#: includes/Migration.php:106
 msgid "WordPress Migration Tool"
 msgstr "Ferramenta de Migração do WordPress"
 
-#: includes/Migration.php:104
+#: includes/Migration.php:107
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migre um site WordPress existente para esta instância do WordPress. Esta ferramenta fará uma cópia do site existente e a importará automaticamente para esta instância do WordPress. <strong>Isso substituirá todo o conteúdo.</strong>"
 
-#: includes/Migration.php:161
+#: includes/Migration.php:164
 msgid "Preparing your site"
 msgstr "Preparando seu site"
 
-#: includes/Migration.php:162
+#: includes/Migration.php:165
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Aguarde alguns segundos enquanto preparamos sua nova conta para importar seu site WordPress existente."
 
-#: includes/Migration.php:163
+#: includes/Migration.php:166
 msgid "WordPress Content"
 msgstr "Conteúdo do WordPress"
 
@@ -59,20 +59,20 @@ msgstr "Estrutura ou valor de evento inválido."
 msgid "Error decoding response"
 msgstr "Erro ao decodificar a resposta"
 
-#: includes/Services/InstaMigrateService.php:48
+#: includes/Services/InstaMigrateService.php:54
 msgid "Cannot get api key."
 msgstr "Não foi possível obter a chave da API."
 
-#: includes/Services/InstaMigrateService.php:60
+#: includes/Services/InstaMigrateService.php:80
 msgid "Connect plugin is installed and ready to start the migration."
 msgstr "O plugin Connect está instalado e pronto para iniciar a migração."
 
-#: includes/Services/InstaMigrateService.php:67
+#: includes/Services/InstaMigrateService.php:95
 #: includes/Steps/ConnectToInstaWp.php:48
 msgid "Website could not connect successfully."
 msgstr "Não foi possível conectar-se ao site com sucesso."
 
-#: includes/Services/InstaMigrateService.php:74
+#: includes/Services/InstaMigrateService.php:102
 msgid "Migration service could not be started."
 msgstr "Não foi possível iniciar o serviço de migração."
 
@@ -87,3 +87,19 @@ msgstr "Falha ao instalar e ativar o plugin"
 #: includes/Steps/SourceHostingInfo.php:59
 msgid "Source hosting details not retrieved correctly"
 msgstr "Os detalhes da hospedagem de origem não foram recuperados corretamente"
+
+#: includes/Services/EventService.php:120
+msgid "Invalid input for event key or data."
+msgstr ""
+
+#: includes/Services/EventService.php:134
+msgid "Invalid event payload."
+msgstr ""
+
+#: includes/Services/EventService.php:153
+msgid "Failed to encode event JSON."
+msgstr ""
+
+#: includes/Services/EventService.php:173
+msgid "Failed to forward event to Hiive."
+msgstr ""

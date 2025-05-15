@@ -19,7 +19,7 @@ msgstr ""
 "X-Crowdin-File: wp-module-migration.pot\n"
 "X-Crowdin-File-ID: 36\n"
 
-#: bootstrap.php:20
+#: bootstrap.php:19
 msgid "Migration"
 msgstr "Migración"
 
@@ -27,32 +27,32 @@ msgstr "Migración"
 msgid "NFD migration Options"
 msgstr "Opciones de migración NFD"
 
-#: includes/Migration.php:103
+#: includes/Migration.php:106
 msgid "WordPress Migration Tool"
 msgstr "Herramienta de migración de WordPress"
 
-#: includes/Migration.php:104
+#: includes/Migration.php:107
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migra un sitio de WordPress existente a esta instancia de WordPress. Esta herramienta hará una copia de un sitio existente y lo importará automáticamente en esta instancia de WordPress. <strong>Esto sobrescribirá todo el contenido.</strong>"
 
-#: includes/Migration.php:161
+#: includes/Migration.php:164
 msgid "Preparing your site"
 msgstr "Preparando su sitio"
 
-#: includes/Migration.php:162
+#: includes/Migration.php:165
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Por favor, espere unos segundos mientras obtenemos su nueva cuenta lista para importar su sitio WordPress existente."
 
-#: includes/Migration.php:163
+#: includes/Migration.php:166
 msgid "WordPress Content"
 msgstr "Contenido de WordPress"
 
-#: includes/Services/InstaMigrateService.php:67
+#: includes/Services/InstaMigrateService.php:95
 #: includes/Steps/ConnectToInstaWp.php:48
 msgid "Website could not connect successfully."
 msgstr "El sitio web no se pudo conectar correctamente."
 
-#: includes/Services/InstaMigrateService.php:60
+#: includes/Services/InstaMigrateService.php:80
 msgid "Connect plugin is installed and ready to start the migration."
 msgstr "El plugin está instalado y listo para iniciar la migración."
 
@@ -65,11 +65,11 @@ msgstr "Informe de Migración"
 msgid "No report available."
 msgstr "No hay informe disponible."
 
-#: includes/Services/InstaMigrateService.php:48
+#: includes/Services/InstaMigrateService.php:54
 msgid "Cannot get api key."
 msgstr "No se puede obtener la clave API."
 
-#: includes/Services/InstaMigrateService.php:74
+#: includes/Services/InstaMigrateService.php:102
 msgid "Migration service could not be started."
 msgstr "No se pudo iniciar el servicio de migración."
 
@@ -93,3 +93,19 @@ msgstr "Error al decodificar la respuesta."
 #: includes/Steps/SourceHostingInfo.php:59
 msgid "Source hosting details not retrieved correctly"
 msgstr "No se recuperaron correctamente los detalles del hosting de origen."
+
+#: includes/Services/EventService.php:120
+msgid "Invalid input for event key or data."
+msgstr ""
+
+#: includes/Services/EventService.php:134
+msgid "Invalid event payload."
+msgstr ""
+
+#: includes/Services/EventService.php:153
+msgid "Failed to encode event JSON."
+msgstr ""
+
+#: includes/Services/EventService.php:173
+msgid "Failed to forward event to Hiive."
+msgstr ""
