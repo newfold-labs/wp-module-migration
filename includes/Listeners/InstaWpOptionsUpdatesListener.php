@@ -99,10 +99,10 @@ class InstaWpOptionsUpdatesListener {
 						$migration_complete = new LastStep();
 						$migration_complete->set_status( $migration_complete->statuses['aborted'] );
 						$this->tracker->update_track( $migration_complete );
-												EventService::send_application_event(
-													'migration_aborted',
-													$this->tracker->get_track_content()
-												);
+						EventService::send_application_event(
+							'migration_aborted',
+							$this->tracker->get_track_content()
+						);
 					}
 				}
 			}
