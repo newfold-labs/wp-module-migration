@@ -29,6 +29,7 @@ final class Events {
 		'migration_vendor_plugin_activate' => true,
 		'migration_vendor_plugin_connect'  => true,
 		'migration_get_vendor_api_key'     => true,
+		'migration_successful'             => true,
 	);
 
 	/**
