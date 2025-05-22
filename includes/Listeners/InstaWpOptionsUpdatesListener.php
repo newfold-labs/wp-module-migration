@@ -177,7 +177,7 @@ class InstaWpOptionsUpdatesListener {
 			$this->tracker->update_track( $source_url_pagespeed );
 		} finally {
 			EventService::send_application_event(
-				"migration_$status",
+				'migration_completed',
 				array_merge(
 					array(
 						'migration_uuid' => $migrate_group_uuid,
