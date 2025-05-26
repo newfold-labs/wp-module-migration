@@ -56,7 +56,7 @@ class Migration {
 
 		if ( Permissions::is_authorized_admin() ) {
 			new MigrationReport();
-			add_action( 'init', array( __CLASS__, 'load_text_domain' ), 100 );
+			add_action( 'init', array( $this, 'load_text_domain' ), 100 );
 			if ( BrandHelper::is_whitelisted( $container->plugin()->id ) ) {
 				add_action( 'load-import.php', array( $this, 'register_wp_migration_tool' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'set_import_tools' ) );
@@ -168,12 +168,6 @@ class Migration {
 				'restApiNonce'          => \wp_create_nonce( 'wp_rest' ),
 			);
 			wp_localize_script( 'nfd_migration_tool', 'migration', $migration_data );
-
-			wp_set_script_translations(
-				'nfd_migration_tool',
-				'wp-module-migration',
-				NFD_MIGRATION_DIR . '/languages'
-			);
 		}
 	}
 
@@ -182,18 +176,11 @@ class Migration {
 	 *
 	 * @return void
 	 */
-	public static function load_text_domain() {
-
-		\load_plugin_textdomain(
+	public function load_text_domain() {
+		load_plugin_textdomain(
 			'wp-module-migration',
 			false,
-			dirname( plugin_basename( NFD_MIGRATION_DIR ) ) . '/' . basename( NFD_MIGRATION_DIR ) . '/languages'
-		);
-
-		\load_script_textdomain(
-			'nfd_migration_tool',
-			'wp-module-migration',
-			dirname( plugin_basename( NFD_MIGRATION_DIR ) ) . '/' . basename( NFD_MIGRATION_DIR ) . '/languages'
+			dirname( $this->container->plugin()->basename ) . '/vendor/newfold-labs/wp-module-migration/languages'
 		);
 	}
 }
