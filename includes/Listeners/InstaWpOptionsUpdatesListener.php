@@ -40,24 +40,6 @@ class InstaWpOptionsUpdatesListener {
 		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10, 3 );
 		add_action( 'nfd_migration_source_hosting_info', array( $this, 'source_hosting_info' ), 10 );
 	}
-	/**
-	 * Push event with tracking file content.
-	 *
-	 * @param string $action action/key for the event.
-	 * @param array  $data   data to be sent with the event.
-	 * @param array  $category category of the event.
-	 * @return WP_REST_Response|WP_Error
-	 */
-	public static function push( $action, $data, $category = '' ) {
-		$category = ! empty( $category ) ? $category : Events::get_category()[0];
-		return EventService::send(
-			array(
-				'category' => $category,
-				'action'   => $action,
-				'data'     => $data,
-			)
-		);
-	}
 
 	/**
 	 * Triggers events
@@ -109,12 +91,18 @@ class InstaWpOptionsUpdatesListener {
 						$migration_complete = new LastStep();
 						$migration_complete->set_status( $migration_complete->statuses['failed'] );
 						$this->tracker->update_track( $migration_complete );
-						$this::push( 'migration_failed', $this->tracker->get_track_content() );
+						EventService::send_application_event(
+							'migration_failed',
+							$this->tracker->get_track_content()
+						);
 					} elseif ( 'aborted' === $migration_status ) {
 						$migration_complete = new LastStep();
 						$migration_complete->set_status( $migration_complete->statuses['aborted'] );
 						$this->tracker->update_track( $migration_complete );
-						$this::push( 'migration_aborted', $this->tracker->get_track_content() );
+						EventService::send_application_event(
+							'migration_aborted',
+							$this->tracker->get_track_content()
+						);
 					}
 				}
 			}
@@ -188,7 +176,7 @@ class InstaWpOptionsUpdatesListener {
 
 			$this->tracker->update_track( $source_url_pagespeed );
 		} finally {
-			self::push(
+			EventService::send_application_event(
 				'migration_completed',
 				array_merge(
 					array(
@@ -216,7 +204,7 @@ class InstaWpOptionsUpdatesListener {
 				'destination_page_speed' => $destination_speed_index,
 			);
 
-			self::push( "migration_$status", $migration_infos, 'migration' );
+			EventService::send_application_event( "migration_$status", $migration_infos );
 		}
 	}
 }
