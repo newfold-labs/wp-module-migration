@@ -95,7 +95,7 @@ document
 			.then( ( res ) => {
 				fetch(
 					migration.restApiUrl +
-						'/newfold-data/v1/events&_locale=user',
+						'/newfold-migration/v1/migrate/events&_locale=user',
 					{
 						credentials: 'same-origin',
 						method: 'post',
@@ -104,8 +104,7 @@ document
 							'X-WP-Nonce': migration.restApiNonce,
 						},
 						body: JSON.stringify( {
-							action: 'migration_initiated_tools',
-							category: 'user_action',
+							key: 'migration_initiated_tools',
 							data: {
 								page: window.location.href,
 							},
