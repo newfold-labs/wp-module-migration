@@ -135,6 +135,8 @@ class EventService {
 			);
 		}
 
+		$site_url = get_site_url();
+
 		$url     = trailingslashit( NFD_MIGRATION_PROXY_WORKER ) . 'events';
 		$payload = array(
 			'key'      => $event['action'],
@@ -142,7 +144,8 @@ class EventService {
 			'data'     => array_merge(
 				$event['data'],
 				array(
-					'dest_url' => get_site_url(),
+					'dest_url' => $site_url,
+					'url'      => $site_url,
 				)
 			),
 		);
@@ -153,6 +156,7 @@ class EventService {
 				__( 'Failed to encode event JSON.', 'wp-module-migration' )
 			);
 		}
+
 		$response = wp_remote_post(
 			$url,
 			array(
@@ -163,9 +167,11 @@ class EventService {
 				'timeout' => 10,
 			)
 		);
+
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
+
 		$code = wp_remote_retrieve_response_code( $response );
 		if ( $code < 200 || $code >= 300 ) {
 			return new \WP_Error(
