@@ -139,9 +139,12 @@ class EventService {
 
 		$url     = trailingslashit( NFD_MIGRATION_PROXY_WORKER ) . 'events';
 		$payload = array(
-			'key'      => $event['action'],
-			'category' => $event['category'],
-			'data'     => array_merge(
+			'key'         => $event['action'],
+			'category'    => $event['category'],
+			'environment' => array(
+				'brand' => BRAND_PLUGIN,
+			),
+			'data'        => array_merge(
 				$event['data'],
 				array(
 					'dest_url' => $site_url,
