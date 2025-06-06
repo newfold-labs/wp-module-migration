@@ -141,6 +141,9 @@ class EventService {
 		$payload = array(
 			'key'         => $event['action'],
 			'category'    => $event['category'],
+			'request'     => array(
+				'url' => $site_url,
+			),
 			'environment' => array(
 				'brand' => BRAND_PLUGIN,
 			),
