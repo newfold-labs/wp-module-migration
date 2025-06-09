@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1749457339">
-  <project timestamp="1749457339">
+<coverage generated="1749465612">
+  <project timestamp="1749465612">
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Data/Constants.php">
       <class name="NewfoldLabs\WP\Module\Migration\Data\Constants" namespace="global">
         <metrics complexity="9" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="0" elements="12" coveredelements="0"/>
@@ -59,7 +59,7 @@
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Listeners/InstaWpOptionsUpdatesListener.php">
       <class name="NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener" namespace="global">
-        <metrics complexity="33" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="101" coveredstatements="0" elements="108" coveredelements="0"/>
+        <metrics complexity="35" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="103" coveredstatements="0" elements="110" coveredelements="0"/>
       </class>
       <line num="27" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
       <line num="28" type="stmt" count="0"/>
@@ -70,7 +70,7 @@
       <line num="39" type="stmt" count="0"/>
       <line num="40" type="stmt" count="0"/>
       <line num="41" type="stmt" count="0"/>
-      <line num="50" type="method" name="on_update_instawp_last_migration_details" visibility="public" complexity="18" crap="342" count="0"/>
+      <line num="50" type="method" name="on_update_instawp_last_migration_details" visibility="public" complexity="19" crap="380" count="0"/>
       <line num="51" type="stmt" count="0"/>
       <line num="52" type="stmt" count="0"/>
       <line num="53" type="stmt" count="0"/>
@@ -137,7 +137,7 @@
       <line num="156" type="stmt" count="0"/>
       <line num="157" type="stmt" count="0"/>
       <line num="160" type="stmt" count="0"/>
-      <line num="170" type="method" name="page_speed_destination" visibility="public" complexity="3" crap="12" count="0"/>
+      <line num="170" type="method" name="page_speed_destination" visibility="public" complexity="4" crap="20" count="0"/>
       <line num="172" type="stmt" count="0"/>
       <line num="173" type="stmt" count="0"/>
       <line num="174" type="stmt" count="0"/>
@@ -151,7 +151,7 @@
       <line num="185" type="stmt" count="0"/>
       <line num="186" type="stmt" count="0"/>
       <line num="187" type="stmt" count="0"/>
-      <line num="190" type="stmt" count="0"/>
+      <line num="188" type="stmt" count="0"/>
       <line num="191" type="stmt" count="0"/>
       <line num="192" type="stmt" count="0"/>
       <line num="193" type="stmt" count="0"/>
@@ -168,8 +168,10 @@
       <line num="204" type="stmt" count="0"/>
       <line num="205" type="stmt" count="0"/>
       <line num="206" type="stmt" count="0"/>
-      <line num="208" type="stmt" count="0"/>
-      <metrics loc="212" ncloc="162" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="101" coveredstatements="0" elements="108" coveredelements="0"/>
+      <line num="207" type="stmt" count="0"/>
+      <line num="209" type="stmt" count="0"/>
+      <line num="210" type="stmt" count="0"/>
+      <metrics loc="215" ncloc="165" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="103" coveredstatements="0" elements="110" coveredelements="0"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Migration.php">
       <class name="NewfoldLabs\WP\Module\Migration\Migration" namespace="global">
@@ -393,7 +395,7 @@
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Services/EventService.php">
       <class name="NewfoldLabs\WP\Module\Migration\Services\EventService" namespace="global">
-        <metrics complexity="23" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="107" coveredstatements="0" elements="112" coveredelements="0"/>
+        <metrics complexity="24" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="109" coveredstatements="0" elements="114" coveredelements="0"/>
       </class>
       <line num="21" type="method" name="send" visibility="public" complexity="4" crap="20" count="0"/>
       <line num="22" type="stmt" count="0"/>
@@ -441,17 +443,14 @@
       <line num="102" type="stmt" count="0"/>
       <line num="103" type="stmt" count="0"/>
       <line num="106" type="stmt" count="0"/>
-      <line num="116" type="method" name="send_application_event" visibility="public" complexity="9" crap="90" count="0"/>
+      <line num="116" type="method" name="send_application_event" visibility="public" complexity="10" crap="110" count="0"/>
       <line num="117" type="stmt" count="0"/>
       <line num="118" type="stmt" count="0"/>
-      <line num="119" type="stmt" count="0"/>
-      <line num="120" type="stmt" count="0"/>
-      <line num="121" type="stmt" count="0"/>
+      <line num="122" type="stmt" count="0"/>
+      <line num="123" type="stmt" count="0"/>
       <line num="124" type="stmt" count="0"/>
       <line num="125" type="stmt" count="0"/>
       <line num="126" type="stmt" count="0"/>
-      <line num="127" type="stmt" count="0"/>
-      <line num="128" type="stmt" count="0"/>
       <line num="129" type="stmt" count="0"/>
       <line num="130" type="stmt" count="0"/>
       <line num="131" type="stmt" count="0"/>
@@ -459,12 +458,12 @@
       <line num="133" type="stmt" count="0"/>
       <line num="134" type="stmt" count="0"/>
       <line num="135" type="stmt" count="0"/>
+      <line num="136" type="stmt" count="0"/>
+      <line num="137" type="stmt" count="0"/>
       <line num="138" type="stmt" count="0"/>
+      <line num="139" type="stmt" count="0"/>
       <line num="140" type="stmt" count="0"/>
-      <line num="141" type="stmt" count="0"/>
-      <line num="142" type="stmt" count="0"/>
       <line num="143" type="stmt" count="0"/>
-      <line num="144" type="stmt" count="0"/>
       <line num="145" type="stmt" count="0"/>
       <line num="146" type="stmt" count="0"/>
       <line num="147" type="stmt" count="0"/>
@@ -484,30 +483,35 @@
       <line num="161" type="stmt" count="0"/>
       <line num="162" type="stmt" count="0"/>
       <line num="163" type="stmt" count="0"/>
+      <line num="164" type="stmt" count="0"/>
+      <line num="165" type="stmt" count="0"/>
       <line num="166" type="stmt" count="0"/>
       <line num="167" type="stmt" count="0"/>
       <line num="168" type="stmt" count="0"/>
-      <line num="169" type="stmt" count="0"/>
-      <line num="170" type="stmt" count="0"/>
       <line num="171" type="stmt" count="0"/>
       <line num="172" type="stmt" count="0"/>
       <line num="173" type="stmt" count="0"/>
       <line num="174" type="stmt" count="0"/>
       <line num="175" type="stmt" count="0"/>
+      <line num="176" type="stmt" count="0"/>
       <line num="177" type="stmt" count="0"/>
       <line num="178" type="stmt" count="0"/>
-      <line num="181" type="stmt" count="0"/>
+      <line num="179" type="stmt" count="0"/>
+      <line num="180" type="stmt" count="0"/>
       <line num="182" type="stmt" count="0"/>
       <line num="183" type="stmt" count="0"/>
-      <line num="184" type="stmt" count="0"/>
-      <line num="185" type="stmt" count="0"/>
       <line num="186" type="stmt" count="0"/>
       <line num="187" type="stmt" count="0"/>
       <line num="188" type="stmt" count="0"/>
       <line num="189" type="stmt" count="0"/>
       <line num="190" type="stmt" count="0"/>
+      <line num="191" type="stmt" count="0"/>
+      <line num="192" type="stmt" count="0"/>
       <line num="193" type="stmt" count="0"/>
-      <metrics loc="196" ncloc="162" classes="1" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="107" coveredstatements="0" elements="112" coveredelements="0"/>
+      <line num="194" type="stmt" count="0"/>
+      <line num="195" type="stmt" count="0"/>
+      <line num="198" type="stmt" count="0"/>
+      <metrics loc="201" ncloc="165" classes="1" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="109" coveredstatements="0" elements="114" coveredelements="0"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Services/HostingInfoService.php">
       <class name="NewfoldLabs\WP\Module\Migration\Services\HostingInfoService" namespace="global">
@@ -557,14 +561,13 @@
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Services/InstaMigrateService.php">
       <class name="NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService" namespace="global">
-        <metrics complexity="5" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="59" coveredstatements="0" elements="61" coveredelements="0"/>
+        <metrics complexity="5" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="60" coveredstatements="0" elements="62" coveredelements="0"/>
       </class>
       <line num="31" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
       <line num="32" type="stmt" count="0"/>
       <line num="33" type="stmt" count="0"/>
       <line num="39" type="method" name="run" visibility="public" complexity="4" crap="20" count="0"/>
       <line num="41" type="stmt" count="0"/>
-      <line num="42" type="stmt" count="0"/>
       <line num="43" type="stmt" count="0"/>
       <line num="44" type="stmt" count="0"/>
       <line num="45" type="stmt" count="0"/>
@@ -573,13 +576,13 @@
       <line num="48" type="stmt" count="0"/>
       <line num="49" type="stmt" count="0"/>
       <line num="50" type="stmt" count="0"/>
+      <line num="51" type="stmt" count="0"/>
       <line num="52" type="stmt" count="0"/>
-      <line num="53" type="stmt" count="0"/>
       <line num="54" type="stmt" count="0"/>
       <line num="55" type="stmt" count="0"/>
       <line num="56" type="stmt" count="0"/>
-      <line num="59" type="stmt" count="0"/>
-      <line num="60" type="stmt" count="0"/>
+      <line num="57" type="stmt" count="0"/>
+      <line num="58" type="stmt" count="0"/>
       <line num="61" type="stmt" count="0"/>
       <line num="62" type="stmt" count="0"/>
       <line num="63" type="stmt" count="0"/>
@@ -596,8 +599,8 @@
       <line num="74" type="stmt" count="0"/>
       <line num="75" type="stmt" count="0"/>
       <line num="76" type="stmt" count="0"/>
+      <line num="77" type="stmt" count="0"/>
       <line num="78" type="stmt" count="0"/>
-      <line num="79" type="stmt" count="0"/>
       <line num="80" type="stmt" count="0"/>
       <line num="81" type="stmt" count="0"/>
       <line num="82" type="stmt" count="0"/>
@@ -610,17 +613,19 @@
       <line num="89" type="stmt" count="0"/>
       <line num="90" type="stmt" count="0"/>
       <line num="91" type="stmt" count="0"/>
+      <line num="92" type="stmt" count="0"/>
       <line num="93" type="stmt" count="0"/>
-      <line num="94" type="stmt" count="0"/>
       <line num="95" type="stmt" count="0"/>
       <line num="96" type="stmt" count="0"/>
       <line num="97" type="stmt" count="0"/>
-      <line num="100" type="stmt" count="0"/>
-      <line num="101" type="stmt" count="0"/>
+      <line num="98" type="stmt" count="0"/>
+      <line num="99" type="stmt" count="0"/>
       <line num="102" type="stmt" count="0"/>
       <line num="103" type="stmt" count="0"/>
       <line num="104" type="stmt" count="0"/>
-      <metrics loc="108" ncloc="88" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="59" coveredstatements="0" elements="61" coveredelements="0"/>
+      <line num="105" type="stmt" count="0"/>
+      <line num="106" type="stmt" count="0"/>
+      <metrics loc="110" ncloc="90" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="60" coveredstatements="0" elements="62" coveredelements="0"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Services/MigrationSSO.php">
       <class name="NewfoldLabs\WP\Module\Migration\Services\MigrationSSO" namespace="global">
@@ -1007,6 +1012,6 @@
       <line num="87" type="stmt" count="0"/>
       <metrics loc="90" ncloc="54" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="21" coveredelements="0"/>
     </file>
-    <metrics files="25" loc="2279" ncloc="1511" classes="25" methods="92" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="764" coveredstatements="0" elements="856" coveredelements="0"/>
+    <metrics files="25" loc="2289" ncloc="1519" classes="25" methods="92" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="769" coveredstatements="0" elements="861" coveredelements="0"/>
   </project>
 </coverage>
