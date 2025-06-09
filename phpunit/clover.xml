@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1749451895">
-  <project timestamp="1749451895">
+<coverage generated="1749457339">
+  <project timestamp="1749457339">
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Data/Constants.php">
       <class name="NewfoldLabs\WP\Module\Migration\Data\Constants" namespace="global">
         <metrics complexity="9" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="0" elements="12" coveredelements="0"/>
@@ -59,7 +59,7 @@
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Listeners/InstaWpOptionsUpdatesListener.php">
       <class name="NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener" namespace="global">
-        <metrics complexity="33" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="100" coveredstatements="0" elements="107" coveredelements="0"/>
+        <metrics complexity="33" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="101" coveredstatements="0" elements="108" coveredelements="0"/>
       </class>
       <line num="27" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
       <line num="28" type="stmt" count="0"/>
@@ -167,8 +167,9 @@
       <line num="203" type="stmt" count="0"/>
       <line num="204" type="stmt" count="0"/>
       <line num="205" type="stmt" count="0"/>
-      <line num="207" type="stmt" count="0"/>
-      <metrics loc="211" ncloc="161" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="100" coveredstatements="0" elements="107" coveredelements="0"/>
+      <line num="206" type="stmt" count="0"/>
+      <line num="208" type="stmt" count="0"/>
+      <metrics loc="212" ncloc="162" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="101" coveredstatements="0" elements="108" coveredelements="0"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Migration.php">
       <class name="NewfoldLabs\WP\Module\Migration\Migration" namespace="global">
@@ -1006,6 +1007,6 @@
       <line num="87" type="stmt" count="0"/>
       <metrics loc="90" ncloc="54" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="21" coveredelements="0"/>
     </file>
-    <metrics files="25" loc="2278" ncloc="1510" classes="25" methods="92" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="763" coveredstatements="0" elements="855" coveredelements="0"/>
+    <metrics files="25" loc="2279" ncloc="1511" classes="25" methods="92" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="764" coveredstatements="0" elements="856" coveredelements="0"/>
   </project>
 </coverage>
