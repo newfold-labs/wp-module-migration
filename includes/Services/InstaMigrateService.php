@@ -38,6 +38,8 @@ class InstaMigrateService {
 	 */
 	public function run() {
 
+		delete_option( 'nfd_migration_status_sent' );
+
 		$instawp_get_key_step = new GetInstaWpApiKey();
 		EventService::send_application_event(
 			'migration_get_vendor_api_key',

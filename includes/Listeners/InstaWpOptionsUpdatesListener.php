@@ -48,7 +48,7 @@ class InstaWpOptionsUpdatesListener {
 	 * @param array $old_value previous status of migration
 	 */
 	public function on_update_instawp_last_migration_details( $new_value, $old_value ) {
-		if ( $old_value !== $new_value ) {
+		if ( $old_value !== $new_value && ! get_option( 'nfd_migration_status_sent', false ) ) {
 			$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
 			if ( ! empty( $migrate_group_uuid ) ) {
 				$response = UtilityService::get_migration_data( $migrate_group_uuid );
@@ -176,36 +176,39 @@ class InstaWpOptionsUpdatesListener {
 
 			$this->tracker->update_track( $source_url_pagespeed );
 		} finally {
-			EventService::send_application_event(
-				'migration_completed',
-				array_merge(
-					array(
-						'migration_uuid' => $migrate_group_uuid,
+			if ( ! get_option( 'nfd_migration_status_sent', false ) ) {
+				EventService::send_application_event(
+					'migration_completed',
+					array_merge(
+						array(
+							'migration_uuid' => $migrate_group_uuid,
+						),
+						$this->tracker->get_track_content()
 					),
-					$this->tracker->get_track_content()
-				),
-			);
+				);
 
-			// send specific data to the Migration Table Event
-			$tracked_datas           = $this->tracker->get_track_content();
-			$isp                     = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['isp'] ?? 'N/A';
-			$as                      = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['as'] ?? 'N/A';
-			$source_speed_index      = $tracked_datas['PageSpeed_source']['data']['speedIndex'] ?? '0';
-			$source_speed_index      = str_replace( ' s', '', $source_speed_index );
-			$destination_speed_index = $tracked_datas['PageSpeed_destination']['data']['speedIndex'] ?? 0;
-			$destination_speed_index = str_replace( ' s', '', $destination_speed_index );
-			$status                  = 'completed' === $status ? 'successful' : $status;
-			$migration_infos         = array(
-				'migration_uuid'         => $migrate_group_uuid,
-				'status'                 => $status,
-				'origin_url'             => $source_site_url,
-				'origin_isp'             => $isp,
-				'origin_as'              => $as,
-				'origin_page_speed'      => $source_speed_index,
-				'destination_page_speed' => $destination_speed_index,
-			);
+				// send specific data to the Migration Table Event
+				$tracked_datas           = $this->tracker->get_track_content();
+				$isp                     = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['isp'] ?? 'N/A';
+				$as                      = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['as'] ?? 'N/A';
+				$source_speed_index      = $tracked_datas['PageSpeed_source']['data']['speedIndex'] ?? '0';
+				$source_speed_index      = str_replace( ' s', '', $source_speed_index );
+				$destination_speed_index = $tracked_datas['PageSpeed_destination']['data']['speedIndex'] ?? 0;
+				$destination_speed_index = str_replace( ' s', '', $destination_speed_index );
+				$status                  = 'completed' === $status ? 'successful' : $status;
+				$migration_infos         = array(
+					'migration_uuid'         => $migrate_group_uuid,
+					'status'                 => $status,
+					'origin_url'             => $source_site_url,
+					'origin_isp'             => $isp,
+					'origin_as'              => $as,
+					'origin_page_speed'      => $source_speed_index,
+					'destination_page_speed' => $destination_speed_index,
+				);
 
-			EventService::send_application_event( "migration_$status", $migration_infos );
+				EventService::send_application_event( "migration_$status", $migration_infos );
+				update_option( 'nfd_migration_status_sent', true );
+			}
 		}
 	}
 }
