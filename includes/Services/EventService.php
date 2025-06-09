@@ -114,6 +114,11 @@ class EventService {
 	 * @return bool|WP_Error
 	 */
 	public static function send_application_event( $key, $data ) {
+		if ( get_option( 'nfd_migration_status_sent', false ) ) {
+			return true; // Event already sent, no need to send again.
+		}
+
+		// Validate input parameters.
 		if ( ! is_string( $key ) || empty( $key ) || ! is_array( $data ) ) {
 			return new \WP_Error(
 				'nfd_module_migration_invalid_input',
