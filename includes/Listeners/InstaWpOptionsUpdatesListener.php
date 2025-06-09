@@ -48,7 +48,7 @@ class InstaWpOptionsUpdatesListener {
 	 * @param array $old_value previous status of migration
 	 */
 	public function on_update_instawp_last_migration_details( $new_value, $old_value ) {
-		if ( $old_value !== $new_value ) {
+		if ( $old_value !== $new_value && ! get_option( 'nfd_migration_status_sent', false ) ) {
 			$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
 			if ( ! empty( $migrate_group_uuid ) ) {
 				$response = UtilityService::get_migration_data( $migrate_group_uuid );
