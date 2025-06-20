@@ -37,6 +37,13 @@ class ConnectToInstaWp extends AbstractStep {
 		$this->insta_api_key = $insta_api_key;
 		if ( defined( 'BRAND_PLUGIN' ) ) {
 			$this->brand = BRAND_PLUGIN;
+		} elseif (
+		defined( 'NFD_MIGRATION_BRAND_WHITELIST' )
+		&& is_array( NFD_MIGRATION_BRAND_WHITELIST )
+		&& ! empty( NFD_MIGRATION_BRAND_WHITELIST )
+		) {
+			$whitelist   = NFD_MIGRATION_BRAND_WHITELIST;
+			$this->brand = $whitelist[0];
 		} else {
 			$this->brand = 'bluehost';
 		}
