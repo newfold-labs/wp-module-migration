@@ -42,12 +42,12 @@ msgstr "Please wait a few seconds while we get your new account ready to import 
 msgid "WordPress Content"
 msgstr "WordPress Content"
 
-#: includes/Services/InstaMigrateService.php:95
+#: includes/Services/InstaMigrateService.php:97
 #: includes/Steps/ConnectToInstaWp.php:48
 msgid "Website could not connect successfully."
 msgstr "Website could not connect successfully."
 
-#: includes/Services/InstaMigrateService.php:80
+#: includes/Services/InstaMigrateService.php:82
 msgid "Connect plugin is installed and ready to start the migration."
 msgstr "Connect plugin is installed and ready to start the migration."
 
@@ -60,11 +60,11 @@ msgstr "Migration Report"
 msgid "No report available."
 msgstr "No report available."
 
-#: includes/Services/InstaMigrateService.php:54
+#: includes/Services/InstaMigrateService.php:56
 msgid "Cannot get api key."
 msgstr "Cannot get API key."
 
-#: includes/Services/InstaMigrateService.php:102
+#: includes/Services/InstaMigrateService.php:104
 msgid "Migration service could not be started."
 msgstr "Migration service could not be started."
 
@@ -89,18 +89,18 @@ msgstr "Error decoding response"
 msgid "Source hosting details not retrieved correctly"
 msgstr "Source hosting details not retrieved correctly"
 
-#: includes/Services/EventService.php:120
+#: includes/Services/EventService.php:125
 msgid "Invalid input for event key or data."
 msgstr ""
 
-#: includes/Services/EventService.php:134
+#: includes/Services/EventService.php:139
 msgid "Invalid event payload."
 msgstr ""
 
-#: includes/Services/EventService.php:153
+#: includes/Services/EventService.php:167
 msgid "Failed to encode event JSON."
 msgstr ""
 
-#: includes/Services/EventService.php:173
+#: includes/Services/EventService.php:190
 msgid "Failed to forward event to Hiive."
 msgstr ""
