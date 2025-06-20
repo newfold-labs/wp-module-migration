@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bbc32dd86a567f2ad38eb7ee819674de",
+    "content-hash": "893a5c87f6d08ec30f0f41d4673e7eb4",
     "packages": [
         {
             "name": "instawp/connect-helpers",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/InstaWP/connect-helpers.git",
-                "reference": "e1a3372323f5944c88d5e6098914661027fe1df5"
+                "reference": "702108c2e2a30b4cc8201f1e8cbbe40e489b95d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/InstaWP/connect-helpers/zipball/e1a3372323f5944c88d5e6098914661027fe1df5",
-                "reference": "e1a3372323f5944c88d5e6098914661027fe1df5",
+                "url": "https://api.github.com/repos/InstaWP/connect-helpers/zipball/702108c2e2a30b4cc8201f1e8cbbe40e489b95d4",
+                "reference": "702108c2e2a30b4cc8201f1e8cbbe40e489b95d4",
                 "shasum": ""
             },
             "require": {
@@ -49,10 +49,10 @@
             ],
             "description": "CLI Package for InstaWP Remote Features",
             "support": {
-                "source": "https://github.com/InstaWP/connect-helpers/tree/1.0.3",
+                "source": "https://github.com/InstaWP/connect-helpers/tree/1.0.4",
                 "issues": "https://github.com/InstaWP/connect-helpers/issues"
             },
-            "time": "2025-05-07T13:37:50+00:00"
+            "time": "2025-06-20T08:26:17+00:00"
         },
         {
             "name": "newfold-labs/container",
