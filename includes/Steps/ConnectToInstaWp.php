@@ -65,6 +65,7 @@ class ConnectToInstaWp extends AbstractStep {
 				array(
 					'e2e_mig_push_request' => true,
 					'wlm_slug'             => $this->brand,
+					'managed'              => false,
 				)
 			);
 			if ( ! $connect_response ) {
