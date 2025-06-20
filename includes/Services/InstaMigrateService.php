@@ -83,10 +83,10 @@ class InstaMigrateService {
 					'response'     => true,
 					'redirect_url' => esc_url_raw(
 						sprintf(
-							'%s/%s?d_id=%s&locale=%s',
+							'%s/%s?g_id=%s&locale=%s',
 							NFD_MIGRATION_PROXY_WORKER,
 							INSTAWP_MIGRATE_ENDPOINT,
-							Helper::get_connect_uuid(),
+							Helper::get_mig_gid(),
 							$locale
 						)
 					),
