@@ -33,7 +33,7 @@ if ( pluginId === 'bluehost' || pluginId === 'hostgator' ) {
 					( href ) => {
 						const url = new URL( href );
 						expect( url.hostname ).to.eq( migrationDomain );
-						expect( url.searchParams.has( 'd_id' ) ).to.eq( true );
+						expect( url.searchParams.has( 'g_id' ) ).to.eq( true );
 						expect( url.searchParams.has( 'locale' ) ).to.eq(
 							true
 						);

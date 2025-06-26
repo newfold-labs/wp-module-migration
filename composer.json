@@ -37,7 +37,7 @@
     },
     "require": {
         "newfold-labs/wp-module-loader": "^1.0.10",
-        "instawp/connect-helpers": "1.0.3"
+        "instawp/connect-helpers": "^1.0.4"
     },
     "require-dev": {
         "johnpbloch/wordpress": "6.8.1",
