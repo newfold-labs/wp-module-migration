@@ -1,18 +1,19 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
+"PO-Revision-Date: 2025-02-13 19:23+0530\n"
 "Last-Translator: Vara Prasad Maruboina <varaprasad.maruboina@newfold.com>\n"
 "Language-Team: English (British) <(nothing)>\n"
+"Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
-"PO-Revision-Date: 2025-02-13 19:23+0530\n"
-"Language: en_GB\n"
-"X-Generator: WP-CLI 2.11.0\n"
-"X-Domain: wp-module-migration\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: wp-module-migration\n"
+"X-Generator: WP-CLI 2.11.0\n"
 
 #: bootstrap.php:19
 msgid "Migration"
@@ -27,16 +28,26 @@ msgid "WordPress Migration Tool"
 msgstr "WordPress Migration Tool"
 
 #: includes/Migration.php:107
-msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
-msgstr "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
+msgid ""
+"Migrate an existing WordPress site to this WordPress instance. This tool "
+"will make a copy of an existing site and automatically import it into this "
+"WordPress instance <strong>This will overwrite all the content.</strong>"
+msgstr ""
+"Migrate an existing WordPress site to this WordPress instance. This tool "
+"will make a copy of an existing site and automatically import it into this "
+"WordPress instance <strong>This will overwrite all the content.</strong>"
 
 #: includes/Migration.php:164
 msgid "Preparing your site"
 msgstr "Preparing your site"
 
 #: includes/Migration.php:165
-msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
-msgstr "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
+msgid ""
+"Please wait a few seconds while we get your new account ready to import your"
+" existing WordPress site."
+msgstr ""
+"Please wait a few seconds while we get your new account ready to import your"
+" existing WordPress site."
 
 #: includes/Migration.php:166
 msgid "WordPress Content"
@@ -91,16 +102,16 @@ msgstr "Source hosting details not retrieved correctly"
 
 #: includes/Services/EventService.php:125
 msgid "Invalid input for event key or data."
-msgstr ""
+msgstr "Invalid input for event key or data."
 
 #: includes/Services/EventService.php:139
 msgid "Invalid event payload."
-msgstr ""
+msgstr "Invalid event payload."
 
 #: includes/Services/EventService.php:167
 msgid "Failed to encode event JSON."
-msgstr ""
+msgstr "Failed to encode event JSON."
 
 #: includes/Services/EventService.php:190
 msgid "Failed to forward event to Hiive."
-msgstr ""
+msgstr "Failed to forward event to Hiive."
