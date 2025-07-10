@@ -11,7 +11,7 @@ class UtilityService {
 	 * @param string $brand name of the brand
 	 */
 	public static function get_insta_api_key( $brand ) {
-		$insta_cf_worker = NFD_MIGRATION_PROXY_WORKER . '/get/token?brand=' . $brand;
+		$insta_cf_worker = NFD_MIGRATION_PROXY_WORKER . '/token?brand=' . $brand;
 		$insta_cf_data   = wp_remote_get(
 			$insta_cf_worker,
 			array(
