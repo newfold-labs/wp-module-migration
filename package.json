@@ -1,6 +1,5 @@
 {
   "name": "wp-module-migration",
-  "version": "1.5.7",
   "devDependencies": {
     "@wordpress/env": "^10.25.0"
   }
