@@ -17,7 +17,6 @@ class Constants {
 		// Basic plugin constants.
 		defined( 'NFD_MIGRATION_PLUGIN_URL' ) || define( 'NFD_MIGRATION_PLUGIN_URL', $container->plugin()->url );
 		defined( 'NFD_MIGRATION_DIR' ) || define( 'NFD_MIGRATION_DIR', __DIR__ );
-		defined( 'NFD_PROXY_ACCESS_WORKER' ) || define( 'NFD_PROXY_ACCESS_WORKER', 'https://hiive.cloud/workers/migration-token-proxy' );
 
 		// Determine brand-specific values.
 		$plugin_brand = $container->plugin()->id;
