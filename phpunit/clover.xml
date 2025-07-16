@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1752217380">
-  <project timestamp="1752217380">
+<coverage generated="1752665392">
+  <project timestamp="1752665392">
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Data/Constants.php">
       <class name="NewfoldLabs\WP\Module\Migration\Data\Constants" namespace="global">
-        <metrics complexity="9" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="0" elements="12" coveredelements="0"/>
+        <metrics complexity="8" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="11" coveredelements="0"/>
       </class>
-      <line num="16" type="method" name="__construct" visibility="public" complexity="9" crap="90" count="0"/>
+      <line num="16" type="method" name="__construct" visibility="public" complexity="8" crap="72" count="0"/>
       <line num="18" type="stmt" count="0"/>
       <line num="19" type="stmt" count="0"/>
-      <line num="20" type="stmt" count="0"/>
+      <line num="22" type="stmt" count="0"/>
       <line num="23" type="stmt" count="0"/>
-      <line num="24" type="stmt" count="0"/>
+      <line num="25" type="stmt" count="0"/>
       <line num="26" type="stmt" count="0"/>
-      <line num="27" type="stmt" count="0"/>
+      <line num="30" type="stmt" count="0"/>
       <line num="31" type="stmt" count="0"/>
       <line num="32" type="stmt" count="0"/>
       <line num="33" type="stmt" count="0"/>
-      <line num="34" type="stmt" count="0"/>
-      <metrics loc="37" ncloc="26" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="0" elements="12" coveredelements="0"/>
+      <metrics loc="36" ncloc="25" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="11" coveredelements="0"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Data/Events.php">
       <class name="NewfoldLabs\WP\Module\Migration\Data\Events" namespace="global">
@@ -1028,6 +1027,6 @@
       <line num="87" type="stmt" count="0"/>
       <metrics loc="90" ncloc="54" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="21" coveredelements="0"/>
     </file>
-    <metrics files="25" loc="2317" ncloc="1541" classes="25" methods="92" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="785" coveredstatements="0" elements="877" coveredelements="0"/>
+    <metrics files="25" loc="2316" ncloc="1540" classes="25" methods="92" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="784" coveredstatements="0" elements="876" coveredelements="0"/>
   </project>
 </coverage>
