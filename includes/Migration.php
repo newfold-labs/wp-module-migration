@@ -65,8 +65,28 @@ class Migration {
 
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
+		add_filter( 'newfold_sso_success_url', array( $this, 'migration_redirect' ) );
 	}
 
+	/**
+	 * Redirects to on boarding migration page dynamically by brand if nfd_migrate_site is set.
+	 *
+	 * @param string $url The URL to redirect to.
+	 * @return string $url The URL to redirect to.
+	 */
+	public function migration_redirect( $url ) {
+		$get              = $_GET; // phpcs:ignore WordPress.Security.NonceVerification
+		$sso_to_migration = isset( $get['action'] ) && 'migration' === sanitize_key( $get['action'] ) ? true : false;
+
+		if ( $sso_to_migration || get_option( 'nfd_migrate_site', false ) ) {
+			if ( 'bluehost' === BRAND_PLUGIN ) {
+				$url = admin_url( 'index.php?page=nfd-onboarding#/migration' );
+			} elseif ( 'hostgator' === BRAND_PLUGIN ) {
+				$url = admin_url( 'index.php?page=nfd-onboarding#/sitegen/step/migration' );
+			}
+		}
+		return $url;
+	}
 	/**
 	 * Triggers on instawp connect installation
 	 *
