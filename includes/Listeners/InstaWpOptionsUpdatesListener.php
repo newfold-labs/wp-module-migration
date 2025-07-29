@@ -66,19 +66,21 @@ class InstaWpOptionsUpdatesListener {
 							if ( ! wp_next_scheduled( 'nfd_migration_source_hosting_info' ) ) {
 								wp_schedule_single_event( time() + 60, 'nfd_migration_source_hosting_info', array( 'source_site_url' => $source_site_url ) );
 							}
-							if ( ! wp_next_scheduled( 'nfd_migration_page_speed_source' ) ) {
-								wp_schedule_single_event( time() + 90, 'nfd_migration_page_speed_source', array( 'source_site_url' => $source_site_url ) );
-							}
-							if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
-								wp_schedule_single_event(
-									time() + 120,
-									'nfd_migration_page_speed_destination',
-									array(
-										'source_site_url' => $source_site_url,
-										'migrate_group_uuid' => $migrate_group_uuid,
-										'status'          => $migration_status,
-									),
-								);
+							if ( 'completed' === $migration_status ) {
+								if ( ! wp_next_scheduled( 'nfd_migration_page_speed_source' ) ) {
+									wp_schedule_single_event( time() + 90, 'nfd_migration_page_speed_source', array( 'source_site_url' => $source_site_url ) );
+								}
+								if ( ! wp_next_scheduled( 'nfd_migration_page_speed_destination' ) ) {
+									wp_schedule_single_event(
+										time() + 120,
+										'nfd_migration_page_speed_destination',
+										array(
+											'source_site_url' => $source_site_url,
+											'migrate_group_uuid' => $migrate_group_uuid,
+											'status'          => $migration_status,
+										),
+									);
+								}
 							}
 						}
 					}
