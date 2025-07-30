@@ -94,7 +94,7 @@ class HostingInfoService {
 	 */
 	public function get_full_service_url() {
 		$url_to_check = rawurlencode( $this->get_url_to_check() );
-		$service_url  = esc_url( NFD_MIGRATION_PROXY_WORKER . "/$this->endpoint?url=$url_to_check" );
+		$service_url  = esc_url( apply_filters( 'nfd_build_url', NFD_MIGRATION_PROXY_WORKER . "/$this->endpoint?url=$url_to_check" ) );
 
 		return $service_url;
 	}
