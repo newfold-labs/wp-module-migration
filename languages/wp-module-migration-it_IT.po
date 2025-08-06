@@ -10,14 +10,14 @@ msgstr ""
 "POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
 "PO-Revision-Date: 2025-02-19 15:38\n"
 "Language: it_IT\n"
-"X-Generator: WP-CLI 2.11.0\n"
-"X-Domain: wp-module-migration\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: newfold-labswp-module-staging\n"
-"X-Crowdin-Project-ID: 764889\n"
-"X-Crowdin-Language: it\n"
 "X-Crowdin-File: wp-module-migration.pot\n"
 "X-Crowdin-File-ID: 36\n"
+"X-Crowdin-Language: it\n"
+"X-Crowdin-Project: newfold-labswp-module-staging\n"
+"X-Crowdin-Project-ID: 764889\n"
+"X-Domain: wp-module-migration\n"
+"X-Generator: WP-CLI 2.11.0\n"
 
 #: bootstrap.php:19
 msgid "Migration"
@@ -96,16 +96,16 @@ msgstr "I dettagli dell'hosting di origine non sono stati recuperati correttamen
 
 #: includes/Services/EventService.php:125
 msgid "Invalid input for event key or data."
-msgstr ""
+msgstr "Input non valido per la chiave dell'evento o i dati."
 
 #: includes/Services/EventService.php:139
 msgid "Invalid event payload."
-msgstr ""
+msgstr "Payload dell'evento non valido."
 
 #: includes/Services/EventService.php:167
 msgid "Failed to encode event JSON."
-msgstr ""
+msgstr "Impossibile codificare l'evento JSON."
 
 #: includes/Services/EventService.php:190
 msgid "Failed to forward event to Hiive."
-msgstr ""
+msgstr "Impossibile inoltrare l'evento a Hiive."

@@ -10,8 +10,8 @@ msgstr ""
 "POT-Creation-Date: 2025-02-13T09:55:55+00:00\n"
 "PO-Revision-Date: 2025-05-06 10:38+0100\n"
 "Language: es_MX\n"
-"X-Generator: Poedit 3.6\n"
 "X-Domain: wp-module-migration\n"
+"X-Generator: Poedit 3.6\n"
 
 #: bootstrap.php:19
 msgid "Migration"
@@ -90,16 +90,16 @@ msgstr "Los detalles del hosting de origen no se recuperaron correctamente"
 
 #: includes/Services/EventService.php:125
 msgid "Invalid input for event key or data."
-msgstr ""
+msgstr "Entrada no válida para la clave de evento o los datos."
 
 #: includes/Services/EventService.php:139
 msgid "Invalid event payload."
-msgstr ""
+msgstr "Carga útil de evento no válida."
 
 #: includes/Services/EventService.php:167
 msgid "Failed to encode event JSON."
-msgstr ""
+msgstr "No se pudo codificar el JSON del evento."
 
 #: includes/Services/EventService.php:190
 msgid "Failed to forward event to Hiive."
-msgstr ""
+msgstr "No se pudo reenviar el evento a Hiive."
