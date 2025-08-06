@@ -75,18 +75,30 @@ class Migration {
 	 * @return string $url The URL to redirect to.
 	 */
 	public function migration_redirect( $url ) {
-		$get              = $_GET; // phpcs:ignore WordPress.Security.NonceVerification
-		$sso_to_migration = isset( $get['action'] ) && 'migration' === sanitize_key( $get['action'] ) ? true : false;
+		$sso_to_migration = isset( $_GET['nfd-action'] ) && 'nfd-migration' === sanitize_key( $_GET['nfd-action'] ) ? true : false; // phpcs:ignore WordPress.Security.NonceVerification
+
+		$brands_to_onboarding_urls = $this->get_brands_to_urls();
 
 		if ( $sso_to_migration || get_option( 'nfd_migrate_site', false ) ) {
-			if ( 'bluehost' === BRAND_PLUGIN ) {
-				$url = admin_url( 'index.php?page=nfd-onboarding#/migration' );
-			} elseif ( 'hostgator' === BRAND_PLUGIN ) {
-				$url = admin_url( 'index.php?page=nfd-onboarding#/sitegen/step/migration' );
+			if ( isset( $brands_to_onboarding_urls[ BRAND_PLUGIN ] ) ) {
+				$url = $brands_to_onboarding_urls[ BRAND_PLUGIN ];
 			}
 		}
 		return $url;
 	}
+
+	/**
+	 * Returns the brand specific URLs for onboarding migration.
+	 *
+	 * @return array
+	 */
+	public function get_brands_to_urls() {
+		return array(
+			'bluehost'  => admin_url( 'index.php?page=nfd-onboarding#/migration' ),
+			'hostgator' => admin_url( 'index.php?page=nfd-onboarding#/sitegen/step/migration' ),
+		);
+	}
+
 	/**
 	 * Triggers on instawp connect installation
 	 *
