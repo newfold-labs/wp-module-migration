@@ -82,12 +82,15 @@ class InstaMigrateService {
 					'message'      => esc_html__( 'Connect plugin is installed and ready to start the migration.', 'wp-module-migration' ),
 					'response'     => true,
 					'redirect_url' => esc_url_raw(
-						sprintf(
-							'%s/%s?g_id=%s&locale=%s',
-							NFD_MIGRATION_PROXY_WORKER,
-							INSTAWP_MIGRATE_ENDPOINT,
-							Helper::get_mig_gid(),
-							$locale
+						apply_filters(
+							'nfd_build_url',
+							sprintf(
+								'%s/%s?g_id=%s&locale=%s',
+								NFD_MIGRATION_PROXY_WORKER,
+								INSTAWP_MIGRATE_ENDPOINT,
+								Helper::get_mig_gid(),
+								$locale
+							)
 						)
 					),
 				);

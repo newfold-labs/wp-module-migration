@@ -10,7 +10,6 @@ use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
 use NewfoldLabs\WP\Module\Migration\Reports\MigrationReport;
 use NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
-
 /**
  * Class Migration
  *
@@ -116,9 +115,9 @@ class Migration {
 		$this->insta_service = new InstaMigrateService();
 		$response            = $this->insta_service->run();
 		if ( ! is_wp_error( $response ) ) {
-			wp_safe_redirect( $response['redirect_url'] );
+			wp_safe_redirect( apply_filters( 'nfd_build_url', $response['redirect_url'] ) );
 		} else {
-			wp_safe_redirect( admin_url( 'import.php' ) );
+			wp_safe_redirect( apply_filters( 'nfd_build_url', admin_url( 'import.php' ) ) );
 		}
 		die();
 	}
