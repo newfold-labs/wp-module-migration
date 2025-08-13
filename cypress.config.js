@@ -12,6 +12,7 @@ module.exports = defineConfig({
       phpVersion,
       pluginId: 'bluehost',
       appId: 'wppbh',
+       host: 'bh',
       pluginSlug: 'bluehost-wordpress-plugin',
 
       SC_shared_source: process.env.SC_SHARED_SOURCE,
