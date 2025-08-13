@@ -41,11 +41,6 @@ describe('Full Site Migration: Shared ↔ Cloud Variants', () => {
 
   migrations.forEach(({ label, sourceUrl, destUrl, sourceUsername, sourcePassword, destUsername, destPassword }) => {
     it(`Migration Flow: ${label}`, () => {
-      const host = Cypress.env('host');
-    if (host !== 'bh') {
-    cy.log('Skipping test: Not BH');
-    return;
-  }
       const safeDestUrl = typeof destUrl === 'string' ? destUrl.replace(/\/$/, '') : '';
 const destLoginUrl = `${safeDestUrl}/wp-login.php`;
     // const destLoginUrl = `${destUrl.replace(/\/$/, '')}/wp-login.php`;
@@ -124,12 +119,18 @@ cy.contains('Import').should('be.visible').click();
       });
      
  
-  cy.contains(/Your Migration is Complete!|Migration Failed/, { timeout: 300000 })
-    .should('be.visible');
-  cy.log('Done');
+  cy.contains('Your Migration is Complete!', { timeout: 300000 })
+  .should('be.visible')
+  .then(() => {
+    cy.log('Migration is complete.');
+  }, (err) => {
+    // This block runs if the element is not found within 5 minutes
+    cy.log('Migration failed or did not complete in time.');
+    cy.screenshot('migration_failed');
+    throw new Error('Migration did not complete within 5 minutes. Failing test.');
+  });
       });
      });
   });
- 
- 
+  
 });
