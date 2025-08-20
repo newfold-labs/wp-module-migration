@@ -16,23 +16,23 @@ msgstr ""
 msgid "Migration"
 msgstr ""
 
-#: includes/Migration.php:106
+#: includes/Migration.php:105
 msgid "WordPress Migration Tool"
 msgstr ""
 
-#: includes/Migration.php:107
+#: includes/Migration.php:106
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr ""
 
-#: includes/Migration.php:164
+#: includes/Migration.php:163
 msgid "Preparing your site"
 msgstr ""
 
-#: includes/Migration.php:165
+#: includes/Migration.php:164
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr ""
 
-#: includes/Migration.php:166
+#: includes/Migration.php:165
 msgid "WordPress Content"
 msgstr ""
 
@@ -82,12 +82,12 @@ msgstr ""
 msgid "Connect plugin is installed and ready to start the migration."
 msgstr ""
 
-#: includes/Services/InstaMigrateService.php:97
+#: includes/Services/InstaMigrateService.php:100
 #: includes/Steps/ConnectToInstaWp.php:76
 msgid "Website could not connect successfully."
 msgstr ""
 
-#: includes/Services/InstaMigrateService.php:104
+#: includes/Services/InstaMigrateService.php:107
 msgid "Migration service could not be started."
 msgstr ""
 
