@@ -53,8 +53,9 @@ class InstaWpOptionsUpdatesListener {
 			if ( ! empty( $migrate_group_uuid ) ) {
 				$response = UtilityService::get_migration_data( $migrate_group_uuid );
 
-				if ( $response && is_array( $response ) && isset( $response['status'] ) && $response['status'] ) {
-					$migration_status = $response['data']['status'];
+				if ( $response && is_array( $response ) ) {
+					// Use new_value for migration_status instead of API response
+					$migration_status = isset( $new_value['status'] ) ? $new_value['status'] : '';
 
 					if ( 'completed' === $migration_status || 'failed' === $migration_status || 'aborted' === $migration_status ) {
 						$push = new Push();
