@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1759841118">
-  <project timestamp="1759841118">
+<coverage generated="1761311669">
+  <project timestamp="1761311669">
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Data/Constants.php">
       <class name="NewfoldLabs\WP\Module\Migration\Data\Constants" namespace="global">
         <metrics complexity="8" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="11" coveredelements="0"/>
@@ -58,7 +58,7 @@
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Listeners/InstaWpOptionsUpdatesListener.php">
       <class name="NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener" namespace="global">
-        <metrics complexity="36" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="104" coveredstatements="0" elements="111" coveredelements="0"/>
+        <metrics complexity="35" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="104" coveredstatements="0" elements="111" coveredelements="0"/>
       </class>
       <line num="27" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
       <line num="28" type="stmt" count="0"/>
@@ -69,25 +69,24 @@
       <line num="39" type="stmt" count="0"/>
       <line num="40" type="stmt" count="0"/>
       <line num="41" type="stmt" count="0"/>
-      <line num="50" type="method" name="on_update_instawp_last_migration_details" visibility="public" complexity="20" crap="420" count="0"/>
+      <line num="50" type="method" name="on_update_instawp_last_migration_details" visibility="public" complexity="19" crap="380" count="0"/>
       <line num="51" type="stmt" count="0"/>
       <line num="52" type="stmt" count="0"/>
       <line num="53" type="stmt" count="0"/>
       <line num="54" type="stmt" count="0"/>
       <line num="56" type="stmt" count="0"/>
-      <line num="57" type="stmt" count="0"/>
-      <line num="59" type="stmt" count="0"/>
+      <line num="58" type="stmt" count="0"/>
       <line num="60" type="stmt" count="0"/>
       <line num="61" type="stmt" count="0"/>
       <line num="62" type="stmt" count="0"/>
-      <line num="64" type="stmt" count="0"/>
+      <line num="63" type="stmt" count="0"/>
       <line num="65" type="stmt" count="0"/>
       <line num="66" type="stmt" count="0"/>
       <line num="67" type="stmt" count="0"/>
-      <line num="69" type="stmt" count="0"/>
+      <line num="68" type="stmt" count="0"/>
       <line num="70" type="stmt" count="0"/>
       <line num="71" type="stmt" count="0"/>
-      <line num="73" type="stmt" count="0"/>
+      <line num="72" type="stmt" count="0"/>
       <line num="74" type="stmt" count="0"/>
       <line num="75" type="stmt" count="0"/>
       <line num="76" type="stmt" count="0"/>
@@ -97,7 +96,7 @@
       <line num="80" type="stmt" count="0"/>
       <line num="81" type="stmt" count="0"/>
       <line num="82" type="stmt" count="0"/>
-      <line num="88" type="stmt" count="0"/>
+      <line num="83" type="stmt" count="0"/>
       <line num="89" type="stmt" count="0"/>
       <line num="90" type="stmt" count="0"/>
       <line num="91" type="stmt" count="0"/>
@@ -117,32 +116,32 @@
       <line num="105" type="stmt" count="0"/>
       <line num="106" type="stmt" count="0"/>
       <line num="107" type="stmt" count="0"/>
-      <line num="113" type="stmt" count="0"/>
-      <line num="123" type="method" name="on_update_instawp_migration_details" visibility="public" complexity="6" crap="42" count="0"/>
-      <line num="124" type="stmt" count="0"/>
+      <line num="108" type="stmt" count="0"/>
+      <line num="114" type="stmt" count="0"/>
+      <line num="124" type="method" name="on_update_instawp_migration_details" visibility="public" complexity="6" crap="42" count="0"/>
       <line num="125" type="stmt" count="0"/>
       <line num="126" type="stmt" count="0"/>
       <line num="127" type="stmt" count="0"/>
       <line num="128" type="stmt" count="0"/>
       <line num="129" type="stmt" count="0"/>
-      <line num="132" type="stmt" count="0"/>
-      <line num="140" type="method" name="source_hosting_info" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="141" type="stmt" count="0"/>
+      <line num="130" type="stmt" count="0"/>
+      <line num="133" type="stmt" count="0"/>
+      <line num="141" type="method" name="source_hosting_info" visibility="public" complexity="2" crap="6" count="0"/>
       <line num="142" type="stmt" count="0"/>
-      <line num="144" type="stmt" count="0"/>
+      <line num="143" type="stmt" count="0"/>
       <line num="145" type="stmt" count="0"/>
-      <line num="148" type="stmt" count="0"/>
-      <line num="156" type="method" name="page_speed_source" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="157" type="stmt" count="0"/>
+      <line num="146" type="stmt" count="0"/>
+      <line num="149" type="stmt" count="0"/>
+      <line num="157" type="method" name="page_speed_source" visibility="public" complexity="2" crap="6" count="0"/>
       <line num="158" type="stmt" count="0"/>
       <line num="159" type="stmt" count="0"/>
-      <line num="162" type="stmt" count="0"/>
-      <line num="172" type="method" name="page_speed_destination" visibility="public" complexity="4" crap="20" count="0"/>
-      <line num="174" type="stmt" count="0"/>
+      <line num="160" type="stmt" count="0"/>
+      <line num="163" type="stmt" count="0"/>
+      <line num="173" type="method" name="page_speed_destination" visibility="public" complexity="4" crap="20" count="0"/>
       <line num="175" type="stmt" count="0"/>
       <line num="176" type="stmt" count="0"/>
-      <line num="179" type="stmt" count="0"/>
-      <line num="181" type="stmt" count="0"/>
+      <line num="177" type="stmt" count="0"/>
+      <line num="180" type="stmt" count="0"/>
       <line num="182" type="stmt" count="0"/>
       <line num="183" type="stmt" count="0"/>
       <line num="184" type="stmt" count="0"/>
@@ -152,7 +151,7 @@
       <line num="188" type="stmt" count="0"/>
       <line num="189" type="stmt" count="0"/>
       <line num="190" type="stmt" count="0"/>
-      <line num="193" type="stmt" count="0"/>
+      <line num="191" type="stmt" count="0"/>
       <line num="194" type="stmt" count="0"/>
       <line num="195" type="stmt" count="0"/>
       <line num="196" type="stmt" count="0"/>
@@ -169,9 +168,10 @@
       <line num="207" type="stmt" count="0"/>
       <line num="208" type="stmt" count="0"/>
       <line num="209" type="stmt" count="0"/>
-      <line num="211" type="stmt" count="0"/>
+      <line num="210" type="stmt" count="0"/>
       <line num="212" type="stmt" count="0"/>
-      <metrics loc="217" ncloc="167" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="104" coveredstatements="0" elements="111" coveredelements="0"/>
+      <line num="213" type="stmt" count="0"/>
+      <metrics loc="218" ncloc="167" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="104" coveredstatements="0" elements="111" coveredelements="0"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Migration.php">
       <class name="NewfoldLabs\WP\Module\Migration\Migration" namespace="global">
@@ -1031,6 +1031,6 @@
       <line num="87" type="stmt" count="0"/>
       <metrics loc="90" ncloc="54" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="21" coveredelements="0"/>
     </file>
-    <metrics files="25" loc="2320" ncloc="1544" classes="25" methods="92" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="788" coveredstatements="0" elements="880" coveredelements="0"/>
+    <metrics files="25" loc="2321" ncloc="1544" classes="25" methods="92" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="788" coveredstatements="0" elements="880" coveredelements="0"/>
   </project>
 </coverage>
