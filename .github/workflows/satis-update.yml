@@ -9,6 +9,8 @@ jobs:
   webhook:
     name: Send Webhook
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
 
       - name: Set Package
@@ -21,8 +23,77 @@ jobs:
         id: tag
         run: echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
 
+      - name: Debug - Verify Token
+        env:
+          TOKEN: ${{ secrets.WEBHOOK_TOKEN }}
+        run: |
+          echo "🔍 Verifying WEBHOOK_TOKEN..."
+          if [ -z "$TOKEN" ]; then
+            echo "❌ ERROR: WEBHOOK_TOKEN secret is empty or not set"
+            exit 1
+          fi
+          echo "✓ Token exists (length: ${#TOKEN} characters)"
+          
+          # Test token validity by checking repository access
+          echo "Testing token access to newfold-labs/satis..."
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: token $TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/newfold-labs/satis)
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "HTTP Status: $HTTP_CODE"
+          
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✓ Token has read access to repository"
+          elif [ "$HTTP_CODE" = "404" ]; then
+            echo "⚠️  Repository not found or token lacks access (404)"
+          elif [ "$HTTP_CODE" = "401" ]; then
+            echo "❌ Token authentication failed (401 Bad credentials)"
+            echo "Token may be expired, invalid, or missing required scopes"
+            echo "Response: $BODY"
+            exit 1
+          else
+            echo "⚠️  Unexpected response: $HTTP_CODE"
+            echo "Response: $BODY"
+          fi
+          
+          # Check token scopes (if available in response headers)
+          echo "Checking token permissions..."
+          SCOPE_RESPONSE=$(curl -s -I \
+            -H "Authorization: token $TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/user 2>&1)
+          
+          if echo "$SCOPE_RESPONSE" | grep -q "X-OAuth-Scopes"; then
+            SCOPES=$(echo "$SCOPE_RESPONSE" | grep -i "X-OAuth-Scopes" | cut -d' ' -f2- | tr -d '\r')
+            echo "Token scopes: $SCOPES"
+            if echo "$SCOPES" | grep -q "repo"; then
+              echo "✓ Token has 'repo' scope (required for repository dispatch)"
+            else
+              echo "⚠️  Token may lack 'repo' scope (required for cross-repo dispatch)"
+            fi
+          fi
+          
+          echo ""
+          echo "📋 Summary:"
+          echo "  - Token exists: ✓"
+          echo "  - Repository access: $HTTP_CODE"
+          if [ "$HTTP_CODE" = "401" ]; then
+            echo ""
+            echo "🔧 Next steps:"
+            echo "  1. Verify WEBHOOK_TOKEN is a valid Personal Access Token (PAT)"
+            echo "  2. Ensure the token has 'repo' scope"
+            echo "  3. Check if the token has expired in GitHub Settings"
+            echo "  4. Regenerate the token if needed and update the secret"
+          fi
+
       - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@5fc4efd1a4797ddb68ffd0714a238564e4cc0e6f # v4.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.WEBHOOK_TOKEN }}
+        uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3.0.0 (reverted due to v4.0.0 auth issue)
         with:
           token: ${{ secrets.WEBHOOK_TOKEN }}
           repository: newfold-labs/satis
