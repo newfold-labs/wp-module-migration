@@ -1,7 +1,7 @@
 <?php
 namespace NewfoldLabs\WP\Module\Migration\Services;
 
-use NewFoldLabs\WP\Module\SSO\SSO_Helpers;
+use NewfoldLabs\WP\Module\SSO\SSO_Helpers;
 /**
  * Migration SSO service
  */
