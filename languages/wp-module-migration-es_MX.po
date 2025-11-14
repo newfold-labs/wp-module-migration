@@ -17,23 +17,23 @@ msgstr ""
 msgid "Migration"
 msgstr "Migración"
 
-#: includes/Migration.php:106
+#: includes/Migration.php:105
 msgid "WordPress Migration Tool"
 msgstr "Herramienta de Migración de WordPress"
 
-#: includes/Migration.php:107
+#: includes/Migration.php:106
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migra un sitio de WordPress existente a esta instancia de WordPress. Esta herramienta hará una copia del sitio existente e importará automáticamente su contenido en esta instancia de WordPress. <strong>Esto sobrescribirá todo el contenido.</strong>"
 
-#: includes/Migration.php:164
+#: includes/Migration.php:163
 msgid "Preparing your site"
 msgstr "Preparando tu sitio"
 
-#: includes/Migration.php:165
+#: includes/Migration.php:164
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Por favor, espera unos segundos mientras preparamos tu nueva cuenta para importar tu sitio de WordPress existente."
 
-#: includes/Migration.php:166
+#: includes/Migration.php:165
 msgid "WordPress Content"
 msgstr "Contenido de WordPress"
 
@@ -67,12 +67,12 @@ msgstr "No se pudo obtener la clave API."
 msgid "Connect plugin is installed and ready to start the migration."
 msgstr "El plugin Connect está instalado y listo para iniciar la migración."
 
-#: includes/Services/InstaMigrateService.php:97
+#: includes/Services/InstaMigrateService.php:100
 #: includes/Steps/ConnectToInstaWp.php:76
 msgid "Website could not connect successfully."
 msgstr "No se pudo establecer conexión con el sitio web."
 
-#: includes/Services/InstaMigrateService.php:104
+#: includes/Services/InstaMigrateService.php:107
 msgid "Migration service could not be started."
 msgstr "No se pudo iniciar el servicio de migración."
 
