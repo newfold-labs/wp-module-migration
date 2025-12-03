@@ -27,27 +27,27 @@ msgstr "Migration"
 msgid "NFD migration Options"
 msgstr "NFD-Migrationsoptionen"
 
-#: includes/Migration.php:106
+#: includes/Migration.php:105
 msgid "WordPress Migration Tool"
 msgstr "WordPress-Migrations-Tool"
 
-#: includes/Migration.php:107
+#: includes/Migration.php:106
 msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
 msgstr "Migrieren Sie eine bestehende WordPress-Seite zu dieser WordPress-Instanz. Dieses Tool wird eine Kopie einer existierenden Site erstellen und automatisch in diese WordPress-Instanz <strong>importieren. Dies wird den gesamten Inhalt überschreiben.</strong>"
 
-#: includes/Migration.php:164
+#: includes/Migration.php:163
 msgid "Preparing your site"
 msgstr "Ihre Seite wird vorbereitet"
 
-#: includes/Migration.php:165
+#: includes/Migration.php:164
 msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
 msgstr "Bitte warten Sie ein paar Sekunden, während wir Ihr neues Konto bereit, um Ihre bestehende WordPress-Seite zu importieren."
 
-#: includes/Migration.php:166
+#: includes/Migration.php:165
 msgid "WordPress Content"
 msgstr "WordPress-Inhalt"
 
-#: includes/Services/InstaMigrateService.php:97
+#: includes/Services/InstaMigrateService.php:100
 #: includes/Steps/ConnectToInstaWp.php:76
 msgid "Website could not connect successfully."
 msgstr "Website konnte keine Verbindung herstellen."
@@ -69,7 +69,7 @@ msgstr "Kein Bericht verfügbar."
 msgid "Cannot get api key."
 msgstr "API-Schlüssel kann nicht abgerufen werden."
 
-#: includes/Services/InstaMigrateService.php:104
+#: includes/Services/InstaMigrateService.php:107
 msgid "Migration service could not be started."
 msgstr "Migrationsdienst konnte nicht gestartet werden."
 
