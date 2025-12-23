@@ -44,7 +44,7 @@
         "lucatume/wp-browser": "*",
         "newfold-labs/wp-php-standards": "^1.2",
         "phpunit/phpcov": "*",
-        "wp-cli/i18n-command": "^2.6.5"
+        "wp-cli/i18n-command": "^2.6.6"
     },
     "scripts": {
         "fix": [
