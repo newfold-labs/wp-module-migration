@@ -33,12 +33,6 @@ export const { auth, wordpress, newfold, a11y, utils } = pluginHelpers;
 /** Plugin ID from environment */
 export const pluginId = process.env.PLUGIN_ID || 'bluehost';
 
-/** Supported plugins for migration tests */
-export const SUPPORTED_PLUGINS = ['bluehost', 'hostgator'];
-
-/** Check if current plugin supports migration tests */
-export const isMigrationSupported = SUPPORTED_PLUGINS.includes(pluginId);
-
 /** Migration domains by plugin */
 export const MIGRATION_DOMAINS = {
   bluehost: 'migrate.bluehost.com',

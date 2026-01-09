@@ -1,8 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import {
   auth,
-  pluginId,
-  isMigrationSupported,
   setMigrationOptions,
   clearMigrationOptions,
   deleteOption,
@@ -11,9 +9,6 @@ import {
 } from '../helpers/index.mjs';
 
 test.describe('Redirect to Onboarding Migration Flow from MFE entrypoint', () => {
-  // Skip entire suite for unsupported plugins
-  test.skip(!isMigrationSupported, `Migration test skipped for plugin: ${pluginId}`);
-
   test.beforeAll(async () => {
     // Set up migration options before tests
     await setMigrationOptions();
