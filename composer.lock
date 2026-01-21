@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02134dae49069c9721aa5d7b14bc8ed3",
+    "content-hash": "550877caad2771fabd0977da5805f308",
     "packages": [
         {
             "name": "instawp/connect-helpers",
-            "version": "1.0.4",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/InstaWP/connect-helpers.git",
-                "reference": "702108c2e2a30b4cc8201f1e8cbbe40e489b95d4"
+                "reference": "7178cccefc15607880fd8376d95db74a4fb13ed1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/InstaWP/connect-helpers/zipball/702108c2e2a30b4cc8201f1e8cbbe40e489b95d4",
-                "reference": "702108c2e2a30b4cc8201f1e8cbbe40e489b95d4",
+                "url": "https://api.github.com/repos/InstaWP/connect-helpers/zipball/7178cccefc15607880fd8376d95db74a4fb13ed1",
+                "reference": "7178cccefc15607880fd8376d95db74a4fb13ed1",
                 "shasum": ""
             },
             "require": {
@@ -49,10 +49,10 @@
             ],
             "description": "CLI Package for InstaWP Remote Features",
             "support": {
-                "source": "https://github.com/InstaWP/connect-helpers/tree/1.0.4",
+                "source": "https://github.com/InstaWP/connect-helpers/tree/1.0.8",
                 "issues": "https://github.com/InstaWP/connect-helpers/issues"
             },
-            "time": "2025-06-20T08:26:17+00:00"
+            "time": "2026-01-15T13:11:21+00:00"
         },
         {
             "name": "newfold-labs/container",
@@ -155,23 +155,23 @@
         },
         {
             "name": "wp-cli/wp-config-transformer",
-            "version": "v1.4.2",
+            "version": "v1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/wp-config-transformer.git",
-                "reference": "b78cab1159b43eb5ee097e2cfafe5eab573d2a8a"
+                "reference": "5ade4e70349a1d5cd07efc33880ceb5eebb9e9fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/wp-config-transformer/zipball/b78cab1159b43eb5ee097e2cfafe5eab573d2a8a",
-                "reference": "b78cab1159b43eb5ee097e2cfafe5eab573d2a8a",
+                "url": "https://api.github.com/repos/wp-cli/wp-config-transformer/zipball/5ade4e70349a1d5cd07efc33880ceb5eebb9e9fa",
+                "reference": "5ade4e70349a1d5cd07efc33880ceb5eebb9e9fa",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6 || ^7.0 || ^8.0"
+                "php": ">=7.2.24"
             },
             "require-dev": {
-                "wp-cli/wp-cli-tests": "^4.0"
+                "wp-cli/wp-cli-tests": "^4.0 || ^5.0"
             },
             "type": "library",
             "extra": {
@@ -198,9 +198,9 @@
             "homepage": "https://github.com/wp-cli/wp-config-transformer",
             "support": {
                 "issues": "https://github.com/wp-cli/wp-config-transformer/issues",
-                "source": "https://github.com/wp-cli/wp-config-transformer/tree/v1.4.2"
+                "source": "https://github.com/wp-cli/wp-config-transformer/tree/v1.4.3"
             },
-            "time": "2025-03-31T08:37:05+00:00"
+            "time": "2025-11-11T13:31:09+00:00"
         },
         {
             "name": "wp-forge/collection",
