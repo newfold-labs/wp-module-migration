@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1769609303">
-  <project timestamp="1769609303">
+<coverage generated="1770276677">
+  <project timestamp="1770276677">
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Data/Constants.php">
       <class name="NewfoldLabs\WP\Module\Migration\Data\Constants" namespace="global">
         <metrics complexity="8" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="11" coveredelements="0"/>
@@ -20,32 +20,32 @@
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Data/Events.php">
       <class name="NewfoldLabs\WP\Module\Migration\Data\Events" namespace="global">
-        <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="4" coveredelements="0"/>
+        <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
       </class>
-      <line num="43" type="method" name="get_valid_actions" visibility="public" complexity="1" crap="2" count="0"/>
-      <line num="44" type="stmt" count="0"/>
-      <line num="52" type="method" name="get_category" visibility="public" complexity="1" crap="2" count="0"/>
-      <line num="53" type="stmt" count="0"/>
-      <metrics loc="56" ncloc="31" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="4" coveredelements="0"/>
+      <line num="43" type="method" name="get_valid_actions" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="44" type="stmt" count="1"/>
+      <line num="52" type="method" name="get_category" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="53" type="stmt" count="1"/>
+      <metrics loc="56" ncloc="31" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="4" coveredelements="4"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Helpers/BrandHelper.php">
       <class name="NewfoldLabs\WP\Module\Migration\Helpers\BrandHelper" namespace="global">
-        <metrics complexity="2" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="3" coveredelements="0"/>
+        <metrics complexity="2" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
       </class>
-      <line num="15" type="method" name="is_whitelisted" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="16" type="stmt" count="0"/>
-      <line num="17" type="stmt" count="0"/>
-      <metrics loc="20" ncloc="11" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="3" coveredelements="0"/>
+      <line num="15" type="method" name="is_whitelisted" visibility="public" complexity="2" crap="2" count="3"/>
+      <line num="16" type="stmt" count="3"/>
+      <line num="17" type="stmt" count="3"/>
+      <metrics loc="20" ncloc="11" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Helpers/Permissions.php">
       <class name="NewfoldLabs\WP\Module\Migration\Helpers\Permissions" namespace="global">
-        <metrics complexity="4" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="4" coveredelements="0"/>
+        <metrics complexity="4" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="1" elements="4" coveredelements="2"/>
       </class>
-      <line num="19" type="method" name="rest_is_authorized_admin" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="20" type="stmt" count="0"/>
+      <line num="19" type="method" name="rest_is_authorized_admin" visibility="public" complexity="2" crap="2" count="2"/>
+      <line num="20" type="stmt" count="2"/>
       <line num="28" type="method" name="is_authorized_admin" visibility="public" complexity="2" crap="6" count="0"/>
       <line num="29" type="stmt" count="0"/>
-      <metrics loc="32" ncloc="16" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="4" coveredelements="0"/>
+      <metrics loc="32" ncloc="16" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="1" elements="4" coveredelements="2"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Helpers/SiteCapabilityHelper.php">
       <class name="NewfoldLabs\WP\Module\Migration\Helpers\SiteCapabilityHelper" namespace="global">
@@ -316,41 +316,41 @@
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/RestApi/MigrateController.php">
       <class name="NewfoldLabs\WP\Module\Migration\RestApi\MigrateController" namespace="global">
-        <metrics complexity="7" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="45" coveredstatements="0" elements="49" coveredelements="0"/>
+        <metrics complexity="7" methods="4" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="45" coveredstatements="34" elements="49" coveredelements="36"/>
       </class>
-      <line num="32" type="method" name="register_routes" visibility="public" complexity="1" crap="2" count="0"/>
-      <line num="33" type="stmt" count="0"/>
-      <line num="34" type="stmt" count="0"/>
-      <line num="35" type="stmt" count="0"/>
-      <line num="36" type="stmt" count="0"/>
-      <line num="37" type="stmt" count="0"/>
-      <line num="38" type="stmt" count="0"/>
-      <line num="39" type="stmt" count="0"/>
-      <line num="40" type="stmt" count="0"/>
-      <line num="41" type="stmt" count="0"/>
-      <line num="42" type="stmt" count="0"/>
-      <line num="43" type="stmt" count="0"/>
-      <line num="45" type="stmt" count="0"/>
-      <line num="46" type="stmt" count="0"/>
-      <line num="47" type="stmt" count="0"/>
-      <line num="48" type="stmt" count="0"/>
-      <line num="49" type="stmt" count="0"/>
-      <line num="50" type="stmt" count="0"/>
-      <line num="51" type="stmt" count="0"/>
-      <line num="52" type="stmt" count="0"/>
-      <line num="53" type="stmt" count="0"/>
-      <line num="54" type="stmt" count="0"/>
-      <line num="55" type="stmt" count="0"/>
-      <line num="56" type="stmt" count="0"/>
-      <line num="57" type="stmt" count="0"/>
-      <line num="58" type="stmt" count="0"/>
-      <line num="59" type="stmt" count="0"/>
-      <line num="60" type="stmt" count="0"/>
-      <line num="61" type="stmt" count="0"/>
-      <line num="62" type="stmt" count="0"/>
-      <line num="63" type="stmt" count="0"/>
-      <line num="64" type="stmt" count="0"/>
-      <line num="65" type="stmt" count="0"/>
+      <line num="32" type="method" name="register_routes" visibility="public" complexity="1" crap="1" count="2"/>
+      <line num="33" type="stmt" count="2"/>
+      <line num="34" type="stmt" count="2"/>
+      <line num="35" type="stmt" count="2"/>
+      <line num="36" type="stmt" count="2"/>
+      <line num="37" type="stmt" count="2"/>
+      <line num="38" type="stmt" count="2"/>
+      <line num="39" type="stmt" count="2"/>
+      <line num="40" type="stmt" count="2"/>
+      <line num="41" type="stmt" count="2"/>
+      <line num="42" type="stmt" count="2"/>
+      <line num="43" type="stmt" count="2"/>
+      <line num="45" type="stmt" count="2"/>
+      <line num="46" type="stmt" count="2"/>
+      <line num="47" type="stmt" count="2"/>
+      <line num="48" type="stmt" count="2"/>
+      <line num="49" type="stmt" count="2"/>
+      <line num="50" type="stmt" count="2"/>
+      <line num="51" type="stmt" count="2"/>
+      <line num="52" type="stmt" count="2"/>
+      <line num="53" type="stmt" count="2"/>
+      <line num="54" type="stmt" count="2"/>
+      <line num="55" type="stmt" count="2"/>
+      <line num="56" type="stmt" count="2"/>
+      <line num="57" type="stmt" count="2"/>
+      <line num="58" type="stmt" count="2"/>
+      <line num="59" type="stmt" count="2"/>
+      <line num="60" type="stmt" count="2"/>
+      <line num="61" type="stmt" count="2"/>
+      <line num="62" type="stmt" count="2"/>
+      <line num="63" type="stmt" count="2"/>
+      <line num="64" type="stmt" count="2"/>
+      <line num="65" type="stmt" count="2"/>
       <line num="73" type="method" name="connect_instawp" visibility="public" complexity="2" crap="6" count="0"/>
       <line num="74" type="stmt" count="0"/>
       <line num="75" type="stmt" count="0"/>
@@ -364,34 +364,34 @@
       <line num="96" type="stmt" count="0"/>
       <line num="97" type="stmt" count="0"/>
       <line num="99" type="stmt" count="0"/>
-      <line num="107" type="method" name="rest_is_authorized_admin" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="108" type="stmt" count="0"/>
-      <line num="109" type="stmt" count="0"/>
-      <metrics loc="112" ncloc="77" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="45" coveredstatements="0" elements="49" coveredelements="0"/>
+      <line num="107" type="method" name="rest_is_authorized_admin" visibility="public" complexity="2" crap="2" count="2"/>
+      <line num="108" type="stmt" count="2"/>
+      <line num="109" type="stmt" count="2"/>
+      <metrics loc="112" ncloc="77" classes="1" methods="4" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="45" coveredstatements="34" elements="49" coveredelements="36"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/RestApi/RestApi.php">
       <class name="NewfoldLabs\WP\Module\Migration\RestApi\RestApi" namespace="global">
-        <metrics complexity="5" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="0" elements="18" coveredelements="0"/>
+        <metrics complexity="5" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="18" coveredelements="18"/>
       </class>
-      <line num="30" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
-      <line num="31" type="stmt" count="0"/>
-      <line num="37" type="method" name="register_routes" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="38" type="stmt" count="0"/>
-      <line num="44" type="stmt" count="0"/>
-      <line num="45" type="stmt" count="0"/>
-      <line num="47" type="stmt" count="0"/>
-      <line num="52" type="method" name="register_settings" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="53" type="stmt" count="0"/>
-      <line num="54" type="stmt" count="0"/>
-      <line num="55" type="stmt" count="0"/>
-      <line num="56" type="stmt" count="0"/>
-      <line num="57" type="stmt" count="0"/>
-      <line num="58" type="stmt" count="0"/>
-      <line num="59" type="stmt" count="0"/>
-      <line num="60" type="stmt" count="0"/>
-      <line num="61" type="stmt" count="0"/>
-      <line num="62" type="stmt" count="0"/>
-      <metrics loc="66" ncloc="39" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="0" elements="18" coveredelements="0"/>
+      <line num="30" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="31" type="stmt" count="1"/>
+      <line num="37" type="method" name="register_routes" visibility="public" complexity="2" crap="2" count="1"/>
+      <line num="38" type="stmt" count="1"/>
+      <line num="44" type="stmt" count="1"/>
+      <line num="45" type="stmt" count="1"/>
+      <line num="47" type="stmt" count="1"/>
+      <line num="52" type="method" name="register_settings" visibility="public" complexity="2" crap="2" count="1"/>
+      <line num="53" type="stmt" count="1"/>
+      <line num="54" type="stmt" count="1"/>
+      <line num="55" type="stmt" count="1"/>
+      <line num="56" type="stmt" count="1"/>
+      <line num="57" type="stmt" count="1"/>
+      <line num="58" type="stmt" count="1"/>
+      <line num="59" type="stmt" count="1"/>
+      <line num="60" type="stmt" count="1"/>
+      <line num="61" type="stmt" count="1"/>
+      <line num="62" type="stmt" count="1"/>
+      <metrics loc="66" ncloc="39" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="18" coveredelements="18"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Services/EventService.php">
       <class name="NewfoldLabs\WP\Module\Migration\Services\EventService" namespace="global">
@@ -803,7 +803,7 @@
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Steps/AbstractStep.php">
       <class name="NewfoldLabs\WP\Module\Migration\Steps\AbstractStep" namespace="global">
-        <metrics complexity="28" methods="17" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="0" elements="47" coveredelements="0"/>
+        <metrics complexity="28" methods="17" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="2" elements="47" coveredelements="4"/>
       </class>
       <line num="85" type="method" name="success" visibility="protected" complexity="1" crap="2" count="0"/>
       <line num="86" type="stmt" count="0"/>
@@ -820,8 +820,8 @@
       <line num="115" type="stmt" count="0"/>
       <line num="117" type="stmt" count="0"/>
       <line num="119" type="stmt" count="0"/>
-      <line num="127" type="method" name="set_step_slug" visibility="protected" complexity="2" crap="6" count="0"/>
-      <line num="128" type="stmt" count="0"/>
+      <line num="127" type="method" name="set_step_slug" visibility="protected" complexity="2" crap="2" count="1"/>
+      <line num="128" type="stmt" count="1"/>
       <line num="136" type="method" name="get_step_slug" visibility="public" complexity="1" crap="2" count="0"/>
       <line num="137" type="stmt" count="0"/>
       <line num="145" type="method" name="set_max_retries" visibility="protected" complexity="2" crap="6" count="0"/>
@@ -834,8 +834,8 @@
       <line num="171" type="stmt" count="0"/>
       <line num="178" type="method" name="get_status" visibility="public" complexity="1" crap="2" count="0"/>
       <line num="179" type="stmt" count="0"/>
-      <line num="186" type="method" name="set_status" visibility="public" complexity="1" crap="2" count="0"/>
-      <line num="187" type="stmt" count="0"/>
+      <line num="186" type="method" name="set_status" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="187" type="stmt" count="1"/>
       <line num="195" type="method" name="get_response" visibility="public" complexity="1" crap="2" count="0"/>
       <line num="196" type="stmt" count="0"/>
       <line num="203" type="method" name="set_response" visibility="public" complexity="3" crap="12" count="0"/>
@@ -852,7 +852,7 @@
       <line num="238" type="stmt" count="0"/>
       <line num="239" type="stmt" count="0"/>
       <line num="241" type="stmt" count="0"/>
-      <metrics loc="244" ncloc="108" classes="1" methods="17" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="0" elements="47" coveredelements="0"/>
+      <metrics loc="244" ncloc="108" classes="1" methods="17" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="2" elements="47" coveredelements="4"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Steps/ConnectToInstaWp.php">
       <class name="NewfoldLabs\WP\Module\Migration\Steps\ConnectToInstaWp" namespace="global">
@@ -962,12 +962,12 @@
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Steps/LastStep.php">
       <class name="NewfoldLabs\WP\Module\Migration\Steps\LastStep" namespace="global">
-        <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="3" coveredelements="0"/>
+        <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
       </class>
-      <line num="14" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
-      <line num="15" type="stmt" count="0"/>
-      <line num="16" type="stmt" count="0"/>
-      <metrics loc="19" ncloc="11" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="3" coveredelements="0"/>
+      <line num="14" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="15" type="stmt" count="1"/>
+      <line num="16" type="stmt" count="1"/>
+      <metrics loc="19" ncloc="11" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
     </file>
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Steps/PageSpeed.php">
       <class name="NewfoldLabs\WP\Module\Migration\Steps\PageSpeed" namespace="global">
@@ -1031,6 +1031,6 @@
       <line num="87" type="stmt" count="0"/>
       <metrics loc="90" ncloc="54" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="21" coveredelements="0"/>
     </file>
-    <metrics files="25" loc="2321" ncloc="1544" classes="25" methods="92" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="788" coveredstatements="0" elements="880" coveredelements="0"/>
+    <metrics files="25" loc="2321" ncloc="1544" classes="25" methods="92" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="788" coveredstatements="58" elements="880" coveredelements="70"/>
   </project>
 </coverage>
