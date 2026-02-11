@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1770764718">
-  <project timestamp="1770764718">
+<coverage generated="1770794394">
+  <project timestamp="1770794394">
     <file name="/home/runner/work/wp-module-migration/wp-module-migration/includes/Data/Constants.php">
       <class name="NewfoldLabs\WP\Module\Migration\Data\Constants" namespace="global">
         <metrics complexity="8" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="11" coveredelements="0"/>
