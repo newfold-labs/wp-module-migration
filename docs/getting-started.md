@@ -1,0 +1,12 @@
+# Getting started
+
+Prerequisites: PHP 7.3+, Composer. The module requires instawp/connect-helpers, wp-module-loader.
+
+```bash
+composer install
+composer run test
+composer run lint
+composer run fix
+```
+
+See [integration.md](integration.md) for using in a host plugin.
