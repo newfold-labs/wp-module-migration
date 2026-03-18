@@ -1,3 +1,10 @@
+---
+name: wp-module-migration
+title: Getting started
+description: Prerequisites, install, and run.
+updated: 2025-03-18
+---
+
 # Getting started
 
 Prerequisites: PHP 7.3+, Composer. The module requires instawp/connect-helpers, wp-module-loader.
