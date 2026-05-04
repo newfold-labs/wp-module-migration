@@ -144,19 +144,19 @@ export async function navigateToMigrationPage(page) {
  */
 export async function assertMigrationRedirect(page) {
   const domain = getMigrationDomain();
-  
-  // Wait for external redirect with generous timeout
-  await page.waitForURL(`**://${domain}/**`, { timeout: 60000 });
-  
-  // Wait for page to be ready after redirect
-  await page.waitForLoadState('domcontentloaded');
-  
+
+  // waitForURL defaults to "load"; external migration pages may never fire it in CI.
+  await page.waitForURL(`**://${domain}/**`, {
+    timeout: 60000,
+    waitUntil: 'domcontentloaded',
+  });
+
   // Verify URL structure with soft assertions for better debugging
   const url = new URL(page.url());
   expect(url.hostname, 'Expected redirect to migration domain').toBe(domain);
   expect.soft(url.searchParams.has('g_id'), 'Expected g_id parameter in URL').toBe(true);
   expect.soft(url.searchParams.has('locale'), 'Expected locale parameter in URL').toBe(true);
-  
+
   // Verify page loaded correctly (check for specific error patterns, not generic "error")
   const bodyText = await page.locator('body').textContent();
   expect(bodyText, 'Page should not show 404 error').not.toMatch(/404\s*(not found)?/i);
