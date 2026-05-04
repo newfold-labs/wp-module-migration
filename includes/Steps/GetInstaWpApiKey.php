@@ -47,7 +47,6 @@ class GetInstaWpApiKey extends AbstractStep {
 		if ( ! $this->insta_api_key ) {
 			$this->insta_api_key = UtilityService::get_insta_api_key( BRAND_PLUGIN );
 			if ( $this->insta_api_key ) {
-				$this->set_data( 'insta_api_key', $this->insta_api_key );
 				update_option( 'newfold_insta_api_key', $this->encrypter->encrypt( $this->insta_api_key ) );
 				$this->success();
 			} else {
@@ -59,8 +58,16 @@ class GetInstaWpApiKey extends AbstractStep {
 				);
 			}
 		} else {
-			$this->set_data( 'insta_api_key', $this->insta_api_key );
 			$this->success();
 		}
+	}
+
+	/**
+	 * Get the InstaWP API key.
+	 *
+	 * @return string
+	 */
+	public function get_insta_api_key() {
+		return $this->insta_api_key;
 	}
 }

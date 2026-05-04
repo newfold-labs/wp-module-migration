@@ -98,6 +98,7 @@ class InstaWpOptionsUpdatesListener {
 							'migration_failed',
 							$this->tracker->get_track_content()
 						);
+						$this->tracker->delete_track();
 					} elseif ( 'aborted' === $migration_status ) {
 						$migration_complete = new LastStep();
 						$migration_complete->set_status( $migration_complete->statuses['aborted'] );
@@ -106,6 +107,7 @@ class InstaWpOptionsUpdatesListener {
 							'migration_aborted',
 							$this->tracker->get_track_content()
 						);
+						$this->tracker->delete_track();
 					}
 				}
 			}
@@ -211,6 +213,7 @@ class InstaWpOptionsUpdatesListener {
 
 				EventService::send_application_event( "migration_$status", $migration_infos );
 				update_option( 'nfd_migration_status_sent', true );
+				$this->tracker->delete_track();
 			}
 		}
 	}

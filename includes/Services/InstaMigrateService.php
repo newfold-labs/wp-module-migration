@@ -49,7 +49,7 @@ class InstaMigrateService {
 		);
 		$this->tracker->update_track( $instawp_get_key_step );
 		if ( ! $instawp_get_key_step->failed() ) {
-			$this->insta_api_key = $instawp_get_key_step->get_data( 'insta_api_key' );
+			$this->insta_api_key = $instawp_get_key_step->get_insta_api_key();
 		} else {
 			return new \WP_Error(
 				'Bad request',
