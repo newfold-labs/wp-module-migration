@@ -84,15 +84,4 @@ class ConnectToInstaWp extends AbstractStep {
 			$this->success();
 		}
 	}
-
-	/**
-	 * Set the step as successful and store the API key.
-	 *
-	 * @return void
-	 */
-	protected function success() {
-		parent::success();
-
-		$this->set_data( 'ApiKey', Helper::get_api_key() );
-	}
 }
