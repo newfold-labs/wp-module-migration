@@ -19,10 +19,10 @@ permissions: {}
 jobs:
   translate:
     name: 'Check and update translations'
-    uses: newfold-labs/workflows/.github/workflows/reusable-translations.yml@main
     permissions:
       contents: write      # Required so the reusable workflow can commit translation updates via GITHUB_TOKEN.
       pull-requests: write # Required so the reusable workflow can create or update pull requests via GITHUB_TOKEN.
+    uses: newfold-labs/workflows/.github/workflows/reusable-translations.yml@main
     with:
       text_domain: 'wp-module-migration'
     secrets:
