@@ -32,8 +32,8 @@ jobs:
   codecoverage:
     needs: get-repo-name
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write      # Required so the reusable workflow can publish gh-pages artifacts with GITHUB_TOKEN.
+      pull-requests: write # Required so the reusable workflow can attach coverage summaries to pull requests via GITHUB_TOKEN.
     uses: newfold-labs/workflows/.github/workflows/reusable-codecoverage.yml@main
     with:
       php-versions: '["7.4", "8.0", "8.1", "8.2", "8.3", "8.4"]'
