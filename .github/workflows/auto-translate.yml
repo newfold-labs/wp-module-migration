@@ -27,3 +27,4 @@ jobs:
       text_domain: 'wp-module-migration'
     secrets:
       TRANSLATOR_API_KEY: ${{ secrets.TRANSLATOR_API_KEY }}
+    timeout-minutes: 30

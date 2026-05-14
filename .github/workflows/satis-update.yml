@@ -14,6 +14,7 @@ jobs:
     name: Send Webhook
     runs-on: ubuntu-latest
     permissions: {} # Workflow uses secrets.WEBHOOK_TOKEN only; GitHub Actions should not broaden the generated GITHUB_TOKEN.
+    timeout-minutes: 15
     steps:
 
       - name: Set Package
