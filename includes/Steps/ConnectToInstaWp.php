@@ -3,7 +3,6 @@
 namespace NewfoldLabs\WP\Module\Migration\Steps;
 
 use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
-use InstaWP\Connect\Helpers\Helper;
 
 /**
  * Connection to InstaWp step.
@@ -57,30 +56,27 @@ class ConnectToInstaWp extends AbstractStep {
 	 * @return void
 	 */
 	protected function run() {
-		if ( empty( Helper::get_api_key() ) || empty( Helper::get_connect_id() ) ) {
-			$api_key          = Helper::get_api_key( false, $this->insta_api_key );
-			$connect_response = Helper::instawp_generate_api_key(
-				$api_key,
-				'',
-				array(
-					'e2e_mig_push_request' => true,
-					'wlm_slug'             => $this->brand,
-					'managed'              => false,
-				)
-			);
-			if ( ! $connect_response ) {
-				delete_option( 'instawp_api_key' );
-				if ( ! $this->retry() ) {
-					$this->set_response(
-						array(
-							'message' => esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
-						),
-					);
-				}
-			} else {
-				$this->success();
+		if ( ! class_exists( '\IWP_Migration_Utils' ) ) {
+			require_once dirname( __DIR__, 2 ) . '/utils/iwp-migration-utils.php';
+		}
+
+		$migration_request = \IWP_Migration_Utils::instaMigrateRequest(
+			$this->insta_api_key,
+			$this->brand
+		);
+
+		if ( ! is_array( $migration_request ) || empty( $migration_request['success'] ) ) {
+			if ( ! $this->retry() ) {
+				$this->set_response(
+					array(
+						'message' => empty( $migration_request['message'] )
+							? esc_html__( 'Website could not connect successfully.', 'wp-module-migration' )
+							: $migration_request['message'],
+					),
+				);
 			}
 		} else {
+			$this->set_data( 'migration_url', $migration_request['data']['migration_url'] ?? '' );
 			$this->success();
 		}
 	}
