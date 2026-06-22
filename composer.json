@@ -6,7 +6,8 @@
             "NewfoldLabs\\WP\\Module\\Migration\\": "includes/"
         },
         "files": [
-            "bootstrap.php"
+            "bootstrap.php",
+            "utils/iwp-migration-utils.php"
         ]
     },
     "authors": [
@@ -26,17 +27,9 @@
             "only": [
                 "newfold-labs/*"
             ]
-        },
-        "1": {
-            "type": "vcs",
-            "url": "git@github.com:InstaWP/connect-helpers.git",
-            "only": [
-                "instawp/*"
-            ]
         }
     },
     "require": {
-        "instawp/connect-helpers": "^1.0.8",
         "newfold-labs/wp-module-loader": "^1.1.0"
     },
     "require-dev": {
