@@ -5,13 +5,13 @@ namespace NewfoldLabs\WP\Module\Migration\Steps;
 use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 
 /**
- * Connection to InstaWp step.
+ * Requests a migration URL from InstaWP migration utilities.
  *
  * @package wp-module-migration
  */
 class ConnectToInstaWp extends AbstractStep {
 	/**
-	 * InstaWP Connect plugin API key used for connecting the instaWP plugin
+	 * InstaWP migration vendor API key.
 	 *
 	 * @var $insta_api_key
 	 */
@@ -28,7 +28,7 @@ class ConnectToInstaWp extends AbstractStep {
 	/**
 	 * Construct. Init basic parameters.
 	 *
-	 * @param string $insta_api_key instawp api key.
+	 * @param string $insta_api_key InstaWP migration vendor API key.
 	 */
 	public function __construct( $insta_api_key ) {
 		$this->set_step_slug( 'ConnectToInstaWp' );

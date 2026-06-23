@@ -10,7 +10,7 @@ use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 class InstaMigrateService {
 
 	/**
-	 * InstaWP Connect plugin API key used for connecting the instaWP plugin
+	 * InstaWP migration vendor API key.
 	 *
 	 * @var string $insta_api_key
 	 */
