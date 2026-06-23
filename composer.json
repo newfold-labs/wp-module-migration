@@ -6,8 +6,7 @@
             "NewfoldLabs\\WP\\Module\\Migration\\": "includes/"
         },
         "files": [
-            "bootstrap.php",
-            "utils/iwp-migration-utils.php"
+            "bootstrap.php"
         ]
     },
     "authors": [

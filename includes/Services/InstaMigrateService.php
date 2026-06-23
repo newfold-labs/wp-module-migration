@@ -67,6 +67,14 @@ class InstaMigrateService {
 
 		if ( ! $connect_to_instawp->failed() ) {
 			$migration_url = $connect_to_instawp->get_data()['migration_url'] ?? '';
+			if ( empty( $migration_url ) || ! filter_var( $migration_url, FILTER_VALIDATE_URL ) ) {
+				return new \WP_Error(
+					'bad_request',
+					esc_html__( 'Migration URL could not be generated.', 'wp-module-migration' ),
+					array( 'status' => 400 )
+				);
+			}
+
 			return array(
 				'message'      => esc_html__( 'Ready to start the migration.', 'wp-module-migration' ),
 				'response'     => true,

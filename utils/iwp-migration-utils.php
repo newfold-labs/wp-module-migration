@@ -19,6 +19,11 @@
  * Requires at least: 5.2
  * Tested up to:      6.8
  * Requires PHP:      7.0
+ *
+ * Vendored by newfold-labs/wp-module-migration — do not modify except for
+ * security patches documented in docs/dependencies.md.
+ * Source: https://github.com/InstaWP/iwp-migration-helper/blob/develop/migration-utils/iwp-migration-utils.php
+ * Version: 0.0.1 (develop branch, 2026-06-22)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -1084,8 +1089,7 @@ if ( ! class_exists('IWP_Migration_Utils') ) {
                     'redirection'     => 10,
                     'httpversion'     => '1.1',
                     'user-agent'      => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
-                    'sslverify'       => false,
-                    'sslverifyhost'   => false,
+                    'sslverify'       => apply_filters( 'nfd_migration_iwp_sslverify', true ),
                     'follow_location' => true,
                     'max_redirects'   => 10,
                 );

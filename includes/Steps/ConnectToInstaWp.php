@@ -62,21 +62,36 @@ class ConnectToInstaWp extends AbstractStep {
 
 		$migration_request = \IWP_Migration_Utils::instaMigrateRequest(
 			$this->insta_api_key,
-			$this->brand
+			$this->brand,
+			get_locale()
 		);
 
 		if ( ! is_array( $migration_request ) || empty( $migration_request['success'] ) ) {
 			if ( ! $this->retry() ) {
+				$error_message = empty( $migration_request['message'] )
+					? esc_html__( 'Website could not connect successfully.', 'wp-module-migration' )
+					: esc_html( wp_strip_all_tags( (string) $migration_request['message'] ) );
+
 				$this->set_response(
 					array(
-						'message' => empty( $migration_request['message'] )
-							? esc_html__( 'Website could not connect successfully.', 'wp-module-migration' )
-							: $migration_request['message'],
+						'message' => $error_message,
 					),
 				);
 			}
 		} else {
-			$this->set_data( 'migration_url', $migration_request['data']['migration_url'] ?? '' );
+			$migration_url = $migration_request['data']['migration_url'] ?? '';
+			if ( empty( $migration_url ) || ! filter_var( $migration_url, FILTER_VALIDATE_URL ) ) {
+				if ( ! $this->retry() ) {
+					$this->set_response(
+						array(
+							'message' => esc_html__( 'Migration URL could not be generated.', 'wp-module-migration' ),
+						),
+					);
+				}
+				return;
+			}
+
+			$this->set_data( 'migration_url', $migration_url );
 			$this->success();
 		}
 	}
