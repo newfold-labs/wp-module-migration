@@ -57,7 +57,19 @@ class ConnectToInstaWp extends AbstractStep {
 	 */
 	protected function run() {
 		if ( ! class_exists( '\IWP_Migration_Utils' ) ) {
-			require_once dirname( __DIR__, 2 ) . '/utils/iwp-migration-utils.php';
+			$utility_path = dirname( __DIR__, 2 ) . '/utils/iwp-migration-utils.php';
+			if ( ! file_exists( $utility_path ) ) {
+				if ( ! $this->retry() ) {
+					$this->set_response(
+						array(
+							'message' => esc_html__( 'Migration utility is missing.', 'wp-module-migration' ),
+						),
+					);
+				}
+				return;
+			}
+
+			require_once $utility_path;
 		}
 
 		$migration_request = \IWP_Migration_Utils::instaMigrateRequest(

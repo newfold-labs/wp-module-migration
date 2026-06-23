@@ -13,4 +13,11 @@ updated: 2026-06-22
 
 `utils/iwp-migration-utils.php` is copied from [InstaWP iwp-migration-helper](https://github.com/InstaWP/iwp-migration-helper/blob/develop/migration-utils/iwp-migration-utils.php). Treat it as upstream code: avoid drive-by edits and only patch for documented security or compatibility reasons.
 
-**Refresh policy:** when InstaWP releases an update, replace the file from upstream `develop` (or the tag InstaWP specifies), re-apply any documented local patches (currently: enable SSL verification via `nfd_migration_iwp_sslverify` filter, default `true`), run `composer run lint` and `composer run test`, then QA both v3 and v4 migration paths.
+**Local patches (re-apply after upstream refresh):**
+
+1. SSL verification enabled by default (`nfd_migration_iwp_sslverify` filter, default `true`).
+2. Locale/slug sanitization in `instaMigrateRequest()` — preserve locale casing/underscores; use `sanitize_title()` for slugs so dashes are kept.
+3. Outbound API user-agent uses `getInstaWPUserAgent( 'wp-module-migration' )`.
+4. `installInstaWPConnect()` error copy references InstaWP Connect (not InstaMigrate).
+
+**Refresh policy:** when InstaWP releases an update, replace the file from upstream `develop` (or the tag InstaWP specifies), re-apply the patches above, run `composer run lint` and `composer run test`, then QA both v3 and v4 migration paths.

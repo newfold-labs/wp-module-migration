@@ -75,10 +75,12 @@ class InstaMigrateService {
 				);
 			}
 
+			$redirect_url = apply_filters( 'nfd_migration_redirect_url', apply_filters( 'nfd_build_url', $migration_url ) );
+
 			return array(
 				'message'      => esc_html__( 'Ready to start the migration.', 'wp-module-migration' ),
 				'response'     => true,
-				'redirect_url' => esc_url_raw( $migration_url ),
+				'redirect_url' => esc_url_raw( $redirect_url ),
 			);
 		}
 

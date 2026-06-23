@@ -94,11 +94,16 @@ if ( ! class_exists('IWP_Migration_Utils') ) {
                 return self::sendResponse( false, 'White label migration slug is required.' );
             }
 
-            $locale = empty( $locale ) || ! is_string( $locale ) ?  get_locale(): $locale;
+            $locale = empty( $locale ) || ! is_string( $locale ) ? get_locale() : $locale;
+            $locale = trim( sanitize_text_field( $locale ) );
+            if ( ! preg_match( '/^[A-Za-z][A-Za-z0-9_\-]*$/', $locale ) ) {
+                $locale = get_locale();
+            }
 
-            $locale = sanitize_key( $locale );
-
-            $wlm_slug = sanitize_key( $wlm_slug );
+            $wlm_slug = sanitize_title( $wlm_slug );
+            if ( empty( $wlm_slug ) ) {
+                return self::sendResponse( false, 'White label migration slug is required.' );
+            }
 
             // e2e flow — tell client-app which flow is resolving the engine.
             $engine = self::getMigrationEngine( $api_key, 'e2e' );
@@ -279,7 +284,7 @@ if ( ! class_exists('IWP_Migration_Utils') ) {
                 }
 
                 if ( ! function_exists( 'is_plugin_active' ) ) {
-                    return self::sendResponse( false, 'Plugin methods not loaded. Failed to install the InstaMigrate plugin.' );
+                    return self::sendResponse( false, 'Plugin methods not loaded. Failed to install the InstaWP Connect plugin.' );
                 }
 
                 // Check if plugin is active
@@ -1088,18 +1093,11 @@ if ( ! class_exists('IWP_Migration_Utils') ) {
                     'timeout'         => $timeout,
                     'redirection'     => 10,
                     'httpversion'     => '1.1',
-                    'user-agent'      => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
+                    'user-agent'      => self::getInstaWPUserAgent( 'wp-module-migration' ),
                     'sslverify'       => apply_filters( 'nfd_migration_iwp_sslverify', true ),
                     'follow_location' => true,
                     'max_redirects'   => 10,
                 );
-
-                /**
-                 *  If unset WordPress itself add user-agent.
-                 */
-                if ( empty( $args['user-agent'] ) ) {
-                    unset( $args['user-agent'] );
-                }
 
                 if ( ! empty( $body ) ) {
                     $args['body'] = is_array( $body ) ? wp_json_encode( $body ) : $body;
