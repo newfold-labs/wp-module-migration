@@ -75,7 +75,8 @@ class InstaMigrateService {
 				);
 			}
 
-			$redirect_url = apply_filters( 'nfd_migration_redirect_url', apply_filters( 'nfd_build_url', $migration_url ) );
+			$migration_url = $this->normalize_migration_redirect_url( $migration_url );
+			$redirect_url  = apply_filters( 'nfd_migration_redirect_url', apply_filters( 'nfd_build_url', $migration_url ) );
 
 			return array(
 				'message'      => esc_html__( 'Ready to start the migration.', 'wp-module-migration' ),
@@ -89,5 +90,71 @@ class InstaMigrateService {
 			esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
 			array( 'status' => 400 )
 		);
+	}
+
+	/**
+	 * Rewrite InstaWP-hosted migration URLs to the brand proxy worker host.
+	 *
+	 * InstaWP v4 returns migrate.instawp.io (e.g. /start?t=...); the brand CF worker
+	 * proxies those paths back to InstaWP behind migrate.{brand}.com.
+	 *
+	 * @param string $migration_url Migration URL returned by InstaWP utilities.
+	 * @return string
+	 */
+	private function normalize_migration_redirect_url( $migration_url ) {
+		if ( ! defined( 'NFD_MIGRATION_PROXY_WORKER' ) || empty( $migration_url ) ) {
+			return $migration_url;
+		}
+
+		$proxy_parts = wp_parse_url( NFD_MIGRATION_PROXY_WORKER );
+		$url_parts   = wp_parse_url( $migration_url );
+
+		if ( empty( $proxy_parts['host'] ) || empty( $url_parts['host'] ) ) {
+			return $migration_url;
+		}
+
+		if ( $url_parts['host'] === $proxy_parts['host'] ) {
+			return $migration_url;
+		}
+
+		$instawp_hosts = apply_filters(
+			'nfd_migration_instawp_redirect_hosts',
+			array( 'migrate.instawp.io' )
+		);
+
+		if ( ! in_array( $url_parts['host'], $instawp_hosts, true ) ) {
+			return $migration_url;
+		}
+
+		$url_parts['scheme'] = $proxy_parts['scheme'] ?? 'https';
+		$url_parts['host']   = $proxy_parts['host'];
+
+		if ( isset( $proxy_parts['port'] ) ) {
+			$url_parts['port'] = $proxy_parts['port'];
+		} else {
+			unset( $url_parts['port'] );
+		}
+
+		return $this->build_url_from_parts( $url_parts );
+	}
+
+	/**
+	 * Build a URL from parsed parts.
+	 *
+	 * @param array $parts Parsed URL components.
+	 * @return string
+	 */
+	private function build_url_from_parts( array $parts ) {
+		$scheme   = isset( $parts['scheme'] ) ? $parts['scheme'] . '://' : '';
+		$host     = $parts['host'] ?? '';
+		$port     = isset( $parts['port'] ) ? ':' . $parts['port'] : '';
+		$user     = $parts['user'] ?? '';
+		$pass     = isset( $parts['pass'] ) ? ':' . $parts['pass'] : '';
+		$pass     = ( $user || $pass ) ? $pass . '@' : '';
+		$path     = $parts['path'] ?? '';
+		$query    = isset( $parts['query'] ) ? '?' . $parts['query'] : '';
+		$fragment = isset( $parts['fragment'] ) ? '#' . $parts['fragment'] : '';
+
+		return $scheme . $user . $pass . $host . $port . $path . $query . $fragment;
 	}
 }
