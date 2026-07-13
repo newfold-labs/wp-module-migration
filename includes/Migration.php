@@ -64,6 +64,38 @@ class Migration {
 
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
+		add_filter( 'newfold_sso_success_url', array( $this, 'migration_redirect' ) );
+	}
+
+	/**
+	 * Redirects to on boarding migration page dynamically by brand if nfd_migrate_site is set.
+	 *
+	 * @param string $url The URL to redirect to.
+	 * @return string $url The URL to redirect to.
+	 */
+	public function migration_redirect( $url ) {
+		$sso_to_migration = isset( $_GET['nfd-action'] ) && 'nfd-migration' === sanitize_key( $_GET['nfd-action'] ) ? true : false; // phpcs:ignore WordPress.Security.NonceVerification
+
+		$brands_to_onboarding_urls = $this->get_brands_to_urls();
+
+		if ( $sso_to_migration || get_option( 'nfd_migrate_site', false ) ) {
+			if ( isset( $brands_to_onboarding_urls[ BRAND_PLUGIN ] ) ) {
+				$url = $brands_to_onboarding_urls[ BRAND_PLUGIN ];
+			}
+		}
+		return $url;
+	}
+
+	/**
+	 * Returns the brand specific URLs for onboarding migration.
+	 *
+	 * @return array
+	 */
+	public function get_brands_to_urls() {
+		return array(
+			'bluehost'  => admin_url( 'index.php?page=nfd-onboarding#/migration' ),
+			'hostgator' => admin_url( 'index.php?page=nfd-onboarding#/sitegen/step/migration' ),
+		);
 	}
 
 	/**
