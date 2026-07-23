@@ -6,6 +6,12 @@
     <exclude-pattern>./assets</exclude-pattern>
     <exclude-pattern>./build</exclude-pattern>
     <exclude-pattern>./utils/iwp-migration-utils.php</exclude-pattern>
+    <rule ref="WordPress.Security">
+        <include-pattern>utils/iwp-migration-utils.php</include-pattern>
+    </rule>
+    <rule ref="WordPress.DB">
+        <include-pattern>utils/iwp-migration-utils.php</include-pattern>
+    </rule>
     <rule ref="WordPress-Core">
         <exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid"/>
         <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase"/>

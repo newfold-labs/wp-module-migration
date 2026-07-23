@@ -7,6 +7,10 @@ use NewfoldLabs\WP\Module\Migration\Steps\AbstractStep;
 /**
  * Requests a migration URL from InstaWP migration utilities.
  *
+ * This step runs synchronously inside REST and option-update hooks. The utility may
+ * perform multiple outbound requests (engine lookup, plugin install, migration request)
+ * with per-request timeouts up to several minutes.
+ *
  * @package wp-module-migration
  */
 class ConnectToInstaWp extends AbstractStep {
@@ -59,13 +63,12 @@ class ConnectToInstaWp extends AbstractStep {
 		if ( ! class_exists( '\IWP_Migration_Utils' ) ) {
 			$utility_path = dirname( __DIR__, 2 ) . '/utils/iwp-migration-utils.php';
 			if ( ! file_exists( $utility_path ) ) {
-				if ( ! $this->retry() ) {
-					$this->set_response(
-						array(
-							'message' => esc_html__( 'Migration utility is missing.', 'wp-module-migration' ),
-						),
-					);
-				}
+				$this->failure();
+				$this->set_response(
+					array(
+						'message' => esc_html__( 'Migration utility is missing.', 'wp-module-migration' ),
+					)
+				);
 				return;
 			}
 
@@ -79,32 +82,84 @@ class ConnectToInstaWp extends AbstractStep {
 		);
 
 		if ( ! is_array( $migration_request ) || empty( $migration_request['success'] ) ) {
-			if ( ! $this->retry() ) {
-				$error_message = empty( $migration_request['message'] )
-					? esc_html__( 'Website could not connect successfully.', 'wp-module-migration' )
-					: esc_html( wp_strip_all_tags( (string) $migration_request['message'] ) );
-
+			$this->retry();
+			if ( $this->failed() ) {
+				$this->log_upstream_error( $migration_request['message'] ?? '' );
 				$this->set_response(
 					array(
-						'message' => $error_message,
-					),
+						'message'    => esc_html__( 'Website could not connect successfully.', 'wp-module-migration' ),
+						'error_code' => $this->get_upstream_error_code( $migration_request['message'] ?? '' ),
+					)
 				);
 			}
-		} else {
-			$migration_url = $migration_request['data']['migration_url'] ?? '';
-			if ( empty( $migration_url ) || ! filter_var( $migration_url, FILTER_VALIDATE_URL ) ) {
-				if ( ! $this->retry() ) {
-					$this->set_response(
-						array(
-							'message' => esc_html__( 'Migration URL could not be generated.', 'wp-module-migration' ),
-						),
-					);
-				}
-				return;
-			}
-
-			$this->set_data( 'migration_url', $migration_url );
-			$this->success();
+			return;
 		}
+
+		$migration_url = $migration_request['data']['migration_url'] ?? '';
+		if ( empty( $migration_url ) || ! filter_var( $migration_url, FILTER_VALIDATE_URL ) ) {
+			$this->retry();
+			if ( $this->failed() ) {
+				$this->set_response(
+					array(
+						'message' => esc_html__( 'Migration URL could not be generated.', 'wp-module-migration' ),
+					)
+				);
+			}
+			return;
+		}
+
+		$this->set_data( 'migration_url', $migration_url );
+		$this->set_response(
+			array(
+				'message' => $this->sanitize_success_message( $migration_request['message'] ?? '' ),
+			)
+		);
+		$this->success();
+	}
+
+	/**
+	 * Log upstream InstaWP error details without exposing them to end users.
+	 *
+	 * @param mixed $message Upstream error message.
+	 * @return void
+	 */
+	private function log_upstream_error( $message ) {
+		$message = wp_strip_all_tags( (string) $message );
+		if ( empty( $message ) ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( 'wp-module-migration: InstaWP connect failed: ' . $message );
+	}
+
+	/**
+	 * Build a short non-PII error code for telemetry from an upstream message.
+	 *
+	 * @param mixed $message Upstream error message.
+	 * @return string
+	 */
+	private function get_upstream_error_code( $message ) {
+		$message = wp_strip_all_tags( (string) $message );
+		if ( empty( $message ) ) {
+			return '';
+		}
+
+		return substr( hash( 'sha256', $message ), 0, 8 );
+	}
+
+	/**
+	 * Sanitize a user-facing success message from the utility response.
+	 *
+	 * @param mixed $message Upstream success message.
+	 * @return string
+	 */
+	private function sanitize_success_message( $message ) {
+		$message = wp_strip_all_tags( (string) $message );
+		if ( empty( $message ) ) {
+			return esc_html__( 'Ready to start the migration.', 'wp-module-migration' );
+		}
+
+		return esc_html( $message );
 	}
 }
