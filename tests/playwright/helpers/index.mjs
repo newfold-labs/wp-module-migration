@@ -54,16 +54,6 @@ async function setOption(key, value) {
 }
 
 /**
- * Update a WordPress transient/option with JSON value (internal helper)
- * @param {string} key - Option/transient name
- * @param {Object} jsonValue - Value to store as JSON
- */
-async function updateTransient(key, jsonValue) {
-  const stringified = JSON.stringify(jsonValue).replace(/"/g, '\\"');
-  await wordpress.wpCli(`option update ${key} "${stringified}" --format=json`);
-}
-
-/**
  * Delete a WordPress option
  * @param {string} key - Option name
  */
@@ -72,14 +62,22 @@ export async function deleteOption(key) {
 }
 
 /**
- * Set migration options required for the test
- * Sets canMigrateSite capability and nfd_migrate_site option
+ * Required capabilities for migration tests to function.
+ * canMigrateSite is required for migration access; hasAISiteGen and canAccessAI
+ * are required when running migration through the onboarding flow.
+ */
+export const MIGRATION_CAPABILITIES = {
+  canAccessAI: true,
+  canMigrateSite: true,
+  hasAISiteGen: true,
+};
+
+/**
+ * Set migration options required for the test.
+ * Sets required site capabilities and nfd_migrate_site option.
  */
 export async function setMigrationOptions() {
-  await updateTransient('_transient_nfd_site_capabilities', {
-    canMigrateSite: true,
-    hasAISiteGen: true,
-  });
+  await newfold.setCapability(MIGRATION_CAPABILITIES);
   await setOption('nfd_migrate_site', 'true');
 }
 
@@ -88,7 +86,7 @@ export async function setMigrationOptions() {
  */
 export async function clearMigrationOptions() {
   await deleteOption('nfd_migrate_site');
-  await deleteOption('_transient_nfd_site_capabilities');
+  await newfold.clearCapabilities();
   await deleteOption('nfd_module_onboarding_status');
 }
 
