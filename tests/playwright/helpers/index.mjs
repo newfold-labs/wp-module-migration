@@ -131,13 +131,29 @@ export async function navigateToMigrationPage(page) {
 // ============================================================================
 
 /**
- * Assert that page redirected to the migration service
- * Verifies:
- * - Hostname matches expected migration domain
- * - URL has required g_id parameter
- * - URL has required locale parameter
- * - Page is valid HTML (not a server error page)
- * 
+ * Detect migration redirect flow from the brand-proxy URL.
+ * v3: InstaWP connect flow — g_id + locale (rebuilt by InstaMigrateService).
+ * v4: InstaWP e2e-mig flow — token in ?t= (URL from InstaWP; we only swap host).
+ *
+ * @param {URL} url Redirect URL.
+ * @returns {'v3'|'v4'|'unknown'}
+ */
+function getMigrationRedirectFlow(url) {
+  if (url.searchParams.has('g_id') && url.searchParams.has('locale')) {
+    return 'v3';
+  }
+
+  if (url.searchParams.has('t')) {
+    return 'v4';
+  }
+
+  return 'unknown';
+}
+
+/**
+ * Assert that page redirected to the migration service.
+ * Accepts v3 (g_id + locale) or v4 (?t= token) brand-proxy URLs.
+ *
  * @param {import('@playwright/test').Page} page
  */
 export async function assertMigrationRedirect(page) {
@@ -149,11 +165,21 @@ export async function assertMigrationRedirect(page) {
     waitUntil: 'domcontentloaded',
   });
 
-  // Verify URL structure with soft assertions for better debugging
   const url = new URL(page.url());
   expect(url.hostname, 'Expected redirect to migration domain').toBe(domain);
-  expect.soft(url.searchParams.has('g_id'), 'Expected g_id parameter in URL').toBe(true);
-  expect.soft(url.searchParams.has('locale'), 'Expected locale parameter in URL').toBe(true);
+
+  const flow = getMigrationRedirectFlow(url);
+  expect(
+    flow,
+    `Expected v3 (g_id + locale) or v4 (?t=) migration URL, got: ${url.href}`,
+  ).not.toBe('unknown');
+
+  if (flow === 'v3') {
+    expect(url.searchParams.get('g_id'), 'Expected g_id for v3 migration URL').toBeTruthy();
+    expect(url.searchParams.get('locale'), 'Expected locale for v3 migration URL').toBeTruthy();
+  } else {
+    expect(url.searchParams.get('t'), 'Expected migration token (t) for v4 migration URL').toBeTruthy();
+  }
 
   // Verify page loaded correctly (check for specific error patterns, not generic "error")
   const bodyText = await page.locator('body').textContent();
