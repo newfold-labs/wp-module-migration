@@ -1,0 +1,1336 @@
+<?php
+/**
+ * InstaWP Helpers
+ *
+ * @copyright    Copyright (C) 2025, InstaWP
+ * @link         https://instawp.com
+ * @since        0.0.1
+ *
+ * @wordpress-plugin
+ * Plugin Name:       InstaWP Migration Utilities
+ * Version:           0.0.1
+ * Plugin URI:        https://instawp.com
+ * Description:       Provides utility methods for InstaWP migration process.
+ * Author:            InstaWP
+ * Author URI:        https://instawp.com
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       iwp-migration-utils
+ * Requires at least: 5.2
+ * Tested up to:      6.8
+ * Requires PHP:      7.0
+ *
+ * Vendored by newfold-labs/wp-module-migration — do not modify except for
+ * security patches documented in docs/dependencies.md.
+ * Source: https://github.com/InstaWP/iwp-migration-helper/blob/develop/migration-utils/iwp-migration-utils.php
+ * Version: 0.0.1 (develop branch, 2026-06-22)
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+if ( ! class_exists('IWP_Migration_Utils') ) {
+    class IWP_Migration_Utils {
+
+        public static function instawp_generate_api_key( $api_key, $jwt = '', $config = array() ) {
+            return self::generate_api_key( $api_key, $jwt, $config );
+        }
+
+        /**
+         * Get Migration Engine
+         *
+         * Hits client-app's GET /api/v2/migrate-v4/engine and returns which migration engine is active
+         * ('v3' | 'v4') so callers branch their flow before deciding which migration API to hit.
+         *
+         * @param string $api_key api key
+         * @param string $migration_mode optional flow the engine is being resolved for (e.g. 'e2e' | 'push')
+         *
+         * @return array
+         */
+        public static function getMigrationEngine( $api_key, $migration_mode = '' ) {
+            if ( empty( $api_key ) ) {
+                return self::sendResponse( false, 'API key is required.' );
+            }
+
+            // Forward the flow as a query param so client-app knows which flow asked (logged there).
+            $endpoint = ! empty( $migration_mode )
+                ? add_query_arg( 'migration_mode', $migration_mode, 'migrate-v4/engine' )
+                : 'migrate-v4/engine';
+
+            $response = self::do_curl( $endpoint, array(), array(), 'GET', 'v2', $api_key );
+
+            if ( empty( $response['success'] ) || empty( $response['data']['engine'] ) ) {
+                return self::sendResponse( false, empty( $response['message'] ) ? 'Something went wrong.' : esc_html( $response['message'] ) );
+            }
+
+            if ( ! in_array( $response['data']['engine'], array('v3','v4') ) ) {
+                return self::sendResponse( false, 'Wrong migration engine ' . $response['data']['engine'] );
+            }
+
+            return self::sendResponse(
+                true,
+                '',
+                array( 'engine' => $response['data']['engine'] )
+            );
+            
+        }
+
+        /**
+         * Insta Migrate Request
+         *
+         * @param string $api_key api key
+         * @param string $wlm_slug white label migration slug
+         *
+         * @return array
+         *
+         */
+        public static function instaMigrateRequest( $api_key, $wlm_slug, $locale = '' ) {
+            if ( empty( $api_key ) ) {
+                return self::sendResponse( false, 'API key is required.' );
+            }
+
+            if ( empty( $wlm_slug )  ) {
+                return self::sendResponse( false, 'White label migration slug is required.' );
+            }
+
+            $locale = empty( $locale ) || ! is_string( $locale ) ? get_locale() : $locale;
+            $locale = trim( sanitize_text_field( $locale ) );
+            if ( ! preg_match( '/^[A-Za-z][A-Za-z0-9_\-]*$/', $locale ) ) {
+                $locale = get_locale();
+            }
+
+            $wlm_slug = sanitize_title( $wlm_slug );
+            if ( empty( $wlm_slug ) ) {
+                return self::sendResponse( false, 'White label migration slug is required.' );
+            }
+
+            // e2e flow — tell client-app which flow is resolving the engine.
+            $engine = self::getMigrationEngine( $api_key, 'e2e' );
+
+            if ( ! $engine['success'] ) {
+                return $engine;
+            }
+
+            $engine = $engine['data']['engine'];
+            
+            return $engine === 'v3' ? self::v3MigrationRequest($api_key, $wlm_slug, $locale) : self::v4MigrationRequest($api_key, $wlm_slug, $locale);
+        }
+
+        /**
+         * Insta Migrate V4 Request. i.e. based on InstaMigrate plugin + AI agent
+         *
+         * @param string $api_key api key
+         * @param string $wlm_slug white label migration slug
+         * @param string $locale locale
+         *
+         * @return array
+         *
+         */
+        private static function v4MigrationRequest($api_key, $wlm_slug, $locale = ''){
+            $install = self::installInstaMigrate();
+
+            if ( ! $install['success'] ) {
+                return $install;
+            }
+            
+            $insta_mig_key = self::getInstaMigrateApiKey();
+
+            if ( ! $insta_mig_key['success'] ) {
+                return $insta_mig_key;
+            }
+
+            $param = array(
+                'destination_url'   => self::wp_site_url(),
+                'wp_version'  		=> get_bloginfo( 'version' ),
+                'php_version' 		=> phpversion(),
+                'title'       		=> get_bloginfo( 'name' ),
+                'plugin_api_key' 	=> $insta_mig_key['data']['insta_mig_key'],
+                'locale'			=> $locale,
+            );
+
+            $mig_request = self::do_curl( 'migrate-v4/' . $wlm_slug . '/e2e-mig', $param, array(), 'POST', 'v2', $api_key );
+
+            if ( ! empty( $mig_request['success'] ) && ! empty( $mig_request['data']['migration_url'] ) ) {
+                return self::sendResponse( 
+                    true, 
+                    'Migration requested with destination site details. Please visit given url and connect source site to continue migrate site.',
+                    array(
+                        'migration_url' => $mig_request['data']['migration_url']
+                    )
+                );
+            }
+
+            return self::sendResponse( false, empty( $mig_request['message'] ) ? 'Something went wrong.': esc_html( $mig_request['message'] ) );
+        }
+
+        /**
+         * Insta Migrate V3 Request. i.e. based on InstaWP Connect plugin
+         *
+         * @param string $api_key api key
+         * @param string $wlm_slug white label migration slug
+         * @param string $locale locale
+         *
+         * @return array
+         *
+         */
+        private static function v3MigrationRequest($api_key, $wlm_slug, $locale = ''){
+            $install = self::installInstaWPConnect();
+
+            if ( ! $install['success'] ) {
+                return $install;
+            }
+            
+            $generate_api_key = self::generate_api_key( 
+                $api_key, 
+                '',  
+                array(
+                    'e2e_mig_push_request' => true,
+                    'wlm_slug'             => $wlm_slug,
+                    'managed'              => false,
+                    'locale'			   => $locale,
+                )
+            );
+
+            if ( ! $generate_api_key ) {
+                delete_option( 'instawp_api_options' );
+                return self::sendResponse( false, 'Failed to connect site.' );
+            }
+
+            return self::sendResponse( 
+                true, 
+                'Migration requested with destination site details. Please visit given url and connect source site to continue migrate site.',
+                array(
+                    'migration_url' => self::get_migration_url(),
+                )
+            );
+        }
+
+        /**
+         * Send Response
+         */
+        public static function sendResponse( $success = true, $message = '', $data = array() ) {
+            return array(
+                'success' 	=> $success,
+                'message' 	=> $message,
+                'data'		=> $data
+            );
+        }
+
+        /**
+         * Install instamigrate plugin
+         */
+        public static function installInstaMigrate( $retry = false ) {
+            try {
+        
+                if ( class_exists( '\InstaMigrate' ) ) {
+                    return self::sendResponse();
+                }
+
+                if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'get_mu_plugins' ) ) {
+                    if ( file_exists( ABSPATH . 'wp-admin/includes/plugin.php' ) ) {
+                        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                    }
+                }
+
+                if ( ! function_exists( 'is_plugin_active' ) ) {
+                    return self::sendResponse( false, 'Plugin methods not loaded. Failed to install the InstaMigrate plugin.' );
+                }
+
+                // Check if plugin is active
+                if ( ! is_plugin_active( 'instamigrate/insta-migrate.php' ) ) {
+                    // Install and active plugin
+                    $response = self::install_activate_plugin( array(
+                        'slug'     => 'instamigrate',
+                        'type'     => 'plugin',
+                        'activate' => true,
+                    ) );
+
+                    if ( $response['success'] ) {
+                        if ( class_exists( '\InstaMigrate' ) && defined('INSTA_MIGRATE_OPTION_KEY') ) {
+                            return self::sendResponse();
+                        } else {
+                            return self::sendResponse( false, 'After install INSTA_MIGRATE_OPTION_KEY not defined.' );
+                        }
+                    } else {
+                        if ( ! $retry ) {
+                            return self::installInstaMigrate( true );
+                        }
+                        $message = $response['message'] ? $response['message'] : 'Failed to install or activate the InstaMigrate plugin.';
+                        return self::sendResponse( false, $message );
+                    }
+                }
+
+                return self::sendResponse();
+            } catch (\Throwable $th) {
+                return self::sendResponse( false, $th->getMessage() );
+            }
+        }
+
+        /**
+         * Install instamigrate plugin
+         */
+        public static function installInstaWPConnect( $retry = false ) {
+            try {
+        
+                if ( class_exists( '\instaWP' ) ) {
+                    return self::sendResponse();
+                }
+
+                if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'get_mu_plugins' ) ) {
+                    if ( file_exists( ABSPATH . 'wp-admin/includes/plugin.php' ) ) {
+                        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                    }
+                }
+
+                if ( ! function_exists( 'is_plugin_active' ) ) {
+                    return self::sendResponse( false, 'Plugin methods not loaded. Failed to install the InstaWP Connect plugin.' );
+                }
+
+                // Check if plugin is active
+                if ( ! is_plugin_active( 'instawp-connect/instawp-connect.php' ) ) {
+                    // Install and active plugin
+                    $response = self::install_activate_plugin( array(
+                        'slug'     => 'instawp-connect',
+                        'type'     => 'plugin',
+                        'activate' => true,
+                    ) );
+
+                    if ( $response['success'] ) {
+                        if ( class_exists( '\instaWP' ) && defined('INSTAWP_PLUGIN_VERSION') ) {
+                            return self::sendResponse();
+                        } else {
+                            return self::sendResponse( false, 'After install INSTAWP_PLUGIN_VERSION not defined.' );
+                        }
+                    } else {
+                        if ( ! $retry ) {
+                            return self::installInstaWPConnect( true );
+                        }
+                        $message = $response['message'] ? $response['message'] : 'Failed to install or activate the InstaWP Connect plugin.';
+                        return self::sendResponse( false, $message );
+                    }
+                }
+
+                return self::sendResponse();
+            } catch (\Throwable $th) {
+                return self::sendResponse( false, $th->getMessage() );
+            }
+        }
+
+        // Get insta migrate plugin api key
+        public static function getInstaMigrateApiKey() {
+            // Added a leading \ to force global namespace resolution on both the guard
+            if ( ! class_exists('\InstaMigrate') || ! defined('INSTA_MIGRATE_OPTION_KEY') ) {
+                return self::sendResponse( false, 'InstaMigrate plugin is not installed or activated' );
+            }
+
+            $plugin = \InstaMigrate::instance();
+            $plugin->ensure_api_key(); // idempotent: generates only if missing
+
+            $insta_mig_key = is_multisite()
+                ? get_site_option(INSTA_MIGRATE_OPTION_KEY)
+                : get_option(INSTA_MIGRATE_OPTION_KEY);
+
+            if ( empty( $insta_mig_key ) ) {
+                return self::sendResponse( false, 'Failed to generate plugin API key.' );
+            }
+            return self::sendResponse( true, '', [
+                'insta_mig_key' => $insta_mig_key
+            ] );
+        }
+
+        /**
+         * Get InstaWP User Agent
+         *
+         * @param null|array|string $agentIdentifier
+         * @return string
+         */
+        public static function getInstaWPUserAgent( $agentIdentifier = null ) {
+            $userAgentItems = array(
+                'InstaWP/1.0 (https://instawp.com; support@instawp.com)',
+            );
+
+            if ( ! empty( $agentIdentifier ) ) {
+                if ( is_array( $agentIdentifier ) ) {
+                    $userAgentItems = array_merge( $userAgentItems, $agentIdentifier );
+                } else {
+                    $userAgentItems[] = $agentIdentifier;
+                }
+            }
+
+            return implode( ' ', $userAgentItems );
+        }
+
+        /**
+         * Add error log
+         *
+         * @param array|string $payload
+         * @param Throwable    $th
+         *
+         * @return void
+         */
+        public static function add_error_log( $payload, $th = null ) {
+            $log_name = 'iwp_connect_helper_error_log';
+            $log      = self::get_options( array(), $log_name );
+
+            $log = ( empty( $log ) || ! is_array( $log ) ) ? array() : $log;
+
+            if ( 150 < count( $log ) ) {
+                // Remove first 50 entries
+                $log = array_slice( $log, 50 );
+            }
+
+            $error         = is_array( $payload ) ? self::sanitize_data( $payload ) : array(
+                'message' => sanitize_text_field( $payload ),
+            );
+            // Use gmdate() (UTC) instead of date() so log timestamps don't depend on the
+            // server's local timezone and stay consistent across sites.
+            $error['time'] = gmdate( 'Y-m-d H:i:s' );
+
+            if ( ! empty( $th ) ) {
+                $error = array_merge(
+                    $error,
+                    array(
+                        'error' => $th->getMessage(),
+                        'line'  => $th->getLine(),
+                        'file'  => $th->getFile(),
+                    )
+                );
+            }
+
+            $log[] = $error;
+            self::set_settings( $log, $log_name );
+        }
+
+        /**
+         * Get error log
+         *
+         * @return array
+         */
+        public static function get_error_log() {
+            $log = self::get_options( array(), 'iwp_connect_helper_error_log' );
+            $log = ( empty( $log ) || ! is_array( $log ) ) ? array() : $log;
+
+            return $log;
+        }
+
+        /**
+         * Sanitize data
+         *
+         * @param array|string $data data
+         *
+         * @return array|string sanitized data
+         */
+        public static function sanitize_data( $data ) {
+            if ( empty( $data ) ) {
+                return $data;
+            }
+
+            if ( is_array( $data ) ) {
+                foreach ( $data as $key => $value ) {
+                    if ( is_array( $value ) ) {
+                        $data[ $key ] = self::sanitize_data( $value );
+                    } else {
+                        $data[ $key ] = sanitize_text_field( $value );
+                    }
+                }
+            } elseif ( is_string( $data ) ) {
+                $data = sanitize_text_field( $data );
+            } else {
+                $data = '';
+            }
+            return $data;
+        }
+
+        public static function generate_api_key( $api_key, $jwt = '', $config = array() ) {
+            try {
+                if ( empty( $api_key ) ) {
+                    self::add_error_log( 'instawp_generate_api_key empty api_key parameter' );
+                    return false;
+                }
+
+                $api_options = self::get_options();
+                $api_options = is_array( $api_options ) ? $api_options : array();
+
+                $api_response = self::do_curl( 'check-key?jwt=' . $jwt, array(), array(), 'GET', 'v1', $api_key );
+
+                if ( ! empty( $api_response['data']['status'] ) ) {
+                    $api_options = array_merge(
+                        $api_options,
+                        array(
+                            'api_key'  => $api_key,
+                            'jwt'      => $jwt,
+                            'origin'   => md5( self::wp_site_url( '', true ) ),
+                            'response' => $api_response['data'],
+                        )
+                    );
+                    self::set_settings(
+                        $api_options
+                    );
+                } else {
+                    self::add_error_log(
+                        array(
+                            'message'  => 'instawp_generate_api_key error, response from check-key api',
+                            'response' => $api_response,
+                            'config'   => $config,
+                        )
+                    );
+                    return false;
+                }
+
+                if ( is_array( $config ) && ! empty( $config['without_connect'] ) ) {
+                    return true;
+                }
+
+                $connect_body = self::get_connect_config( $config );
+
+                if ( is_array( $config ) ) {
+
+                    if ( ! empty( $config['e2e_mig_wo_connects'] ) && ! empty( $config['group_uuid'] ) ) {
+                        self::set_mig_gid( $config['group_uuid'] );
+                        return $connect_body;
+                    }
+
+                    /*
+                     * Migrate White Label.
+                     *
+                     * Driven by two $config keys (not function params):
+                     * - e2e_mig_push_request (bool):  whether this is an end-to-end migration push request
+                     * - wlm_slug (string):            the white label migration slug of the migration
+                     */
+                    if ( ! empty( $config['e2e_mig_push_request'] ) || ! empty( $config['wlm_slug'] ) ) {
+                        $mig_request = self::do_curl( 'migrates-v3/' . $config['wlm_slug'] . '/e2e-push-request', $connect_body, array(), 'POST', 'v2' );
+
+                        if ( empty( $mig_request['success'] ) ) {
+                            return false;
+                        }
+
+                        if ( ! empty( $mig_request['data']['migration_url'] ) ) {
+                            self::set_migration_url( $mig_request['data']['migration_url'] );
+                        }
+                        
+                        if ( ! empty( $mig_request['data']['group_uuid'] ) ) {
+                            self::set_mig_gid( $mig_request['data']['group_uuid'] );
+                        }
+                            
+                        return true;
+                    }
+                }
+
+                $connect_response = self::do_curl( 'connects', $connect_body, array(), 'POST', 'v1' );
+
+                if ( ! empty( $connect_response['data']['status'] ) ) {
+                    $connect_id   = ! empty( $connect_response['data']['id'] ) ? intval( $connect_response['data']['id'] ) : '';
+                    $connect_uuid = isset( $connect_response['data']['uuid'] ) ? $connect_response['data']['uuid'] : '';
+
+                    if ( $connect_id && $connect_uuid ) {
+                        $api_options['connect_id']   = intval( $connect_id );
+                        $api_options['connect_uuid'] = sanitize_text_field( $connect_uuid );
+                        // Plan id comes back on the connects response; capture it (and a first-seen
+                        // timestamp) when present. Previously read an undefined $plan_id, so this block
+                        // never ran and the plan was never persisted.
+                        $plan_id = ! empty( $connect_response['data']['plan_id'] ) ? $connect_response['data']['plan_id'] : '';
+                        if ( ! empty( $plan_id ) ) {
+                            $plan_id = intval( $plan_id );
+                            $key     = "plan_{$plan_id}_timestamp";
+                            if ( ! isset( $api_options[ $key ] ) ) {
+                                $api_options[ $key ] = current_time( 'mysql' );
+                            }
+                            $api_options['plan_id'] = $plan_id;
+                        }
+
+                        // Update team_name as we get it from the response
+                        if ( ! empty( $connect_response['data']['team_name'] ) && ! empty( $api_options['response'] ) && is_array( $api_options['response'] ) && ! empty( $api_options['response']['team_name'] ) ) {
+                            $api_options['response']['team_name'] = sanitize_text_field( $connect_response['data']['team_name'] );
+                        }
+
+                        self::set_settings( $api_options );
+
+                        if ( empty( $jwt ) ) {
+                            self::generate_jwt( $connect_id );
+                        }
+
+                        if ( ! empty( $connect_response['data']['is_staging_site'] ) && true == $connect_response['data']['is_staging_site'] ) {
+                            self::set_settings( true, 'instawp_is_staging' );
+                        }
+
+                        do_action( 'instawp_connect_connected', $connect_id );
+                    } else {
+                        self::add_error_log(
+                            array(
+                                'message'  => 'generate_api_key error, connect id not found in response ',
+                                'response' => $connect_response,
+                                'config'   => $config,
+                            )
+                        );
+                        return false;
+                    }
+                } else {
+                    self::add_error_log(
+                        array(
+                            'message'  => 'generate_api_key error, response from connects api: ',
+                            'response' => $connect_response,
+                            'config'   => $config,
+                        )
+                    );
+
+                    return false;
+                }
+
+                return true;
+            } catch ( \Throwable $th ) {
+                self::add_error_log(
+                    array(
+                        'message' => 'generate_api_key error, exception: ',
+                        'config'  => $config,
+                    ),
+                    $th
+                );
+
+                return false;
+            }
+        }
+
+        /**
+         * Get Connect Config
+         *
+         * @param array $config
+         * @return array
+         */
+        public static function get_connect_config( $config = array() ) {
+            $connect_body = array(
+                'url'         => self::wp_site_url(),
+                'wp_version'  => get_bloginfo( 'version' ),
+                'php_version' => phpversion(),
+                'title'       => get_bloginfo( 'name' ),
+                'icon'        => get_site_icon_url(),
+                'username'    => base64_encode( self::get_admin_username() ),
+                'managed'     => is_bool( $config ) ? $config : true,
+            );
+
+            if ( defined( 'INSTAWP_PLUGIN_VERSION' ) ) {
+                $connect_body['plugin_version'] = INSTAWP_PLUGIN_VERSION;
+            }
+
+            if ( is_array( $config ) ) {
+                $connect_body = array_merge( $connect_body, $config );
+            }
+
+            return $connect_body;
+        }
+
+        public static function generate_jwt( $connect_id = '' ) {
+            $connect_id = ! empty( $connect_id ) ? $connect_id : self::get_connect_id();
+            if ( empty( $connect_id ) ) {
+                return false;
+            }
+
+            $response = self::do_curl( "connects/{$connect_id}/generate-token", array(), array(), 'GET' );
+            if ( ! empty( $response['success'] ) ) {
+                $jwt = ! empty( $response['data']['token'] ) ? $response['data']['token'] : '';
+
+                if ( ! empty( $jwt ) ) {
+                    self::set_jwt( $jwt );
+
+                    return true;
+                }
+            }
+
+            self::add_error_log(
+                array(
+                    'message'    => 'generate_jwt error, response from generate-token api',
+                    'response'   => $response,
+                    'connect_id' => $connect_id,
+                )
+            );
+            return false;
+        }
+
+        public static function get_random_string( $length = 6 ) {
+            try {
+                $length        = (int) round( ceil( absint( $length ) / 2 ) );
+                $bytes         = function_exists( 'random_bytes' ) ? random_bytes( $length ) : openssl_random_pseudo_bytes( $length );
+                $random_string = bin2hex( $bytes );
+            } catch ( \Exception $e ) {
+                $random_string = substr( hash( 'sha256', wp_generate_uuid4() ), 0, absint( $length ) );
+            }
+
+            return $random_string;
+        }
+
+        public static function get_args_option( $key = '', $args = array(), $default = '' ) {
+            $default = is_array( $default ) && empty( $default ) ? array() : $default;
+            $value   = ! is_array( $default ) && ! is_bool( $default ) && empty( $default ) ? '' : $default;
+            $key     = empty( $key ) ? '' : $key;
+
+            if ( ! empty( $args[ $key ] ) ) {
+                $value = $args[ $key ];
+            }
+
+            if ( isset( $args[ $key ] ) && is_bool( $default ) ) {
+                $value = ! ( 0 == $args[ $key ] || '' == $args[ $key ] );
+            }
+
+            return $value;
+        }
+
+        public static function get_directory_info( $path ) {
+            $bytes_total = 0;
+            $files_total = 0;
+            $path        = realpath( $path );
+
+            try {
+                if ( $path !== false && $path != '' && file_exists( $path ) ) {
+                    foreach ( new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $path, \FilesystemIterator::SKIP_DOTS ) ) as $object ) {
+                        try {
+                            $bytes_total += $object->getSize();
+                            ++$files_total;
+                        } catch ( \Exception $e ) {
+                            continue;
+                        }
+                    }
+                }
+            } catch ( \Exception $e ) {
+            }
+
+            return array(
+                'size'  => $bytes_total,
+                'count' => $files_total,
+            );
+        }
+
+        public static function is_on_wordpress_org( $slug, $type ) {
+            $api_url  = 'https://api.wordpress.org/' . ( $type === 'plugin' ? 'plugins' : 'themes' ) . '/info/1.2/';
+            $response = wp_remote_get(
+                add_query_arg(
+                    array(
+                        'action'  => $type . '_information',
+                        'request' => array(
+                            'slug' => $slug,
+                        ),
+                    ),
+                    $api_url
+                )
+            );
+
+            if ( is_wp_error( $response ) ) {
+                return false;
+            }
+
+            $data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+            if ( ! empty( $data['name'] ) && ! empty( $data['slug'] ) && $data['slug'] === $slug ) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static function clean_file( $directory ) {
+            if ( file_exists( $directory ) && is_dir( $directory ) ) {
+                // Normalise the trailing slash so concatenation below always yields a valid
+                // path regardless of whether the caller passed one.
+                $directory = trailingslashit( $directory );
+                if ( $handle = opendir( $directory ) ) {
+                    while ( false !== ( $file = readdir( $handle ) ) ) {
+                        // Guard with is_file() so we only ever unlink files, never the . / ..
+                        // entries or any nested directory that matches the name filter.
+                        if ( $file != '.' && $file != '..' && strpos( $file, 'instawp' ) !== false && is_file( $directory . $file ) ) {
+                            unlink( $directory . $file );
+                        }
+                    }
+                    closedir( $handle );
+                }
+            }
+        }
+
+        public static function get_admin_username() {
+            if ( current_user_can( 'manage_options' ) ) {
+                $current_user = wp_get_current_user();
+
+                if ( ! empty( $current_user ) ) {
+                    return $current_user->user_login;
+                }
+            }
+
+            $username = '';
+
+            foreach (
+                get_users(
+                    array(
+                        'role__in' => array( 'administrator' ),
+                        'fields'   => array( 'user_login' ),
+                    )
+                ) as $admin
+            ) {
+                if ( empty( $username ) && isset( $admin->user_login ) ) {
+                    $username = $admin->user_login;
+                    break;
+                }
+            }
+
+            return $username;
+        }
+
+        public static function get_options( $default = array(), $option_name = 'instawp_api_options' ) {
+            return get_option( $option_name, $default );
+        }
+
+        public static function get_api_key( $return_hashed = false, $default_key = '' ) {
+            $api_options = self::get_options();
+            $api_key     = self::get_args_option( 'api_key', $api_options, $default_key );
+
+            if ( ! $return_hashed ) {
+                return $api_key;
+            }
+
+            if ( ! empty( $api_key ) && strpos( $api_key, '|' ) !== false ) {
+                $exploded             = explode( '|', $api_key );
+                $current_api_key_hash = hash( 'sha256', $exploded[1] );
+            } else {
+                $current_api_key_hash = ! empty( $api_key ) ? hash( 'sha256', $api_key ) : '';
+            }
+
+            return $current_api_key_hash;
+        }
+
+        public static function get_connect_id() {
+            $api_options = self::get_options();
+
+            return self::get_args_option( 'connect_id', $api_options );
+        }
+
+        public static function get_connect_uuid() {
+            $api_options = self::get_options();
+
+            return self::get_args_option( 'connect_uuid', $api_options );
+        }
+
+        public static function get_connect_origin() {
+            $api_options = self::get_options();
+
+            return self::get_args_option( 'origin', $api_options );
+        }
+
+        public static function get_jwt() {
+            $api_options = self::get_options();
+
+            return self::get_args_option( 'jwt', $api_options );
+        }
+
+        public static function get_response() {
+            $api_options = self::get_options();
+
+            return self::get_args_option( 'response', $api_options, array() );
+        }
+
+        public static function get_api_domain( $default_domain = '' ) {
+            $api_options = self::get_options();
+
+            if ( empty( $default_domain ) && defined( 'INSTAWP_API_DOMAIN_PROD' ) ) {
+                $default_domain = INSTAWP_API_DOMAIN_PROD;
+            }
+
+            if ( empty( $default_domain ) ) {
+                $default_domain = esc_url_raw( 'https://app.instawp.io' );
+            }
+
+            return self::get_args_option( 'api_url', $api_options, $default_domain );
+        }
+
+        public static function get_api_server_domain() {
+            if ( defined( 'INSTAWP_API_SERVER_DOMAIN' ) ) {
+                return INSTAWP_API_SERVER_DOMAIN;
+            }
+
+            $api_domain = self::get_api_domain();
+            if ( strpos( $api_domain, 'stage' ) !== false ) {
+                return 'https://stage-api.instawp.io';
+            }
+
+            return 'https://api.instawp.io';
+        }
+
+        public static function set_settings( $settings, $option_name = 'instawp_api_options' ) {
+            return update_option( $option_name, $settings );
+        }
+
+        public static function set_api_key( $api_key ) {
+            $api_options            = self::get_options();
+            $api_options['api_key'] = $api_key;
+
+            return self::set_settings( $api_options );
+        }
+
+        public static function set_connect_id( $connect_id ) {
+            $api_options               = self::get_options();
+            $api_options['connect_id'] = intval( $connect_id );
+
+            return self::set_settings( $api_options );
+        }
+
+        public static function set_connect_uuid( $connect_uuid ) {
+            $api_options                 = self::get_options();
+            $api_options['connect_uuid'] = $connect_uuid;
+
+            return self::set_settings( $api_options );
+        }
+
+        
+        /**
+         * Set migration url
+         */
+        public static function set_migration_url( $url ) {
+            $api_options               = self::get_options();
+            $api_options['migration_url'] = $url;
+            return self::set_settings( $api_options );
+        }
+
+        /**
+         * Set migration group id
+         */
+        public static function set_mig_gid( $group_uuid ) {
+            $api_options               = self::get_options();
+            $api_options['group_uuid'] = $group_uuid;
+
+            return self::set_settings( $api_options );
+        }
+
+        /**
+         * Get migration url
+         */
+        public static function get_migration_url() {
+            $api_options = self::get_options();
+
+            return self::get_args_option( 'migration_url', $api_options );
+        }
+
+        /**
+         * Get migration group id
+         */
+        public static function get_mig_gid() {
+            $api_options = self::get_options();
+
+            return self::get_args_option( 'group_uuid', $api_options );
+        }
+
+        /**
+         * Has migration group id
+         */
+        public static function has_mig_gid( $group_uuid ) {
+            if ( empty( $group_uuid ) ) {
+                return false;
+            }
+            return $group_uuid === self::get_mig_gid();
+        }
+
+        public static function set_connect_origin( $origin ) {
+            $api_options           = self::get_options();
+            $api_options['origin'] = $origin;
+
+            return self::set_settings( $api_options );
+        }
+
+        public static function set_jwt( $jwt ) {
+            $api_options        = self::get_options();
+            $api_options['jwt'] = $jwt;
+
+            return self::set_settings( $api_options );
+        }
+
+        public static function set_api_domain( $api_domain = '' ) {
+            if ( empty( $api_domain ) ) {
+                $api_domain = esc_url_raw( 'https://app.instawp.io' );
+            }
+
+            $api_options            = self::get_options();
+            $api_options['api_url'] = $api_domain;
+
+            return self::set_settings( $api_options );
+        }
+
+        public static function get_connect_plan() {
+            $api_options = self::get_options();
+            $plan_id     = self::get_args_option( 'plan_id', $api_options );
+
+            if ( empty( $plan_id ) ) {
+                return array();
+            }
+
+            return array(
+                'plan_id'        => $plan_id,
+                'plan_timestamp' => self::get_args_option( "plan_{$plan_id}_timestamp", $api_options ),
+            );
+        }
+
+        public static function get_connect_plan_id() {
+            $connect_plan = self::get_connect_plan();
+
+            return self::get_args_option( 'plan_id', $connect_plan );
+        }
+
+        public static function set_connect_plan_id( $plan_id ) {
+            $api_options = self::get_options();
+
+            if ( ! empty( $plan_id ) ) {
+                $key = "plan_{$plan_id}_timestamp";
+
+                if ( ! isset( $api_options[ $key ] ) ) {
+                    $api_options[ $key ] = current_time( 'mysql' );
+                }
+
+                $api_options['plan_id'] = $plan_id;
+            } else {
+                unset( $api_options['plan_id'] );
+            }
+
+            return self::set_settings( $api_options );
+        }
+
+        public static function remove_connect_plan_id() {
+            $api_options = self::get_options();
+            $plan_id     = self::get_args_option( 'plan_id', $api_options );
+
+            if ( empty( $plan_id ) ) {
+                return false;
+            }
+
+            unset( $api_options['plan_id'] );
+            unset( $api_options[ "plan_{$plan_id}_timestamp" ] );
+
+            return self::set_settings( $api_options );
+        }
+
+        public static function wp_site_url( $path = '', $check_ssl = false ) {
+            global $wpdb;
+
+            $site_url = $wpdb->get_var( "SELECT option_value FROM {$wpdb->options} WHERE option_name = 'siteurl'" );
+
+            if ( empty( $site_url ) ) {
+                return get_site_url( null, $path );
+            }
+
+            if ( $path && is_string( $path ) ) {
+                $site_url .= '/' . ltrim( $path, '/' );
+            }
+
+            if ( $check_ssl ) {
+                $parsed_url = parse_url( $site_url );
+                $protocol   = isset( $parsed_url['scheme'] ) ? $parsed_url['scheme'] : 'unknown';
+
+                if ( $protocol !== 'https' ) {
+                    $site_url = site_url( $path );
+                }
+            }
+
+            return $site_url;
+        }
+
+        public static function do_curl( $endpoint, $body = array(), $headers = array(), $method = 'POST', $api_version = 'v2', $api_key = '', $api_domain = '' ) {
+            $api_url = ! empty( $api_domain ) ? $api_domain : self::get_api_domain();
+
+            if ( empty( $api_url ) ) {
+                return array(
+                    'success' => false,
+                    'message' => esc_html__( 'Invalid or Empty API Domain', 'iwp-migration-utils' ),
+                );
+            }
+
+            try {
+
+                if ( empty( $api_key ) ) {
+                    $api_key = self::get_api_key();
+                }
+
+                if ( empty( $api_key ) ) {
+                    return array(
+                        'success' => false,
+                        'message' => esc_html__( 'Invalid or Empty API Key', 'iwp-migration-utils' ),
+                    );
+                }
+
+                if ( $api_version !== null ) {
+                    $api_url = $api_url . '/api/' . $api_version . '/' . $endpoint;
+                } else {
+                    $api_url = $api_url . '/api/' . $endpoint;
+                }
+
+                $headers = wp_parse_args(
+                    $headers,
+                    array(
+                        'Authorization' => 'Bearer ' . $api_key,
+                        'Accept'        => 'application/json',
+                        'Content-Type'  => 'application/json',
+                        'Referer'       => self::wp_site_url( '', true ),
+                    )
+                );
+
+                if ( is_bool( $method ) ) {
+                    $method = $method ? 'POST' : 'GET';
+                } else {
+                    $method = strtoupper( $method );
+                }
+
+                $timeout = 60;
+
+                // Set timeout based on max_execution_time.
+                if ( function_exists( 'ini_get' ) ) {
+                    $timeout = (int) @ini_get( 'max_execution_time' );
+                    if ( $timeout >= 300 ) {
+                        $timeout = 290;
+                    } elseif ( $timeout >= 120 ) {
+                        $timeout = 110;
+                    } elseif ( $timeout >= 90 ) {
+                        $timeout = 80;
+                    } else {
+                        $timeout = 60;
+                    }
+                }
+
+                $args = array(
+                    'method'          => $method,
+                    'headers'         => $headers,
+                    'timeout'         => $timeout,
+                    'redirection'     => 10,
+                    'httpversion'     => '1.1',
+                    'user-agent'      => self::getInstaWPUserAgent( 'wp-module-migration' ),
+                    'sslverify'       => apply_filters( 'nfd_migration_iwp_sslverify', true ),
+                    'follow_location' => true,
+                    'max_redirects'   => 10,
+                );
+
+                if ( ! empty( $body ) ) {
+                    $args['body'] = is_array( $body ) ? wp_json_encode( $body ) : $body;
+                }
+
+                $response = wp_remote_request( $api_url, $args );
+
+                if ( defined( 'INSTAWP_DEBUG_LOG' ) && INSTAWP_DEBUG_LOG ) {
+                    error_log( 'API URL - ' . $api_url );
+                    error_log( 'API ARGS - ' . ( is_array( $body ) ? wp_json_encode( $body ) : $body ) );
+                    error_log( 'API HEADERS - ' . wp_json_encode( $headers ) );
+                    error_log( 'API Response - ' . wp_json_encode( $response ) );
+                }
+
+                if ( is_wp_error( $response ) ) {
+                    $error_message = $response->get_error_message();
+
+                    if ( defined( 'INSTAWP_DEBUG_LOG' ) && INSTAWP_DEBUG_LOG ) {
+                        error_log( 'Error - ' . $error_message );
+                    }
+                    self::add_error_log(
+                        array(
+                            'message' => $error_message,
+                            'args'    => $body,
+                            'api_url' => $api_url,
+                        )
+                    );
+
+                    return array(
+                        'success' => false,
+                        'message' => $error_message,
+                    );
+                }
+
+                $response_code    = wp_remote_retrieve_response_code( $response );
+                $response_body    = wp_remote_retrieve_body( $response );
+                $api_response     = json_decode( $response_body, true );
+                $response_status  = self::get_args_option( 'status', $api_response );
+                $response_data    = self::get_args_option( 'data', $api_response, array() );
+                $response_message = self::get_args_option( 'message', $api_response );
+
+                if ( ! empty( $response_code ) && 400 <= intval( $response_code ) ) {
+                    self::add_error_log(
+                        array(
+                            'api_url'       => $api_url,
+                            'response_code' => $response_code,
+                            'args'          => $body,
+                            'response'      => $api_response,
+                        )
+                    );
+                }
+
+                return array(
+                    'success' => $response_status,
+                    'message' => $response_message,
+                    'data'    => $response_data,
+                    'code'    => $response_code,
+                );
+            } catch (\Throwable $th) {
+                self::add_error_log(
+                    array(
+                    ),
+                    $th
+                );
+                return array(
+                    'success' => false,
+                    'message' => $th->getMessage(),
+                    'data'    => [],
+                    'code'    => 500,
+                );
+            }
+        }
+
+        public static function is_link_valid( $url = null ) {
+            $is_valid = false;
+            if ( $url && filter_var( $url, FILTER_VALIDATE_URL ) ) {
+                $response = wp_remote_get( $url, [
+                    'timeout' => 60,
+                ] );
+                $is_valid = 200 === wp_remote_retrieve_response_code( $response );
+            }
+
+            return $is_valid;
+        }
+
+        private static function install_activate_plugin( array $args = [] ) {
+            $args  = wp_parse_args( $args, [
+                'slug'     => '',
+                'source'   => 'wp.org',
+                'type'     => 'plugin',
+                'activate' => false
+            ] );
+            // Initialise both before any early/error branch: $data is only populated on the
+            // successful plugin-install path, and $error_message only on failures — without these
+            // defaults the final return (and the sprintf calls below) hit undefined variables.
+            $data          = [];
+            $error_message = '';
+            $args['activate'] = filter_var( $args['activate'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+            $url      = ( 'url' === $args['source'] ) ? $args['slug'] : '';
+
+            try {
+                if ( ! class_exists( 'WP_Upgrader' ) ) {
+                    require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+                }
+
+                if ( ! class_exists( 'Plugin_Upgrader' ) ) {
+                    require_once ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php';
+                }
+
+                if ( ! class_exists( 'Automatic_Upgrader_Skin' ) ) {
+                    require_once ABSPATH . 'wp-admin/includes/class-automatic-upgrader-skin.php';
+                }
+
+                if ( ! function_exists( 'request_filesystem_credentials' ) ) {
+                    require_once ABSPATH . 'wp-admin/includes/file.php';
+                }
+
+                if ( ! function_exists( 'get_plugin_data' ) ) {
+                    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                }
+
+                $skin = new \Automatic_Upgrader_Skin();
+                $upgrader = new \Plugin_Upgrader( $skin );
+
+                if ( 'wp.org' === $args['source'] ) {
+                    if ( ! function_exists( 'plugins_api' ) ) {
+                        require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+                    }
+
+                    $api = \plugins_api( 'plugin_information', [
+                        'slug'   => $args['slug'],
+                        'fields' => [
+                            'short_description' => false,
+                            'screenshots'       => false,
+                            'sections'          => false,
+                            'contributors'      => false,
+                            'versions'          => false,
+                            'banners'           => false,
+                            'requires'          => true,
+                            'rating'            => false,
+                            'ratings'           => false,
+                            'downloaded'        => false,
+                            'last_updated'      => false,
+                            'added'             => false,
+                            'tags'              => false,
+                            'compatibility'     => false,
+                            'homepage'          => false,
+                            'donate_link'       => false,
+                            'downloadlink'      => true,
+                        ],
+                    ] );
+
+                    if ( is_wp_error( $api ) ) {
+                        $error_message = $api->get_error_message();
+                    } else if ( isset( $api->requires ) && ! is_wp_version_compatible( $api->requires ) ) {
+                        $error_message = sprintf( esc_html( 'Minimum required WordPress Version of this plugin is %s!' ), $api->requires );
+                    }
+                    
+                    if ( empty( $error_message ) && ! empty( $api->download_link ) ) {
+                        $url = $api->download_link;
+                    }
+                }
+                
+
+                if ( empty( $error_message ) && self::is_link_valid( $url ) ) {
+                    $result = $upgrader->install( $url, [
+                        'overwrite_package' => true,
+                    ] );
+
+                    if ( ! $result || is_wp_error( $result ) ) {
+                        $error_message = is_wp_error( $result ) ? $result->get_error_message() : sprintf( esc_html( 'Installation failed! Please check minimum supported WordPress version of the %s' ), $args['type'] );
+                    } else {
+                        if ( ! function_exists( 'wp_clean_update_cache' ) || ! function_exists( 'wp_update_themes' ) || ! function_exists( 'wp_update_plugins' ) ) {
+                            require_once ABSPATH . 'wp-includes/update.php';
+                        }
+
+                        wp_clean_update_cache();
+                        wp_update_themes();
+                        wp_update_plugins();
+
+                        if ( 'plugin' === $args['type'] ) {
+                            $plugin_file = $upgrader->plugin_info();
+
+                            if ( $plugin_file ) {
+                                if ( true === $args['activate'] ) {
+                                    if ( ! function_exists( 'activate_plugin' ) ) {
+                                        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                                    }
+
+                                    activate_plugin( $plugin_file );
+                                }
+
+                                if ( ! function_exists( 'get_plugins' ) ) {
+                                    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                                }
+
+                                $active_plugins     = ( array ) get_option( 'active_plugins', [] );
+                                $auto_updates       = ( array ) get_site_option( 'auto_update_plugins', [] );
+                                $plugin_update_data = get_site_transient( 'update_plugins' );
+                                $plugin_update_data = isset( $plugin_update_data->response ) ? $plugin_update_data->response : [];
+                                $plugins_data       = get_plugins();
+                                $plugin_data        = $plugins_data[ $plugin_file ];
+                                $slug               = explode( '/', $plugin_file );
+                                $data = [
+                                    'slug'             => $slug[0],
+                                    'name'             => $plugin_file,
+                                    'version'          => $plugin_data['Version'],
+                                    'activated'        => in_array( $plugin_file, $active_plugins, true ),
+                                    'update_available' => array_key_exists( $plugin_file, $plugin_update_data ),
+                                    'update_version'   => array_key_exists( $plugin_file, $plugin_update_data ) ? $plugin_update_data[ $plugin_file ]->new_version : '',
+                                    'update_enabled'   => in_array( $plugin_file, $auto_updates, true ),
+                                    'icon_url'         => 'https://ps.w.org/' . $slug[0] . '/assets/icon-128x128.png',
+                                    'data'             => $plugin_data,
+                                ];
+                            }
+                        }
+                    }
+                } else {
+                    $error_message = esc_html( 'Provided URL is not valid!' );
+                }
+            } catch( \Exception $e ) {
+                $error_message = $e->getMessage();
+            }
+
+            $message = isset( $error_message ) ? trim( $error_message ) : '';
+
+            return [
+                'success' => empty( $message ),
+                'message' => empty( $message ) ? esc_html( 'Success!' ) : $message,
+                'data'    => $data,
+            ];
+        }
+    }
+}
+
+

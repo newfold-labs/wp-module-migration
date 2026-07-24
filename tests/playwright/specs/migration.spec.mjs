@@ -21,6 +21,8 @@ test.describe('Redirect to Onboarding Migration Flow from MFE entrypoint', () =>
   });
 
   test('Redirects to correct migration URL without errors', async ({ page }) => {
+    test.setTimeout(120000);
+
     await auth.loginToWordPress(page);
     
     // Navigate to migration page - this will trigger redirect to external migration service

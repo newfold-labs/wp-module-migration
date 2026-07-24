@@ -3,60 +3,12 @@
 namespace NewfoldLabs\WP\Module\Migration\Services;
 
 use NewfoldLabs\WP\Module\Migration\Data\Events;
-use NewfoldLabs\WP\Module\Data\Event;
-use NewfoldLabs\WP\Module\Data\EventManager;
-use NewfoldLabs\WP\Module\Data\HiiveConnection;
 
 /**
  * Class for handling analytics events.
  */
 class EventService {
 
-	/**
-	 * Sends a Hiive Event to the data module API.
-	 *
-	 * @param array $event The event to send.
-	 * @return WP_REST_Response|WP_Error|bool
-	 */
-	public static function send( $event ) {
-		$event = self::validate( $event );
-		if ( ! $event ) {
-			return new \WP_Error(
-				'nfd_module_migration_error',
-				__( 'Bad event structure/value.', 'wp-module-migration' )
-			);
-		}
-
-		if ( 'migration_completed' === $event['action'] ) {
-			$event_to_send = new Event(
-				$event['category'],
-				$event['action'],
-				$event['data']
-			);
-
-			$event_manager = new EventManager();
-			$event_manager->push( $event_to_send );
-			$event_manager->add_subscriber(
-				new HiiveConnection()
-			);
-			$event_manager->shutdown();
-
-			return true;
-		}
-
-		$event_data_request = new \WP_REST_Request(
-			\WP_REST_Server::CREATABLE,
-			NFD_MODULE_DATA_EVENTS_API
-		);
-		$event_data_request->set_body_params( $event );
-
-		$response = rest_do_request( $event_data_request );
-		if ( $response->is_error() ) {
-			return $response->as_error();
-		}
-
-		return $response;
-	}
 	/**
 	 * Validates the category of an event.
 	 *
