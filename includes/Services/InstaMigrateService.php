@@ -4,6 +4,7 @@ namespace NewfoldLabs\WP\Module\Migration\Services;
 use NewfoldLabs\WP\Module\Migration\Steps\GetInstaWpApiKey;
 use NewfoldLabs\WP\Module\Migration\Steps\ConnectToInstaWp;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
+use NewfoldLabs\WP\Module\Migration\Services\V4MigrationPollService;
 /**
  * Class InstaMigrateService
  */
@@ -75,6 +76,8 @@ class InstaMigrateService {
 
 			$migration_url = $this->normalize_migration_redirect_url( $migration_url );
 			$redirect_url  = apply_filters( 'nfd_migration_redirect_url', apply_filters( 'nfd_build_url', $migration_url ) );
+
+			$this->maybe_start_v4_portal_polling( $redirect_url );
 
 			return array(
 				'message'      => $this->get_step_message(
@@ -270,5 +273,57 @@ class InstaMigrateService {
 	private function get_step_message( ConnectToInstaWp $step, $fallback_message ) {
 		$message = $step->get_response()['message'] ?? '';
 		return ! empty( $message ) ? $message : $fallback_message;
+	}
+
+	/**
+	 * Start v4 portal polling when the redirect URL contains a migration token.
+	 *
+	 * @param string $redirect_url Final migration redirect URL.
+	 * @return void
+	 */
+	private function maybe_start_v4_portal_polling( $redirect_url ) {
+		if ( ! $this->is_v4_migration_url( $redirect_url ) ) {
+			return;
+		}
+
+		$migration_token = $this->extract_migration_token_from_url( $redirect_url );
+		if ( empty( $migration_token ) ) {
+			return;
+		}
+
+		$poll_service = new V4MigrationPollService();
+		$poll_service->start_polling( $migration_token );
+	}
+
+	/**
+	 * Detect v4 portal redirect URLs (/start?t=...).
+	 *
+	 * @param string $url Migration redirect URL.
+	 * @return bool
+	 */
+	private function is_v4_migration_url( $url ) {
+		$path = wp_parse_url( $url, PHP_URL_PATH );
+		if ( empty( $path ) || false === strpos( $path, '/start' ) ) {
+			return false;
+		}
+
+		return ! empty( $this->extract_migration_token_from_url( $url ) );
+	}
+
+	/**
+	 * Extract the portal migration token from a redirect URL.
+	 *
+	 * @param string $url Migration redirect URL.
+	 * @return string
+	 */
+	private function extract_migration_token_from_url( $url ) {
+		$query = wp_parse_url( $url, PHP_URL_QUERY );
+		if ( empty( $query ) ) {
+			return '';
+		}
+
+		parse_str( $query, $params );
+
+		return isset( $params['t'] ) ? sanitize_text_field( $params['t'] ) : '';
 	}
 }

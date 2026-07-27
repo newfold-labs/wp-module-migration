@@ -10,6 +10,7 @@ use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
 use NewfoldLabs\WP\Module\Migration\Reports\MigrationReport;
 use NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
+use NewfoldLabs\WP\Module\Migration\Services\V4MigrationPollService;
 /**
  * Class Migration
  *
@@ -48,6 +49,9 @@ class Migration {
 
 		new Constants( $container );
 		new InstaWpOptionsUpdatesListener();
+
+		$v4_poll = new V4MigrationPollService();
+		$v4_poll->register_hooks();
 
 		if ( Permissions::rest_is_authorized_admin() ) {
 			new RestApi();
