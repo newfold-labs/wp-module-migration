@@ -5,7 +5,7 @@ use NewfoldLabs\WP\Module\Migration\Steps\Push;
 use NewfoldLabs\WP\Module\Migration\Steps\LastStep;
 
 /**
- * Shared post-migration completion handling for v3 option updates and v4 portal polling.
+ * Shared post-migration completion handling for v3 and v4 option updates.
  */
 class MigrationCompletionService {
 
@@ -29,22 +29,20 @@ class MigrationCompletionService {
 	 * Process a terminal migration status and schedule post-migration work.
 	 *
 	 * @param string $migration_status   completed, failed, or aborted.
-	 * @param string $migrate_group_uuid Migration group UUID (portal token used as fallback).
+	 * @param string $migrate_group_uuid Migration group UUID.
 	 * @param array  $context            Optional enrichment and source URL overrides.
 	 * @return bool Whether terminal handling was started.
 	 */
 	public function process_terminal_status( $migration_status, $migrate_group_uuid, array $context = array() ) {
-		V4MigrationPollService::reconcile_stale_status_sent_flag();
+		self::reconcile_stale_status_sent_flag();
 
 		if ( get_option( 'nfd_migration_status_sent', false ) ) {
 			return false;
 		}
 
-		if ( ! in_array( $migration_status, array( 'completed', 'failed', 'aborted' ), true ) ) {
-			return false;
-		}
+		$migration_status = UtilityService::normalize_migration_status( $migration_status );
 
-		if ( ! V4MigrationPollService::session_matches( $migrate_group_uuid, $context['source_site_url'] ?? '' ) ) {
+		if ( ! in_array( $migration_status, array( 'completed', 'failed', 'aborted' ), true ) ) {
 			return false;
 		}
 
@@ -53,7 +51,7 @@ class MigrationCompletionService {
 			: array();
 
 		if ( empty( $response ) && ! empty( $migrate_group_uuid ) ) {
-			$fetched = UtilityService::get_migration_data( $migrate_group_uuid );
+			$fetched = UtilityService::get_migration_enrichment( $migrate_group_uuid );
 			if ( is_array( $fetched ) && ! empty( $fetched ) ) {
 				$response = $fetched;
 			}
@@ -133,7 +131,6 @@ class MigrationCompletionService {
 
 		$this->tracker->delete_track();
 		update_option( 'nfd_migration_status_sent', true );
-		V4MigrationPollService::end_session();
 
 		return true;
 	}
@@ -147,13 +144,9 @@ class MigrationCompletionService {
 	 * @return void
 	 */
 	public function send_completed_events( $migrate_group_uuid, $source_site_url, $migration_status = 'completed' ) {
-		V4MigrationPollService::reconcile_stale_status_sent_flag();
+		self::reconcile_stale_status_sent_flag();
 
 		if ( get_option( 'nfd_migration_status_sent', false ) ) {
-			return;
-		}
-
-		if ( ! V4MigrationPollService::session_matches( $migrate_group_uuid, $source_site_url ) ) {
 			return;
 		}
 
@@ -188,6 +181,29 @@ class MigrationCompletionService {
 		EventService::send_application_event( "migration_$status", $migration_infos );
 		update_option( 'nfd_migration_status_sent', true );
 		$this->tracker->delete_track();
-		V4MigrationPollService::end_session();
+	}
+
+	/**
+	 * Clear a stale status-sent flag when a new migration is in progress.
+	 *
+	 * @return bool Whether the flag was cleared.
+	 */
+	public static function reconcile_stale_status_sent_flag() {
+		if ( ! get_option( 'nfd_migration_status_sent', false ) ) {
+			return false;
+		}
+
+		$details = get_option( 'instawp_last_migration_details', array() );
+		if ( ! is_array( $details ) || empty( $details['migrate_group_uuid'] ) ) {
+			return false;
+		}
+
+		$status = isset( $details['status'] ) ? UtilityService::normalize_migration_status( $details['status'] ) : '';
+		if ( ! in_array( $status, array( 'completed', 'failed', 'aborted' ), true ) ) {
+			delete_option( 'nfd_migration_status_sent' );
+			return true;
+		}
+
+		return false;
 	}
 }

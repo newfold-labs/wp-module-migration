@@ -4,7 +4,6 @@ namespace NewfoldLabs\WP\Module\Migration\Listeners;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
 use NewfoldLabs\WP\Module\Migration\Services\MigrationCompletionService;
-use NewfoldLabs\WP\Module\Migration\Services\V4MigrationPollService;
 use NewfoldLabs\WP\Module\Migration\Steps\Push;
 use NewfoldLabs\WP\Module\Migration\Steps\PageSpeed;
 use NewfoldLabs\WP\Module\Migration\Steps\SourceHostingInfo;
@@ -59,22 +58,17 @@ class InstaWpOptionsUpdatesListener {
 	public function on_update_instawp_last_migration_details( $new_value, $old_value ) {
 		if ( $old_value !== $new_value && ! get_option( 'nfd_migration_status_sent', false ) ) {
 			$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
-			if ( V4MigrationPollService::has_active_session() ) {
-				return $new_value;
-			}
 			if ( ! empty( $migrate_group_uuid ) ) {
-				$response = UtilityService::get_migration_data( $migrate_group_uuid );
+				$migration_status = isset( $new_value['status'] ) ? $new_value['status'] : '';
+				$response         = UtilityService::get_migration_enrichment( $migrate_group_uuid );
 
-				if ( $response && is_array( $response ) ) {
-					$migration_status = isset( $new_value['status'] ) ? $new_value['status'] : '';
-					$this->completion->process_terminal_status(
-						$migration_status,
-						$migrate_group_uuid,
-						array(
-							'enrichment' => $response,
-						)
-					);
-				}
+				$this->completion->process_terminal_status(
+					$migration_status,
+					$migrate_group_uuid,
+					array(
+						'enrichment' => is_array( $response ) ? $response : array(),
+					)
+				);
 			}
 		}
 
@@ -107,10 +101,6 @@ class InstaWpOptionsUpdatesListener {
 	 * @return void
 	 */
 	public function source_hosting_info( $source_site_url ) {
-		if ( ! V4MigrationPollService::session_matches( '', $source_site_url ) ) {
-			return;
-		}
-
 		$source_hosting_info = new SourceHostingInfo( $source_site_url );
 		$this->tracker->update_track( $source_hosting_info );
 
@@ -128,10 +118,6 @@ class InstaWpOptionsUpdatesListener {
 	 * @return void
 	 */
 	public function page_speed_source( $source_site_url ) {
-		if ( ! V4MigrationPollService::session_matches( '', $source_site_url ) ) {
-			return;
-		}
-
 		$source_url_pagespeed = new PageSpeed( $source_site_url, 'source' );
 		if ( ! $source_url_pagespeed->failed() ) {
 			$source_url_pagespeed->set_status( $source_url_pagespeed->statuses['completed'] );
@@ -149,10 +135,6 @@ class InstaWpOptionsUpdatesListener {
 	 * @return void
 	 */
 	public function page_speed_destination( $source_site_url, $migrate_group_uuid, $status ) {
-		if ( ! V4MigrationPollService::session_matches( $migrate_group_uuid, $source_site_url ) ) {
-			return;
-		}
-
 		try {
 			$source_url_pagespeed = new PageSpeed( site_url(), 'destination' );
 			if ( ! $source_url_pagespeed->failed() ) {

@@ -10,7 +10,6 @@ use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
 use NewfoldLabs\WP\Module\Migration\Reports\MigrationReport;
 use NewfoldLabs\WP\Module\Migration\Listeners\InstaWpOptionsUpdatesListener;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
-use NewfoldLabs\WP\Module\Migration\Services\V4MigrationPollService;
 /**
  * Class Migration
  *
@@ -50,9 +49,6 @@ class Migration {
 		new Constants( $container );
 		new InstaWpOptionsUpdatesListener();
 
-		$v4_poll = new V4MigrationPollService();
-		$v4_poll->register_hooks();
-
 		if ( Permissions::rest_is_authorized_admin() ) {
 			new RestApi();
 		}
@@ -89,7 +85,7 @@ class Migration {
 	public function on_update_instawp_last_migration_details( $new_option ) {
 		$migrate_group_uuid = isset( $new_option['migrate_group_uuid'] ) ? $new_option['migrate_group_uuid'] : '';
 		if ( ! empty( $migrate_group_uuid ) ) {
-			$data = UtilityService::get_migration_data( $migrate_group_uuid );
+			$data = UtilityService::get_migration_enrichment( $migrate_group_uuid );
 			if ( $data && is_array( $data ) && isset( $data['status'] ) && $data['status'] ) {
 				$migration_status = $data['data']['status'];
 				if ( 'completed' === $migration_status ) {

@@ -66,6 +66,8 @@ class EventService {
 	 * @return bool|WP_Error
 	 */
 	public static function send_application_event( $key, $data ) {
+		MigrationCompletionService::reconcile_stale_status_sent_flag();
+
 		if ( get_option( 'nfd_migration_status_sent', false ) ) {
 			return true; // Event already sent, no need to send again.
 		}
@@ -135,14 +137,16 @@ class EventService {
 			return $response;
 		}
 
-		$code = wp_remote_retrieve_response_code( $response );
+		$code          = wp_remote_retrieve_response_code( $response );
+		$response_body = wp_remote_retrieve_body( $response );
+
 		if ( $code < 200 || $code >= 300 ) {
 			return new \WP_Error(
 				'nfd_module_migration_forward_failed',
 				__( 'Failed to forward event to Hiive.', 'wp-module-migration' ),
 				array(
 					'status_code' => $code,
-					'body'        => wp_remote_retrieve_body( $response ),
+					'body'        => $response_body,
 				)
 			);
 		}
