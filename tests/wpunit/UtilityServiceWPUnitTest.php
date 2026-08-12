@@ -31,4 +31,13 @@ class UtilityServiceWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 		$this->assertSame( 'in_progress', UtilityService::normalize_migration_status( 'in_progress' ) );
 		$this->assertSame( 'failed', UtilityService::normalize_migration_status( 'failed' ) );
 	}
+
+	/**
+	 * Empty migrate group UUID returns empty enrichment without API calls.
+	 *
+	 * @return void
+	 */
+	public function test_get_migration_enrichment_returns_empty_for_empty_uuid() {
+		$this->assertSame( array(), UtilityService::get_migration_enrichment( '' ) );
+	}
 }

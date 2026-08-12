@@ -17,7 +17,7 @@ The migration module is used to initiate the migration process by installing the
 ## Module Responsibilities
 
 - It uses InstaWP migration utilities to initiate migration and install required migration plugins automatically.
-- It triggers the events based on update option hook when instawp updates the `instawp_last_migration_details` value in database.
+- It triggers the events based on update option hook when instawp updates the `instawp_last_migration_details` value in database (v3 and v4 migrations use the same hook).
 
 ## Critical Paths
 - Migration process is initiated when user hits the endpoint ( `/newfold-migration/v1/migrate/connect` ).
@@ -26,7 +26,9 @@ The migration module is used to initiate the migration process by installing the
 ## How it works
 - When user hits the endpoint or updates the value in db, it requests a migration URL via InstaWP migration utilities and returns that URL.
 - Once you're redirected to the url, you'll be taken to instawp screen where it'll ask you for source website that you wanted to migrate and migration starts here and completes in the instawp screens only.
-- As soon as the migration gets completed, the current BH plugin which is present in destination site is being replaced with the latest BH plugin from hiive url. Instawp is updating the db  value `instawp_last_migration_details` with the respective status, which we're using to trigger the events ( `migration_completed`, `migration_failed` ) based on update hook of that value and doing the post migration logic here updating the db value to show migration steps in brand plugin dashboard.
+- When migration finishes, InstaMigrate updates `instawp_last_migration_details` with status and `migrate_group_uuid`. The module enriches details from the InstaWP API (`migrate-v4/{uuid}` for v4, with v3 status API as fallback), runs post-migration crons (hosting info, page speed), and sends Hiive events (`migration_completed`, `migration_successful`, `migration_failed`, `migration_aborted`). Completed migrations also set `nfd_show_migration_steps` so the brand plugin can show migration steps in the dashboard.
+
+See [docs/integration.md](docs/integration.md) for the completion flow in detail.
 
 ## Installation
 
