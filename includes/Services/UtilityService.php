@@ -114,6 +114,9 @@ class UtilityService {
 				'headers' => array(
 					'Authorization' => 'Bearer ' . $token,
 				),
+				'timeout'   => 30,
+				'sslverify' => apply_filters( 'nfd_migration_iwp_sslverify', true ),
+				'user-agent' => self::get_insta_user_agent(),
 			)
 		);
 
@@ -124,5 +127,18 @@ class UtilityService {
 		}
 
 		return array();
+	}
+
+	/**
+	 * User-agent string for direct InstaWP API requests.
+	 *
+	 * @return string
+	 */
+	private static function get_insta_user_agent() {
+		if ( class_exists( '\IWP_Migration_Utils' ) ) {
+			return \IWP_Migration_Utils::getInstaWPUserAgent( 'wp-module-migration' );
+		}
+
+		return 'wp-module-migration';
 	}
 }

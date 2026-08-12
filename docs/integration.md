@@ -11,16 +11,28 @@ The module registers with the Newfold Module Loader via `bootstrap.php`. It inte
 
 ## Migration completion (v3 and v4)
 
-InstaMigrate updates the WordPress option `instawp_last_migration_details` as migration status changes. The module listens on `pre_update_option_instawp_last_migration_details` in `InstaWpOptionsUpdatesListener`.
+v3 and v4 use the same destination-side flow in `InstaWpOptionsUpdatesListener`. InstaMigrate updates `instawp_last_migration_details` when migration status changes.
 
-When the option changes and completion events have not been sent yet (`nfd_migration_status_sent` is false):
+When the option changes and `nfd_migration_status_sent` is false:
 
-1. Read `migrate_group_uuid` and `status` from the option.
-2. Enrich migration details via `UtilityService::get_migration_enrichment()`:
+1. Read `migrate_group_uuid` and `status` from the option (not from the API response).
+2. Enrich via `UtilityService::get_migration_enrichment()` when the API returns data:
    - v4: `GET https://app.instawp.io/api/v2/migrate-v4/{migrate_group_uuid}`
    - v3 fallback: `GET https://app.instawp.io/api/v2/migrates-v3/status/{migrate_group_uuid}`
-3. `MigrationCompletionService` handles terminal statuses (`completed`, `failed`, `aborted`), schedules post-migration crons (source hosting info, page speed), and sends Hiive events (`migration_completed`, `migration_successful`, `migration_failed`, `migration_aborted`).
+3. For terminal statuses (`completed`, `failed`, `aborted`): update Push/LastStep tracking, schedule post-migration crons when `source_site_url` is present, and send Hiive events.
+4. `migration_completed` and `migration_successful` are sent from the `nfd_migration_page_speed_destination` cron after page-speed tracking. `migration_failed` and `migration_aborted` are sent immediately on the option hook.
 
 API requests use a Bearer token from the brand migration proxy worker (`GET {NFD_MIGRATION_PROXY_WORKER}/token?brand=...`).
 
-Starting a new migration clears `nfd_migration_status_sent` and any stale post-migration cron jobs from prior runs.
+Starting a new migration clears `nfd_migration_status_sent` and stale post-migration cron jobs from prior runs.
+
+## Redirect URL filters
+
+Integrators can adjust migration redirect handling:
+
+| Filter | Purpose |
+|--------|---------|
+| `nfd_migration_redirect_url` | Final migration redirect URL before returning to the client. |
+| `nfd_migration_instawp_v3_redirect_hosts` | Hostnames (default `app.instawp.io`) that trigger v3 brand-proxy URL rebuild with `g_id` and `locale`. |
+| `nfd_migration_instawp_redirect_hosts` | Hostnames (default `migrate.instawp.io`, `app.instawp.io`) eligible for brand-proxy host swap on v4 URLs. |
+| `nfd_migration_iwp_sslverify` | SSL verification for outbound InstaWP HTTP calls (default `true`). |

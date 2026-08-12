@@ -66,8 +66,6 @@ class EventService {
 	 * @return bool|WP_Error
 	 */
 	public static function send_application_event( $key, $data ) {
-		MigrationCompletionService::reconcile_stale_status_sent_flag();
-
 		if ( get_option( 'nfd_migration_status_sent', false ) ) {
 			return true; // Event already sent, no need to send again.
 		}
