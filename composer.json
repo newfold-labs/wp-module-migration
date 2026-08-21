@@ -42,7 +42,7 @@
     "require-dev": {
         "johnpbloch/wordpress": "6.9.4",
         "lucatume/wp-browser": "*",
-        "newfold-labs/wp-php-standards": "^1.2",
+        "newfold-labs/wp-php-standards": "^2.0",
         "phpunit/phpcov": "*",
         "wp-cli/i18n-command": "^2.7.0"
     },
