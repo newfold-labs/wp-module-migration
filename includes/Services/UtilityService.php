@@ -31,30 +31,114 @@ class UtilityService {
 	}
 
 	/**
-	 * Get migration status and source url by instaWp api
+	 * Get v3 migration status and source url from InstaWP API.
 	 *
-	 * @param string $migrate_group_uuid migration group id (it is stored in instawp_last_migration_details option).
+	 * @param string $migrate_group_uuid Migration group id from instawp_last_migration_details.
 	 * @return array
 	 */
 	public static function get_migration_data( $migrate_group_uuid ) {
-		if ( ! empty( $migrate_group_uuid ) ) {
-			$token = self::get_insta_api_key( BRAND_PLUGIN );
-			if ( $token ) {
-				$response = wp_remote_get(
-					'https://app.instawp.io/api/v2/migrates-v3/status/' . $migrate_group_uuid,
-					array(
-						'headers' => array(
-							'Authorization' => 'Bearer ' . $token,
-						),
-					)
-				);
-				if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
-					$body = wp_remote_retrieve_body( $response );
-					return json_decode( $body, true );
-				}
-			}
+		return self::fetch_insta_migration_status(
+			'migrates-v3/status/' . $migrate_group_uuid,
+			$migrate_group_uuid
+		);
+	}
+
+	/**
+	 * Get v4 migration details from InstaWP API.
+	 *
+	 * @param string $migrate_group_uuid Migration group id from instawp_last_migration_details.
+	 * @return array
+	 */
+	public static function get_v4_migration_data( $migrate_group_uuid ) {
+		return self::fetch_insta_migration_status(
+			'migrate-v4/' . $migrate_group_uuid,
+			$migrate_group_uuid
+		);
+	}
+
+	/**
+	 * Fetch migration enrichment from InstaWP (v4 first, then v3).
+	 *
+	 * @param string $migrate_group_uuid Migration group UUID.
+	 * @return array
+	 */
+	public static function get_migration_enrichment( $migrate_group_uuid ) {
+		$response = self::get_v4_migration_data( $migrate_group_uuid );
+		if ( is_array( $response ) && ! empty( $response ) ) {
+			return $response;
+		}
+
+		return self::get_migration_data( $migrate_group_uuid );
+	}
+
+	/**
+	 * Normalize migration status values from options or InstaWP APIs.
+	 *
+	 * @param string $status Raw migration status.
+	 * @return string
+	 */
+	public static function normalize_migration_status( $status ) {
+		$status = strtolower( sanitize_text_field( (string) $status ) );
+
+		if ( 'successful' === $status ) {
+			return 'completed';
+		}
+
+		if ( in_array( $status, array( 'cancelled', 'canceled' ), true ) ) {
+			return 'aborted';
+		}
+
+		return $status;
+	}
+
+	/**
+	 * Fetch migration details from app.instawp.io.
+	 *
+	 * @param string $path               API path after /api/v2/.
+	 * @param string $migrate_group_uuid Migration group UUID.
+	 * @return array
+	 */
+	private static function fetch_insta_migration_status( $path, $migrate_group_uuid ) {
+		if ( empty( $migrate_group_uuid ) ) {
+			return array();
+		}
+
+		$token = self::get_insta_api_key( BRAND_PLUGIN );
+		if ( empty( $token ) ) {
+			return array();
+		}
+
+		$response = wp_remote_get(
+			'https://app.instawp.io/api/v2/' . ltrim( $path, '/' ),
+			array(
+				'headers' => array(
+					'Authorization' => 'Bearer ' . $token,
+				),
+				'timeout'   => 30,
+				'sslverify' => apply_filters( 'nfd_migration_iwp_sslverify', true ),
+				'user-agent' => self::get_insta_user_agent(),
+			)
+		);
+
+		if ( wp_remote_retrieve_response_code( $response ) === 200 && ! is_wp_error( $response ) ) {
+			$body = wp_remote_retrieve_body( $response );
+			$data = json_decode( $body, true );
+			return is_array( $data ) ? $data : array();
 		}
 
 		return array();
+	}
+
+	/**
+	 * User-agent string for direct InstaWP API requests.
+	 *
+	 * @return string
+	 */
+	private static function get_insta_user_agent() {
+		if ( class_exists( '\IWP_Migration_Utils' ) ) {
+			return \IWP_Migration_Utils::getInstaWPUserAgent( 'wp-module-migration' );
+		}
+
+		return 'wp-module-migration';
 	}
 }

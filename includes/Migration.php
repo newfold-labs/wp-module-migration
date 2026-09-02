@@ -64,6 +64,7 @@ class Migration {
 
 		add_action( 'pre_update_option_nfd_migrate_site', array( $this, 'on_update_nfd_migrate_site' ) );
 		add_action( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 1 );
+		add_action( 'added_option', array( $this, 'on_add_instawp_last_migration_details' ), 10, 2 );
 	}
 
 	/**
@@ -85,7 +86,7 @@ class Migration {
 	public function on_update_instawp_last_migration_details( $new_option ) {
 		$migrate_group_uuid = isset( $new_option['migrate_group_uuid'] ) ? $new_option['migrate_group_uuid'] : '';
 		if ( ! empty( $migrate_group_uuid ) ) {
-			$data = UtilityService::get_migration_data( $migrate_group_uuid );
+			$data = UtilityService::get_migration_enrichment( $migrate_group_uuid );
 			if ( $data && is_array( $data ) && isset( $data['status'] ) && $data['status'] ) {
 				$migration_status = $data['data']['status'];
 				if ( 'completed' === $migration_status ) {
@@ -94,6 +95,21 @@ class Migration {
 			}
 		}
 		return $new_option;
+	}
+
+	/**
+	 * Same as on_update_instawp_last_migration_details when the option is inserted, not updated.
+	 *
+	 * @param string $option Option name.
+	 * @param mixed  $value  Option value.
+	 * @return void
+	 */
+	public function on_add_instawp_last_migration_details( $option, $value ) {
+		if ( 'instawp_last_migration_details' !== $option ) {
+			return;
+		}
+
+		$this->on_update_instawp_last_migration_details( $value );
 	}
 
 	/**

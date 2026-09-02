@@ -1,7 +1,6 @@
 <?php
 namespace NewfoldLabs\WP\Module\Migration\Listeners;
 
-use NewfoldLabs\WP\Module\Migration\Data\Events;
 use NewfoldLabs\WP\Module\Migration\Services\EventService;
 use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
 use NewfoldLabs\WP\Module\Migration\Services\Tracker;
@@ -27,6 +26,7 @@ class InstaWpOptionsUpdatesListener {
 	public function __construct() {
 		$this->register_hooks();
 	}
+
 	/**
 	 * Register the hooks for the listener
 	 *
@@ -35,6 +35,7 @@ class InstaWpOptionsUpdatesListener {
 	public function register_hooks() {
 		$this->tracker = new Tracker();
 		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 2 );
+		add_action( 'added_option', array( $this, 'on_add_instawp_last_migration_details' ), 10, 2 );
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
 		add_action( 'nfd_migration_page_speed_source', array( $this, 'page_speed_source' ), 10 );
 		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10, 3 );
@@ -46,15 +47,15 @@ class InstaWpOptionsUpdatesListener {
 	 *
 	 * @param array $new_value status of migration
 	 * @param array $old_value previous status of migration
+	 * @return array
 	 */
 	public function on_update_instawp_last_migration_details( $new_value, $old_value ) {
 		if ( $old_value !== $new_value && ! get_option( 'nfd_migration_status_sent', false ) ) {
 			$migrate_group_uuid = isset( $new_value['migrate_group_uuid'] ) ? $new_value['migrate_group_uuid'] : '';
 			if ( ! empty( $migrate_group_uuid ) ) {
-				$response = UtilityService::get_migration_data( $migrate_group_uuid );
+				$response = UtilityService::get_migration_enrichment( $migrate_group_uuid );
 
 				if ( $response && is_array( $response ) ) {
-					// Use new_value for migration_status instead of API response
 					$migration_status = isset( $new_value['status'] ) ? $new_value['status'] : '';
 
 					if ( 'completed' === $migration_status || 'failed' === $migration_status || 'aborted' === $migration_status ) {
@@ -76,10 +77,10 @@ class InstaWpOptionsUpdatesListener {
 										time() + 120,
 										'nfd_migration_page_speed_destination',
 										array(
-											'source_site_url' => $source_site_url,
+											'source_site_url'    => $source_site_url,
 											'migrate_group_uuid' => $migrate_group_uuid,
-											'status'          => $migration_status,
-										),
+											'status'             => $migration_status,
+										)
 									);
 								}
 							}
@@ -117,6 +118,21 @@ class InstaWpOptionsUpdatesListener {
 	}
 
 	/**
+	 * Process instawp_last_migration_details when WordPress creates the option.
+	 *
+	 * @param string $option Option name.
+	 * @param mixed  $value  Option value.
+	 * @return void
+	 */
+	public function on_add_instawp_last_migration_details( $option, $value ) {
+		if ( 'instawp_last_migration_details' !== $option ) {
+			return;
+		}
+
+		$this->on_update_instawp_last_migration_details( $value, array() );
+	}
+
+	/**
 	 * Listen instaWp option update to intercept the Push step and track it
 	 *
 	 * @param array $new_value status of migration
@@ -134,6 +150,7 @@ class InstaWpOptionsUpdatesListener {
 		}
 		return $new_value;
 	}
+
 	/**
 	 * Get source site hosting informations.
 	 *
@@ -150,6 +167,7 @@ class InstaWpOptionsUpdatesListener {
 
 		$this->tracker->update_track( $source_hosting_info );
 	}
+
 	/**
 	 * Track page speed for source site.
 	 *
@@ -164,8 +182,9 @@ class InstaWpOptionsUpdatesListener {
 
 		$this->tracker->update_track( $source_url_pagespeed );
 	}
+
 	/**
-	 * Track page speed for source site.
+	 * Track page speed for destination site and send completion events.
 	 *
 	 * @param string $source_site_url    source site url.
 	 * @param string $migrate_group_uuid migrate group uuid.
@@ -189,10 +208,9 @@ class InstaWpOptionsUpdatesListener {
 							'migration_uuid' => $migrate_group_uuid,
 						),
 						$this->tracker->get_track_content()
-					),
+					)
 				);
 
-				// send specific data to the Migration Table Event
 				$tracked_datas           = $this->tracker->get_track_content();
 				$isp                     = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['isp'] ?? 'N/A';
 				$as                      = $tracked_datas['SourceHostingInfo']['data']['SourceHostingData']['as'] ?? 'N/A';

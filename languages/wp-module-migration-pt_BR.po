@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-13T09:55:55+00:00\n"
-"PO-Revision-Date: 2025-05-06 10:39+0100\n"
+"PO-Revision-Date: 2026-06-23T10:52:29+00:00\n"
 "Language: pt_BR\n"
 "X-Domain: wp-module-migration\n"
 "X-Generator: Poedit 3.6\n"
@@ -50,56 +50,53 @@ msgstr "Nenhum relatório disponível."
 msgid "NFD migration Options"
 msgstr "Opções de migração do NFD"
 
-#: includes/Services/EventService.php:26
-msgid "Bad event structure/value."
-msgstr "Estrutura ou valor de evento inválido."
+#: includes/Services/EventService.php:77
+msgid "Invalid input for event key or data."
+msgstr "Entrada inválida para chave de evento ou dados."
+
+#: includes/Services/EventService.php:91
+msgid "Invalid event payload."
+msgstr "Carga útil de evento inválida."
+
+#: includes/Services/EventService.php:119
+msgid "Failed to encode event JSON."
+msgstr "Falha ao codificar o evento JSON."
+
+#: includes/Services/EventService.php:142
+msgid "Failed to forward event to Hiive."
+msgstr "Falha ao encaminhar o evento para o Hiive."
 
 #: includes/Services/HostingInfoService.php:74
 #: includes/Services/PageSpeedService.php:67
 msgid "Error decoding response"
 msgstr "Erro ao decodificar a resposta"
 
-#: includes/Services/InstaMigrateService.php:56
+#: includes/Services/InstaMigrateService.php:54
 msgid "Cannot get api key."
 msgstr "Não foi possível obter a chave da API."
 
-#: includes/Services/InstaMigrateService.php:82
-msgid "Connect plugin is installed and ready to start the migration."
-msgstr "O plugin Connect está instalado e pronto para iniciar a migração."
+#: includes/Services/InstaMigrateService.php:73
+#: includes/Steps/ConnectToInstaWp.php:99
+msgid "Migration URL could not be generated."
+msgstr ""
 
-#: includes/Services/InstaMigrateService.php:100
-#: includes/Steps/ConnectToInstaWp.php:76
+#: includes/Services/InstaMigrateService.php:81
+msgid "Ready to start the migration."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:89
+#: includes/Steps/ConnectToInstaWp.php:84
 msgid "Website could not connect successfully."
 msgstr "Não foi possível conectar-se ao site com sucesso."
 
-#: includes/Services/InstaMigrateService.php:107
-msgid "Migration service could not be started."
-msgstr "Não foi possível iniciar o serviço de migração."
+#: includes/Steps/ConnectToInstaWp.php:65
+msgid "Migration utility is missing."
+msgstr ""
 
-#: includes/Steps/GetInstaWpApiKey.php:57
+#: includes/Steps/GetInstaWpApiKey.php:56
 msgid "Cannot get Api key."
 msgstr "Não foi possível obter a chave da API."
-
-#: includes/Steps/InstallActivateInstaWp.php:57
-msgid "Failed to install and activate the plugin"
-msgstr "Falha ao instalar e ativar o plugin"
 
 #: includes/Steps/SourceHostingInfo.php:59
 msgid "Source hosting details not retrieved correctly"
 msgstr "Os detalhes da hospedagem de origem não foram recuperados corretamente"
-
-#: includes/Services/EventService.php:125
-msgid "Invalid input for event key or data."
-msgstr "Entrada inválida para chave de evento ou dados."
-
-#: includes/Services/EventService.php:139
-msgid "Invalid event payload."
-msgstr "Carga útil de evento inválida."
-
-#: includes/Services/EventService.php:167
-msgid "Failed to encode event JSON."
-msgstr "Falha ao codificar o evento JSON."
-
-#: includes/Services/EventService.php:190
-msgid "Failed to forward event to Hiive."
-msgstr "Falha ao encaminhar o evento para o Hiive."

@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
-"PO-Revision-Date: 2025-02-19 15:38\n"
+"PO-Revision-Date: 2026-06-23T10:52:29+00:00\n"
 "Language: nl_NL\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-File: wp-module-migration.pot\n"
@@ -22,10 +22,6 @@ msgstr ""
 #: bootstrap.php:19
 msgid "Migration"
 msgstr "Migratie"
-
-#: includes/RestApi/RestApi.php:60
-msgid "NFD migration Options"
-msgstr "NFD migratie-opties"
 
 #: includes/Migration.php:105
 msgid "WordPress Migration Tool"
@@ -47,15 +43,6 @@ msgstr "Wacht een paar seconden terwijl we uw nieuwe account klaar hebben om uw 
 msgid "WordPress Content"
 msgstr "WordPress inhoud"
 
-#: includes/Services/InstaMigrateService.php:100
-#: includes/Steps/ConnectToInstaWp.php:76
-msgid "Website could not connect successfully."
-msgstr "Website kon geen verbinding maken."
-
-#: includes/Services/InstaMigrateService.php:82
-msgid "Connect plugin is installed and ready to start the migration."
-msgstr "Verbindingsplugin is geïnstalleerd en klaar om de migratie te starten."
-
 #: includes/Reports/MigrationReport.php:42
 #: includes/Reports/MigrationReport.php:60
 msgid "Migration Report"
@@ -65,47 +52,57 @@ msgstr "Migratierapport"
 msgid "No report available."
 msgstr "Geen rapport beschikbaar."
 
-#: includes/Services/InstaMigrateService.php:56
-msgid "Cannot get api key."
-msgstr "Kan de API-sleutel niet verkrijgen."
+#: includes/RestApi/RestApi.php:60
+msgid "NFD migration Options"
+msgstr "NFD migratie-opties"
 
-#: includes/Services/InstaMigrateService.php:107
-msgid "Migration service could not be started."
-msgstr "Migratieservice kon niet worden gestart."
+#: includes/Services/EventService.php:77
+msgid "Invalid input for event key or data."
+msgstr "Ongeldige invoer voor gebeurtenissleutel of gegevens."
 
-#: includes/Steps/GetInstaWpApiKey.php:57
-msgid "Cannot get Api key."
-msgstr "Kan de API-sleutel niet verkrijgen."
+#: includes/Services/EventService.php:91
+msgid "Invalid event payload."
+msgstr "Ongeldige gebeurtenispayload."
 
-#: includes/Steps/InstallActivateInstaWp.php:57
-msgid "Failed to install and activate the plugin"
-msgstr "Kan de plugin niet installeren en activeren."
+#: includes/Services/EventService.php:119
+msgid "Failed to encode event JSON."
+msgstr "Kan gebeurtenis JSON niet coderen."
 
-#: includes/Services/EventService.php:26
-msgid "Bad event structure/value."
-msgstr "Foute gebeurtenisstructuur/waarde."
+#: includes/Services/EventService.php:142
+msgid "Failed to forward event to Hiive."
+msgstr "Kan evenement niet doorsturen naar Hiive."
 
 #: includes/Services/HostingInfoService.php:74
 #: includes/Services/PageSpeedService.php:67
 msgid "Error decoding response"
 msgstr "Fout bij het decoderen van de reactie."
 
+#: includes/Services/InstaMigrateService.php:54
+msgid "Cannot get api key."
+msgstr "Kan de API-sleutel niet verkrijgen."
+
+#: includes/Services/InstaMigrateService.php:73
+#: includes/Steps/ConnectToInstaWp.php:99
+msgid "Migration URL could not be generated."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:81
+msgid "Ready to start the migration."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:89
+#: includes/Steps/ConnectToInstaWp.php:84
+msgid "Website could not connect successfully."
+msgstr "Website kon geen verbinding maken."
+
+#: includes/Steps/ConnectToInstaWp.php:65
+msgid "Migration utility is missing."
+msgstr ""
+
+#: includes/Steps/GetInstaWpApiKey.php:56
+msgid "Cannot get Api key."
+msgstr "Kan de API-sleutel niet verkrijgen."
+
 #: includes/Steps/SourceHostingInfo.php:59
 msgid "Source hosting details not retrieved correctly"
 msgstr "Bronhostinggegevens niet correct opgehaald."
-
-#: includes/Services/EventService.php:125
-msgid "Invalid input for event key or data."
-msgstr "Ongeldige invoer voor gebeurtenissleutel of gegevens."
-
-#: includes/Services/EventService.php:139
-msgid "Invalid event payload."
-msgstr "Ongeldige gebeurtenispayload."
-
-#: includes/Services/EventService.php:167
-msgid "Failed to encode event JSON."
-msgstr "Kan gebeurtenis JSON niet coderen."
-
-#: includes/Services/EventService.php:190
-msgid "Failed to forward event to Hiive."
-msgstr "Kan evenement niet doorsturen naar Hiive."

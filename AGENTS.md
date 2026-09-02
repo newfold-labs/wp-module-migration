@@ -4,11 +4,11 @@ This file gives AI agents a quick orientation to the repo. For full detail, see 
 
 ## What this project is
 
-- **wp-module-migration** – Initiates the migration process. Registers with the Newfold Module Loader; depends on instawp/connect-helpers and wp-module-loader. Maintained by Newfold Labs.
+- **wp-module-migration** – Initiates the migration process. Registers with the Newfold Module Loader, vendors InstaWP migration utilities, and depends on wp-module-loader. Maintained by Newfold Labs.
 
 - **Stack:** PHP 7.3+. See docs/dependencies.md.
 
-- **Architecture:** Registers with the loader; integrates with InstaWP connect-helpers for migration. See docs/integration.md.
+- **Architecture:** Registers with the loader; integrates with standalone InstaWP migration utilities for migration flows. See docs/integration.md.
 
 ## Key paths
 
