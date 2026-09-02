@@ -35,6 +35,7 @@ class InstaWpOptionsUpdatesListener {
 	public function register_hooks() {
 		$this->tracker = new Tracker();
 		add_filter( 'pre_update_option_instawp_last_migration_details', array( $this, 'on_update_instawp_last_migration_details' ), 10, 2 );
+		add_action( 'added_option', array( $this, 'on_add_instawp_last_migration_details' ), 10, 2 );
 		add_filter( 'pre_update_option_instawp_migration_details', array( $this, 'on_update_instawp_migration_details' ), 10, 2 );
 		add_action( 'nfd_migration_page_speed_source', array( $this, 'page_speed_source' ), 10 );
 		add_action( 'nfd_migration_page_speed_destination', array( $this, 'page_speed_destination' ), 10, 3 );
@@ -114,6 +115,21 @@ class InstaWpOptionsUpdatesListener {
 		}
 
 		return $new_value;
+	}
+
+	/**
+	 * Process instawp_last_migration_details when WordPress creates the option.
+	 *
+	 * @param string $option Option name.
+	 * @param mixed  $value  Option value.
+	 * @return void
+	 */
+	public function on_add_instawp_last_migration_details( $option, $value ) {
+		if ( 'instawp_last_migration_details' !== $option ) {
+			return;
+		}
+
+		$this->on_update_instawp_last_migration_details( $value, array() );
 	}
 
 	/**

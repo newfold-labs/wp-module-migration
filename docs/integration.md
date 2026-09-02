@@ -2,7 +2,7 @@
 name: wp-module-migration
 title: Integration
 description: How the module registers and integrates.
-updated: 2026-08-12
+updated: 2026-09-02
 ---
 
 # Integration
@@ -11,7 +11,7 @@ The module registers with the Newfold Module Loader via `bootstrap.php`. It inte
 
 ## Migration completion (v3 and v4)
 
-v3 and v4 use the same destination-side flow in `InstaWpOptionsUpdatesListener`. InstaMigrate updates `instawp_last_migration_details` when migration status changes.
+v3 and v4 use the same destination-side flow in `InstaWpOptionsUpdatesListener`. InstaMigrate updates `instawp_last_migration_details` when migration status changes. The listener handles both `pre_update_option_instawp_last_migration_details` and `added_option`, because WordPress uses the add path when the option does not exist after a v4 migration replaces the installed plugin.
 
 When the option changes and `nfd_migration_status_sent` is false:
 
