@@ -119,6 +119,15 @@ function getMigrationDomain() {
 }
 
 /**
+ * Get expected brand path prefix for the current plugin
+ * @returns {string} Path prefix such as /migrate/bluehost
+ */
+function getMigrationPathPrefix() {
+  const brand = MIGRATION_DOMAINS[pluginId] ? pluginId : 'bluehost';
+  return `/migrate/${brand}`;
+}
+
+/**
  * Navigate to migration page
  * @param {import('@playwright/test').Page} page
  */
@@ -133,7 +142,7 @@ export async function navigateToMigrationPage(page) {
 /**
  * Detect migration redirect flow from the brand-proxy URL.
  * v3: InstaWP connect flow — g_id + locale (rebuilt by InstaMigrateService).
- * v4: InstaWP e2e-mig flow — token in ?t= (URL from InstaWP; we only swap host).
+ * v4: InstaWP e2e-mig flow — token in ?t= (host swap plus /migrate/{brand} path).
  *
  * @param {URL} url Redirect URL.
  * @returns {'v3'|'v4'|'unknown'}
@@ -167,6 +176,12 @@ export async function assertMigrationRedirect(page) {
 
   const url = new URL(page.url());
   expect(url.hostname, 'Expected redirect to migration domain').toBe(domain);
+
+  const pathPrefix = getMigrationPathPrefix();
+  expect(
+    url.pathname === pathPrefix || url.pathname.startsWith(`${pathPrefix}/`),
+    `Expected brand path ${pathPrefix}, got: ${url.pathname}`,
+  ).toBe(true);
 
   const flow = getMigrationRedirectFlow(url);
   expect(
