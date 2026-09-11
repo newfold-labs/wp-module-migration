@@ -1,103 +1,100 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
+"PO-Revision-Date: 2026-09-11T07:16:24+00:00\n"
 "Last-Translator: Vara Prasad Maruboina <varaprasad.maruboina@newfold.com>\n"
 "Language-Team: English\n"
+"Language: en_AU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
-"PO-Revision-Date: 2026-06-23T10:52:29+00:00\n"
-"Language: en_AU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: wp-module-migration\n"
 "X-Generator: WP-CLI 2.11.0\n"
-
-#: bootstrap.php:19
-msgid "Migration"
-msgstr "Migration"
-
-#: includes/Migration.php:105
-msgid "WordPress Migration Tool"
-msgstr "WordPress Migration Tool"
-
-#: includes/Migration.php:106
-msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
-msgstr "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
-
-#: includes/Migration.php:163
-msgid "Preparing your site"
-msgstr "Preparing your site"
-
-#: includes/Migration.php:164
-msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
-msgstr "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
-
-#: includes/Migration.php:165
-msgid "WordPress Content"
-msgstr "WordPress Content"
-
-#: includes/Reports/MigrationReport.php:42
-#: includes/Reports/MigrationReport.php:60
-msgid "Migration Report"
-msgstr "Migration Report"
-
-#: includes/Reports/MigrationReport.php:94
-msgid "No report available."
-msgstr "No report available."
-
-#: includes/RestApi/RestApi.php:60
-msgid "NFD migration Options"
-msgstr "NFD migration Options"
-
-#: includes/Services/EventService.php:77
-msgid "Invalid input for event key or data."
-msgstr "Invalid input for event key or data."
-
-#: includes/Services/EventService.php:91
-msgid "Invalid event payload."
-msgstr "Invalid event payload."
-
-#: includes/Services/EventService.php:119
-msgid "Failed to encode event JSON."
-msgstr "Failed to encode event JSON."
-
-#: includes/Services/EventService.php:142
-msgid "Failed to forward event to Hiive."
-msgstr "Failed to forward event to Hiive."
-
-#: includes/Services/HostingInfoService.php:74
-#: includes/Services/PageSpeedService.php:67
-msgid "Error decoding response"
-msgstr "Error decoding response"
-
-#: includes/Services/InstaMigrateService.php:54
-msgid "Cannot get api key."
-msgstr "Cannot get API key."
-
-#: includes/Services/InstaMigrateService.php:73
-#: includes/Steps/ConnectToInstaWp.php:99
-msgid "Migration URL could not be generated."
-msgstr ""
-
-#: includes/Services/InstaMigrateService.php:81
-msgid "Ready to start the migration."
-msgstr ""
-
-#: includes/Services/InstaMigrateService.php:89
-#: includes/Steps/ConnectToInstaWp.php:84
-msgid "Website could not connect successfully."
-msgstr "Website could not connect successfully."
-
-#: includes/Steps/ConnectToInstaWp.php:65
-msgid "Migration utility is missing."
-msgstr ""
 
 #: includes/Steps/GetInstaWpApiKey.php:56
 msgid "Cannot get Api key."
 msgstr "Cannot get API key."
 
+#: includes/Services/InstaMigrateService.php:57
+msgid "Cannot get api key."
+msgstr "Cannot get API key."
+
+#: includes/Services/HostingInfoService.php:74 includes/Services/PageSpeedService.php:67
+msgid "Error decoding response"
+msgstr "Error decoding response"
+
+#: includes/Services/EventService.php:119
+msgid "Failed to encode event JSON."
+msgstr "Failed to encode event JSON."
+
+#: includes/Services/EventService.php:144
+msgid "Failed to forward event to Hiive."
+msgstr "Failed to forward event to Hiive."
+
+#: includes/Services/EventService.php:91
+msgid "Invalid event payload."
+msgstr "Invalid event payload."
+
+#: includes/Services/EventService.php:77
+msgid "Invalid input for event key or data."
+msgstr "Invalid input for event key or data."
+
+#: includes/Migration.php:122
+msgid "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
+msgstr "Migrate an existing WordPress site to this WordPress instance. This tool will make a copy of an existing site and automatically import it into this WordPress instance <strong>This will overwrite all the content.</strong>"
+
+#: bootstrap.php:19
+msgid "Migration"
+msgstr "Migration"
+
+#: includes/Reports/MigrationReport.php:42 includes/Reports/MigrationReport.php:60
+msgid "Migration Report"
+msgstr "Migration Report"
+
+#: includes/Services/InstaMigrateService.php:74 includes/Steps/ConnectToInstaWp.php:104
+msgid "Migration URL could not be generated."
+msgstr "Migration URL could not be generated."
+
+#: includes/Steps/ConnectToInstaWp.php:69
+msgid "Migration utility is missing."
+msgstr "Migration utility is missing."
+
+#: includes/RestApi/RestApi.php:60
+msgid "NFD migration Options"
+msgstr "NFD migration Options"
+
+#: includes/Reports/MigrationReport.php:94
+msgid "No report available."
+msgstr "No report available."
+
+#: includes/Migration.php:180
+msgid "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
+msgstr "Please wait a few seconds while we get your new account ready to import your existing WordPress site."
+
+#: includes/Migration.php:179
+msgid "Preparing your site"
+msgstr "Preparing your site"
+
+#: includes/Services/InstaMigrateService.php:85 includes/Steps/ConnectToInstaWp.php:160
+msgid "Ready to start the migration."
+msgstr "Ready to start the migration."
+
 #: includes/Steps/SourceHostingInfo.php:59
 msgid "Source hosting details not retrieved correctly"
 msgstr "Source hosting details not retrieved correctly"
+
+#: includes/Services/InstaMigrateService.php:96 includes/Steps/ConnectToInstaWp.php:90
+msgid "Website could not connect successfully."
+msgstr "Website could not connect successfully."
+
+#: includes/Migration.php:181
+msgid "WordPress Content"
+msgstr "WordPress Content"
+
+#: includes/Migration.php:121
+msgid "WordPress Migration Tool"
+msgstr "WordPress Migration Tool"
