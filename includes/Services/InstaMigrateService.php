@@ -103,7 +103,8 @@ class InstaMigrateService {
 	 * Rewrite InstaWP-hosted migration URLs to the brand proxy worker host.
 	 *
 	 * v3 returns app.instawp.io URLs; rebuild the legacy proxy URL with g_id and locale.
-	 * v4 returns migrate.instawp.io (e.g. /start?t=...); swap the host and keep path/query.
+	 * v4 returns migrate.instawp.io (e.g. /start?t=...); swap the host, keep path/query and
+	 * prefix the brand route (e.g. /migrate/bluehost) so the proxy can identify the brand.
 	 *
 	 * @param string $migration_url Migration URL returned by InstaWP utilities.
 	 * @return string
@@ -209,6 +210,7 @@ class InstaMigrateService {
 
 		$url_parts['scheme'] = $proxy_parts['scheme'] ?? 'https';
 		$url_parts['host']   = $proxy_parts['host'];
+		$url_parts['path']   = $this->prefix_brand_proxy_path( $url_parts['path'] ?? '' );
 
 		if ( isset( $proxy_parts['port'] ) ) {
 			$url_parts['port'] = $proxy_parts['port'];
@@ -217,6 +219,35 @@ class InstaMigrateService {
 		}
 
 		return $this->build_url_from_parts( $url_parts );
+	}
+
+	/**
+	 * Prefix a migration path with the brand route used by the proxy worker.
+	 *
+	 * Mirrors the v3 URL shape (e.g. /migrate/bluehost/start?t=...) so the proxy can
+	 * resolve the brand from the path instead of relying on the host alone.
+	 *
+	 * @param string $path Path from the InstaWP migration URL.
+	 * @return string
+	 */
+	private function prefix_brand_proxy_path( $path ) {
+		$prefix = apply_filters(
+			'nfd_migration_brand_proxy_path_prefix',
+			defined( 'INSTAWP_MIGRATE_ENDPOINT' ) ? trim( INSTAWP_MIGRATE_ENDPOINT, '/' ) : ''
+		);
+
+		$prefix = trim( (string) $prefix, '/' );
+		$path   = trim( (string) $path, '/' );
+
+		if ( empty( $prefix ) ) {
+			return '' === $path ? '' : '/' . $path;
+		}
+
+		if ( $path === $prefix || 0 === strpos( $path, $prefix . '/' ) ) {
+			return '/' . $path;
+		}
+
+		return '/' . $prefix . ( '' === $path ? '' : '/' . $path );
 	}
 
 	/**

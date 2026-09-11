@@ -35,4 +35,5 @@ Integrators can adjust migration redirect handling:
 | `nfd_migration_redirect_url` | Final migration redirect URL before returning to the client. |
 | `nfd_migration_instawp_v3_redirect_hosts` | Hostnames (default `app.instawp.io`) that trigger v3 brand-proxy URL rebuild with `g_id` and `locale`. |
 | `nfd_migration_instawp_redirect_hosts` | Hostnames (default `migrate.instawp.io`, `app.instawp.io`) eligible for brand-proxy host swap on v4 URLs. |
+| `nfd_migration_brand_proxy_path_prefix` | Path prefix added to rewritten v4 URLs (default `INSTAWP_MIGRATE_ENDPOINT`, e.g. `migrate/bluehost`) so the proxy can identify the brand. Return an empty string to disable. |
 | `nfd_migration_iwp_sslverify` | SSL verification for outbound InstaWP HTTP calls (default `true`). |
