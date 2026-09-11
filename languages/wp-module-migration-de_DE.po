@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
-"PO-Revision-Date: 2025-02-19 15:38\n"
+"PO-Revision-Date: 2026-06-23T10:52:29+00:00\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-File: wp-module-migration.pot\n"
@@ -22,10 +22,6 @@ msgstr ""
 #: bootstrap.php:19
 msgid "Migration"
 msgstr "Migration"
-
-#: includes/RestApi/RestApi.php:60
-msgid "NFD migration Options"
-msgstr "NFD-Migrationsoptionen"
 
 #: includes/Migration.php:105
 msgid "WordPress Migration Tool"
@@ -47,15 +43,6 @@ msgstr "Bitte warten Sie ein paar Sekunden, während wir Ihr neues Konto bereit,
 msgid "WordPress Content"
 msgstr "WordPress-Inhalt"
 
-#: includes/Services/InstaMigrateService.php:100
-#: includes/Steps/ConnectToInstaWp.php:76
-msgid "Website could not connect successfully."
-msgstr "Website konnte keine Verbindung herstellen."
-
-#: includes/Services/InstaMigrateService.php:82
-msgid "Connect plugin is installed and ready to start the migration."
-msgstr "Das Connect-Plugin ist installiert und kann die Migration starten."
-
 #: includes/Reports/MigrationReport.php:42
 #: includes/Reports/MigrationReport.php:60
 msgid "Migration Report"
@@ -65,47 +52,57 @@ msgstr "Migrationsbericht"
 msgid "No report available."
 msgstr "Kein Bericht verfügbar."
 
-#: includes/Services/InstaMigrateService.php:56
-msgid "Cannot get api key."
-msgstr "API-Schlüssel kann nicht abgerufen werden."
+#: includes/RestApi/RestApi.php:60
+msgid "NFD migration Options"
+msgstr "NFD-Migrationsoptionen"
 
-#: includes/Services/InstaMigrateService.php:107
-msgid "Migration service could not be started."
-msgstr "Migrationsdienst konnte nicht gestartet werden."
+#: includes/Services/EventService.php:77
+msgid "Invalid input for event key or data."
+msgstr "Ungültige Eingabe für Ereignisschlüssel oder Daten."
 
-#: includes/Steps/GetInstaWpApiKey.php:57
-msgid "Cannot get Api key."
-msgstr "API-Schlüssel kann nicht abgerufen werden."
+#: includes/Services/EventService.php:91
+msgid "Invalid event payload."
+msgstr "Ungültige Ereignisnutzlast."
 
-#: includes/Steps/InstallActivateInstaWp.php:57
-msgid "Failed to install and activate the plugin"
-msgstr "Plugin konnte nicht installiert und aktiviert werden"
+#: includes/Services/EventService.php:119
+msgid "Failed to encode event JSON."
+msgstr "Fehler beim Codieren von JSON-Ereignis."
 
-#: includes/Services/EventService.php:26
-msgid "Bad event structure/value."
-msgstr "Ungültige Ereignisstruktur/-wert."
+#: includes/Services/EventService.php:142
+msgid "Failed to forward event to Hiive."
+msgstr "Fehler beim Weiterleiten des Ereignisses an Hiive."
 
 #: includes/Services/HostingInfoService.php:74
 #: includes/Services/PageSpeedService.php:67
 msgid "Error decoding response"
 msgstr "Fehler beim Dekodieren der Antwort"
 
+#: includes/Services/InstaMigrateService.php:54
+msgid "Cannot get api key."
+msgstr "API-Schlüssel kann nicht abgerufen werden."
+
+#: includes/Services/InstaMigrateService.php:73
+#: includes/Steps/ConnectToInstaWp.php:99
+msgid "Migration URL could not be generated."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:81
+msgid "Ready to start the migration."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:89
+#: includes/Steps/ConnectToInstaWp.php:84
+msgid "Website could not connect successfully."
+msgstr "Website konnte keine Verbindung herstellen."
+
+#: includes/Steps/ConnectToInstaWp.php:65
+msgid "Migration utility is missing."
+msgstr ""
+
+#: includes/Steps/GetInstaWpApiKey.php:56
+msgid "Cannot get Api key."
+msgstr "API-Schlüssel kann nicht abgerufen werden."
+
 #: includes/Steps/SourceHostingInfo.php:59
 msgid "Source hosting details not retrieved correctly"
 msgstr "Quellhosting-Details wurden nicht korrekt abgerufen"
-
-#: includes/Services/EventService.php:125
-msgid "Invalid input for event key or data."
-msgstr "Ungültige Eingabe für Ereignisschlüssel oder Daten."
-
-#: includes/Services/EventService.php:139
-msgid "Invalid event payload."
-msgstr "Ungültige Ereignisnutzlast."
-
-#: includes/Services/EventService.php:167
-msgid "Failed to encode event JSON."
-msgstr "Fehler beim Codieren von JSON-Ereignis."
-
-#: includes/Services/EventService.php:190
-msgid "Failed to forward event to Hiive."
-msgstr "Fehler beim Weiterleiten des Ereignisses an Hiive."

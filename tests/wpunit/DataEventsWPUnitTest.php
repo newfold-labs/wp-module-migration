@@ -19,7 +19,9 @@ class DataEventsWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCase {
 	public function test_get_valid_actions_returns_expected_actions() {
 		$actions = Events::get_valid_actions();
 		$this->assertArrayHasKey( 'migration_completed', $actions );
+		$this->assertArrayHasKey( 'migration_successful', $actions );
 		$this->assertArrayHasKey( 'migration_failed', $actions );
+		$this->assertArrayHasKey( 'migration_aborted', $actions );
 		$this->assertArrayHasKey( 'migration_initiated', $actions );
 		$this->assertTrue( $actions['migration_completed'] );
 	}

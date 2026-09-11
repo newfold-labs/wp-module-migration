@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
-"PO-Revision-Date: 2025-02-13 19:23+0530\n"
+"PO-Revision-Date: 2026-06-23T10:52:29+00:00\n"
 "Language: en_GB\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: wp-module-migration\n"
@@ -17,10 +17,6 @@ msgstr ""
 #: bootstrap.php:19
 msgid "Migration"
 msgstr "Migration"
-
-#: includes/RestApi/RestApi.php:60
-msgid "NFD migration Options"
-msgstr "NFD migration Options"
 
 #: includes/Migration.php:105
 msgid "WordPress Migration Tool"
@@ -42,15 +38,6 @@ msgstr "Please wait a few seconds while we get your new account ready to import 
 msgid "WordPress Content"
 msgstr "WordPress Content"
 
-#: includes/Services/InstaMigrateService.php:100
-#: includes/Steps/ConnectToInstaWp.php:76
-msgid "Website could not connect successfully."
-msgstr "Website could not connect successfully."
-
-#: includes/Services/InstaMigrateService.php:82
-msgid "Connect plugin is installed and ready to start the migration."
-msgstr "Connect plugin is installed and ready to start the migration."
-
 #: includes/Reports/MigrationReport.php:42
 #: includes/Reports/MigrationReport.php:60
 msgid "Migration Report"
@@ -60,47 +47,57 @@ msgstr "Migration Report"
 msgid "No report available."
 msgstr "No report available."
 
-#: includes/Services/InstaMigrateService.php:56
-msgid "Cannot get api key."
-msgstr "Cannot get API key."
+#: includes/RestApi/RestApi.php:60
+msgid "NFD migration Options"
+msgstr "NFD migration Options"
 
-#: includes/Services/InstaMigrateService.php:107
-msgid "Migration service could not be started."
-msgstr "Migration service could not be started."
+#: includes/Services/EventService.php:77
+msgid "Invalid input for event key or data."
+msgstr "Invalid input for event key or data."
 
-#: includes/Steps/GetInstaWpApiKey.php:57
-msgid "Cannot get Api key."
-msgstr "Cannot get API key."
+#: includes/Services/EventService.php:91
+msgid "Invalid event payload."
+msgstr "Invalid event payload."
 
-#: includes/Steps/InstallActivateInstaWp.php:57
-msgid "Failed to install and activate the plugin"
-msgstr "Failed to install and activate the plugin"
+#: includes/Services/EventService.php:119
+msgid "Failed to encode event JSON."
+msgstr "Failed to encode event JSON."
 
-#: includes/Services/EventService.php:26
-msgid "Bad event structure/value."
-msgstr "Bad event structure/value."
+#: includes/Services/EventService.php:142
+msgid "Failed to forward event to Hiive."
+msgstr "Failed to forward event to Hiive."
 
 #: includes/Services/HostingInfoService.php:74
 #: includes/Services/PageSpeedService.php:67
 msgid "Error decoding response"
 msgstr "Error decoding response"
 
+#: includes/Services/InstaMigrateService.php:54
+msgid "Cannot get api key."
+msgstr "Cannot get API key."
+
+#: includes/Services/InstaMigrateService.php:73
+#: includes/Steps/ConnectToInstaWp.php:99
+msgid "Migration URL could not be generated."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:81
+msgid "Ready to start the migration."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:89
+#: includes/Steps/ConnectToInstaWp.php:84
+msgid "Website could not connect successfully."
+msgstr "Website could not connect successfully."
+
+#: includes/Steps/ConnectToInstaWp.php:65
+msgid "Migration utility is missing."
+msgstr ""
+
+#: includes/Steps/GetInstaWpApiKey.php:56
+msgid "Cannot get Api key."
+msgstr "Cannot get API key."
+
 #: includes/Steps/SourceHostingInfo.php:59
 msgid "Source hosting details not retrieved correctly"
 msgstr "Source hosting details not retrieved correctly"
-
-#: includes/Services/EventService.php:125
-msgid "Invalid input for event key or data."
-msgstr "Invalid input for event key or data."
-
-#: includes/Services/EventService.php:139
-msgid "Invalid event payload."
-msgstr "Invalid event payload."
-
-#: includes/Services/EventService.php:167
-msgid "Failed to encode event JSON."
-msgstr "Failed to encode event JSON."
-
-#: includes/Services/EventService.php:190
-msgid "Failed to forward event to Hiive."
-msgstr "Failed to forward event to Hiive."

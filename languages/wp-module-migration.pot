@@ -49,23 +49,19 @@ msgstr ""
 msgid "NFD migration Options"
 msgstr ""
 
-#: includes/Services/EventService.php:26
-msgid "Bad event structure/value."
-msgstr ""
-
-#: includes/Services/EventService.php:125
+#: includes/Services/EventService.php:77
 msgid "Invalid input for event key or data."
 msgstr ""
 
-#: includes/Services/EventService.php:139
+#: includes/Services/EventService.php:91
 msgid "Invalid event payload."
 msgstr ""
 
-#: includes/Services/EventService.php:167
+#: includes/Services/EventService.php:119
 msgid "Failed to encode event JSON."
 msgstr ""
 
-#: includes/Services/EventService.php:190
+#: includes/Services/EventService.php:142
 msgid "Failed to forward event to Hiive."
 msgstr ""
 
@@ -74,29 +70,30 @@ msgstr ""
 msgid "Error decoding response"
 msgstr ""
 
-#: includes/Services/InstaMigrateService.php:56
+#: includes/Services/InstaMigrateService.php:54
 msgid "Cannot get api key."
 msgstr ""
 
-#: includes/Services/InstaMigrateService.php:82
-msgid "Connect plugin is installed and ready to start the migration."
+#: includes/Services/InstaMigrateService.php:73
+#: includes/Steps/ConnectToInstaWp.php:99
+msgid "Migration URL could not be generated."
 msgstr ""
 
-#: includes/Services/InstaMigrateService.php:100
-#: includes/Steps/ConnectToInstaWp.php:76
+#: includes/Services/InstaMigrateService.php:81
+msgid "Ready to start the migration."
+msgstr ""
+
+#: includes/Services/InstaMigrateService.php:89
+#: includes/Steps/ConnectToInstaWp.php:84
 msgid "Website could not connect successfully."
 msgstr ""
 
-#: includes/Services/InstaMigrateService.php:107
-msgid "Migration service could not be started."
+#: includes/Steps/ConnectToInstaWp.php:65
+msgid "Migration utility is missing."
 msgstr ""
 
-#: includes/Steps/GetInstaWpApiKey.php:57
+#: includes/Steps/GetInstaWpApiKey.php:56
 msgid "Cannot get Api key."
-msgstr ""
-
-#: includes/Steps/InstallActivateInstaWp.php:57
-msgid "Failed to install and activate the plugin"
 msgstr ""
 
 #: includes/Steps/SourceHostingInfo.php:59

@@ -13,7 +13,7 @@ use NewfoldLabs\WP\Module\Migration\Services\UtilityService;
  */
 class GetInstaWpApiKey extends AbstractStep {
 	/**
-	 * InstaWP Connect plugin API key used for connecting the instaWP plugin
+	 * InstaWP migration vendor API key.
 	 *
 	 * @var $insta_api_key
 	 */
