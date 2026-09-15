@@ -130,9 +130,10 @@ function getMigrationPathPrefix() {
 /**
  * Navigate to migration page
  * @param {import('@playwright/test').Page} page
+ * @returns {Promise<import('@playwright/test').Response|null>} Main resource response
  */
 export async function navigateToMigrationPage(page) {
-  await page.goto(getMigrationRoute());
+  return page.goto(getMigrationRoute());
 }
 
 // ============================================================================
