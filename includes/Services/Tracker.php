@@ -40,7 +40,7 @@ class Tracker {
 					'status'  => $step->get_status(),
 					'intents' => $step->get_retry_count() + 1,
 					'message' => $step->get_response()['message'] ?? '',
-					'data'    => $step->get_data(),
+					'data'    => $this->sanitize_step_data( $step->get_data() ),
 					'time'    => current_time( 'mysql', 1 ),
 				),
 			);
@@ -67,5 +67,27 @@ class Tracker {
 	 */
 	public function reset() {
 		return update_option( self::OPTION_NAME, array() );
+	}
+
+	/**
+	 * Strip sensitive migration URL details before persisting tracking data.
+	 *
+	 * @param array $data Step data array.
+	 * @return array
+	 */
+	private function sanitize_step_data( array $data ) {
+		if ( empty( $data['migration_url'] ) || ! is_string( $data['migration_url'] ) ) {
+			return $data;
+		}
+
+		$url_parts = wp_parse_url( $data['migration_url'] );
+		if ( empty( $url_parts['host'] ) ) {
+			unset( $data['migration_url'] );
+			return $data;
+		}
+
+		$data['migration_url'] = $url_parts['host'] . ( $url_parts['path'] ?? '/' );
+
+		return $data;
 	}
 }

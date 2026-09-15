@@ -2,7 +2,7 @@
 name: wp-module-migration
 title: Documentation index
 description: Table of contents and quick links.
-updated: 2026-05-25
+updated: 2026-08-12
 ---
 
 # wp-module-migration – Documentation index
