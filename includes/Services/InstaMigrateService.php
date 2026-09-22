@@ -60,7 +60,7 @@ class InstaMigrateService {
 		}
 
 		$connect_to_instawp = new ConnectToInstaWp( $this->insta_api_key );
-		if ( $connect_to_instawp->failed() && $this->refresh_insta_api_key( $instawp_get_key_step ) ) {
+		if ( $connect_to_instawp->is_unauthorized() && $this->maybe_refresh_cached_api_key( $instawp_get_key_step ) ) {
 			$connect_to_instawp = new ConnectToInstaWp( $this->insta_api_key );
 		}
 		$this->tracker->update_track( $connect_to_instawp );
@@ -103,12 +103,12 @@ class InstaMigrateService {
 	}
 
 	/**
-	 * Replace a saved API key that InstaWP may have revoked with a fresh one.
+	 * Replace a saved API key that InstaWP rejected with a fresh one.
 	 *
 	 * @param GetInstaWpApiKey $key_step Completed API key step.
 	 * @return bool True when a different key is now in use.
 	 */
-	private function refresh_insta_api_key( GetInstaWpApiKey $key_step ) {
+	private function maybe_refresh_cached_api_key( GetInstaWpApiKey $key_step ) {
 		if ( ! $key_step->is_from_cache() ) {
 			return false;
 		}
@@ -117,6 +117,9 @@ class InstaMigrateService {
 		if ( empty( $api_key ) || $api_key === $this->insta_api_key ) {
 			return false;
 		}
+
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( 'wp-module-migration: InstaWP rejected the saved API key, retrying with a new one.' );
 
 		$this->insta_api_key = $api_key;
 		return true;

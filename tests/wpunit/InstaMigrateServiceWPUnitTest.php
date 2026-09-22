@@ -158,7 +158,7 @@ class InstaMigrateServiceWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestC
 		$property   = $reflection->getProperty( 'insta_api_key' );
 		$property->setAccessible( true );
 		$property->setValue( $service, $api_key );
-		$method = $reflection->getMethod( 'refresh_insta_api_key' );
+		$method = $reflection->getMethod( 'maybe_refresh_cached_api_key' );
 		$method->setAccessible( true );
 
 		return array( $method->invoke( $service, $key_step ), $property->getValue( $service ) );
