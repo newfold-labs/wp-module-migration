@@ -249,4 +249,77 @@ class InstaWpKeyRefreshWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCas
 		$this->assertSame( 0, $this->token_requests() );
 		$this->assertSame( 'saved-key', get_option( 'newfold_insta_api_key' ) );
 	}
+
+	/**
+	 * A 401 from the InstaWP API for some other credential does not count as ours.
+	 *
+	 * @return void
+	 */
+	public function test_401_for_another_credential_is_ignored() {
+		update_option( 'newfold_insta_api_key', 'saved-key' );
+		$this->worker_key   = 'other-key';
+		$this->engine_codes = array( 'saved-key' => 500 );
+
+		$foreign_401 = function ( $pre ) {
+			do_action(
+				'http_api_debug',
+				array( 'response' => array( 'code' => 401 ) ),
+				'response',
+				'WpOrg\Requests\Requests',
+				array( 'headers' => array( 'Authorization' => 'Bearer someone-elses-key' ) ),
+				self::ENGINE_URL
+			);
+			return $pre;
+		};
+		add_filter( 'pre_http_request', $foreign_401, 5 );
+
+		( new InstaMigrateService() )->run();
+
+		remove_filter( 'pre_http_request', $foreign_401, 5 );
+
+		$this->assertSame( 0, $this->token_requests() );
+		$this->assertSame( 2, $this->count_requests( self::ENGINE_URL, 'saved-key' ) );
+	}
+
+	/**
+	 * Third-party code firing the hook with fewer args during connect does not fatal.
+	 *
+	 * @return void
+	 */
+	public function test_short_http_api_debug_call_does_not_fatal() {
+		update_option( 'newfold_insta_api_key', 'saved-key' );
+		$this->engine_codes = array( 'saved-key' => 500 );
+
+		$error      = null;
+		$short_call = function ( $pre ) use ( &$error ) {
+			try {
+				do_action( 'http_api_debug', array() );
+			} catch ( \Throwable $e ) {
+				$error = $e;
+			}
+			return $pre;
+		};
+		add_filter( 'pre_http_request', $short_call, 5 );
+
+		( new InstaMigrateService() )->run();
+
+		remove_filter( 'pre_http_request', $short_call, 5 );
+
+		$this->assertNull( $error, $error ? $error->getMessage() : '' );
+	}
+
+	/**
+	 * The listener is detached once connect returns, so later requests are untouched.
+	 *
+	 * @return void
+	 */
+	public function test_listener_is_removed_after_connect() {
+		update_option( 'newfold_insta_api_key', 'saved-key' );
+		$this->engine_codes = array( 'saved-key' => 500 );
+		$before             = has_action( 'http_api_debug' );
+
+		( new InstaMigrateService() )->run();
+
+		$this->assertSame( $before, has_action( 'http_api_debug' ) );
+	}
 }

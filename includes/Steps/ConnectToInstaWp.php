@@ -84,11 +84,15 @@ class ConnectToInstaWp extends AbstractStep {
 
 		$this->unauthorized = false;
 		$api_host           = wp_parse_url( \IWP_Migration_Utils::get_api_domain(), PHP_URL_HOST );
-		$listener           = function ( $response, $context, $transport, $args, $url ) use ( $api_host ) {
+		$auth_header        = 'Bearer ' . $this->insta_api_key;
+		// Read-only; defaults guard against callers firing the hook with fewer args.
+		$listener = function ( $response, $context = '', $transport = '', $args = array(), $url = '' ) use ( $api_host, $auth_header ) {
 			if ( 'response' === $context
 				&& ! is_wp_error( $response )
 				&& 401 === (int) wp_remote_retrieve_response_code( $response )
+				&& is_string( $url )
 				&& wp_parse_url( $url, PHP_URL_HOST ) === $api_host
+				&& ( $args['headers']['Authorization'] ?? '' ) === $auth_header
 			) {
 				$this->unauthorized = true;
 			}
