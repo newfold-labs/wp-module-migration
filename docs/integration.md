@@ -24,6 +24,8 @@ When the option changes and `nfd_migration_status_sent` is false:
 
 API requests use a Bearer token from the brand migration proxy worker (`GET {NFD_MIGRATION_PROXY_WORKER}/token?brand=...`).
 
+The connect flow saves this token in `newfold_insta_api_key`. If connecting with a saved token fails, the module fetches a new one, saves it, and retries once when it differs.
+
 Starting a new migration clears `nfd_migration_status_sent` and stale post-migration cron jobs from prior runs.
 
 ## Redirect URL filters

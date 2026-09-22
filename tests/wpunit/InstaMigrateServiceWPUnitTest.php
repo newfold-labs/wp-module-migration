@@ -3,6 +3,7 @@
 namespace NewfoldLabs\WP\Module\Migration;
 
 use NewfoldLabs\WP\Module\Migration\Services\InstaMigrateService;
+use NewfoldLabs\WP\Module\Migration\Steps\GetInstaWpApiKey;
 
 /**
  * InstaMigrateService wpunit tests.
@@ -122,5 +123,92 @@ class InstaMigrateServiceWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestC
 			),
 			$normalized
 		);
+	}
+
+	/**
+	 * Build a key step mock without running the real step.
+	 *
+	 * @param bool   $from_cache Whether the key came from the saved option.
+	 * @param string $fresh_key  Key returned by a refresh.
+	 * @return GetInstaWpApiKey
+	 */
+	private function mock_key_step( $from_cache, $fresh_key ) {
+		$key_step = $this->getMockBuilder( GetInstaWpApiKey::class )
+			->disableOriginalConstructor()
+			->onlyMethods( array( 'is_from_cache', 'refresh_insta_api_key' ) )
+			->getMock();
+		$key_step->method( 'is_from_cache' )->willReturn( $from_cache );
+		$key_step->expects( $from_cache ? $this->once() : $this->never() )
+			->method( 'refresh_insta_api_key' )
+			->willReturn( $fresh_key );
+
+		return $key_step;
+	}
+
+	/**
+	 * Run the private key refresh helper with a starting key.
+	 *
+	 * @param GetInstaWpApiKey $key_step Key step.
+	 * @param string           $api_key  Key the connect attempt used.
+	 * @return array Refresh result and the key the service holds afterwards.
+	 */
+	private function refresh_key( $key_step, $api_key ) {
+		$service    = new InstaMigrateService();
+		$reflection = new \ReflectionClass( $service );
+		$property   = $reflection->getProperty( 'insta_api_key' );
+		$property->setAccessible( true );
+		$property->setValue( $service, $api_key );
+		$method = $reflection->getMethod( 'refresh_insta_api_key' );
+		$method->setAccessible( true );
+
+		return array( $method->invoke( $service, $key_step ), $property->getValue( $service ) );
+	}
+
+	/**
+	 * A revoked saved key is swapped for a fresh one so connect can retry.
+	 *
+	 * @return void
+	 */
+	public function test_refresh_swaps_stale_saved_key() {
+		list( $refreshed, $api_key ) = $this->refresh_key( $this->mock_key_step( true, 'fresh-key' ), 'stale-key' );
+
+		$this->assertTrue( $refreshed );
+		$this->assertSame( 'fresh-key', $api_key );
+	}
+
+	/**
+	 * No retry when the worker hands back the same key.
+	 *
+	 * @return void
+	 */
+	public function test_refresh_skips_retry_when_key_unchanged() {
+		list( $refreshed, $api_key ) = $this->refresh_key( $this->mock_key_step( true, 'same-key' ), 'same-key' );
+
+		$this->assertFalse( $refreshed );
+		$this->assertSame( 'same-key', $api_key );
+	}
+
+	/**
+	 * No retry when the fresh fetch fails.
+	 *
+	 * @return void
+	 */
+	public function test_refresh_skips_retry_when_fetch_fails() {
+		list( $refreshed, $api_key ) = $this->refresh_key( $this->mock_key_step( true, '' ), 'saved-key' );
+
+		$this->assertFalse( $refreshed );
+		$this->assertSame( 'saved-key', $api_key );
+	}
+
+	/**
+	 * A key fetched fresh for this run is not fetched again.
+	 *
+	 * @return void
+	 */
+	public function test_refresh_skipped_for_freshly_fetched_key() {
+		list( $refreshed, $api_key ) = $this->refresh_key( $this->mock_key_step( false, 'unused' ), 'fresh-key' );
+
+		$this->assertFalse( $refreshed );
+		$this->assertSame( 'fresh-key', $api_key );
 	}
 }
