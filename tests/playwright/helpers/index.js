@@ -15,7 +15,7 @@ import { pathToFileURL } from 'url';
 // ============================================================================
 
 const pluginDir = process.env.PLUGIN_DIR || process.cwd();
-const finalHelpersPath = join(pluginDir, 'tests/playwright/helpers/index.mjs');
+const finalHelpersPath = join(pluginDir, 'tests/playwright/helpers/index.js');
 const helpersUrl = pathToFileURL(finalHelpersPath).href;
 const pluginHelpers = await import(helpersUrl);
 
