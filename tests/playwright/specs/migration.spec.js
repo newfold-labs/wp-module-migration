@@ -6,7 +6,7 @@ import {
   deleteOption,
   navigateToMigrationPage,
   assertMigrationRedirect,
-} from '../helpers/index.mjs';
+} from '../helpers/index.js';
 
 test.describe('Redirect to Onboarding Migration Flow from MFE entrypoint', () => {
   test.beforeAll(async () => {
