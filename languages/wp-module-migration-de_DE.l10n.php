@@ -5,7 +5,7 @@ return [
 	'language' => 'de_DE',
 	'project-id-version' => 'newfold-labswp-module-staging',
 	'pot-creation-date' => '2025-02-13T10:16:59+00:00',
-	'po-revision-date' => '2026-09-28T17:43:35+00:00',
+	'po-revision-date' => '2026-10-07T06:25:13+00:00',
 	'x-generator' => 'WP-CLI 2.11.0',
 	'messages' => [
 		'Migration' => 'Migration',
