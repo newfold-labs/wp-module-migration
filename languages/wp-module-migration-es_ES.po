@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-13T10:16:59+00:00\n"
-"PO-Revision-Date: 2026-09-28T17:43:35+00:00\n"
+"PO-Revision-Date: 2026-10-07T06:25:13+00:00\n"
 "Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-File: wp-module-migration.pot\n"
@@ -81,26 +81,26 @@ msgstr "Error al decodificar la respuesta."
 msgid "Cannot get api key."
 msgstr "No se puede obtener la clave API."
 
-#: includes/Services/InstaMigrateService.php:74
-#: includes/Steps/ConnectToInstaWp.php:104
+#: includes/Services/InstaMigrateService.php:77
+#: includes/Steps/ConnectToInstaWp.php:137
 msgid "Migration URL could not be generated."
 msgstr "No se pudo generar la URL de migración."
 
-#: includes/Services/InstaMigrateService.php:85
-#: includes/Steps/ConnectToInstaWp.php:160
+#: includes/Services/InstaMigrateService.php:88
+#: includes/Steps/ConnectToInstaWp.php:202
 msgid "Ready to start the migration."
 msgstr "Listo para empezar la migración."
 
-#: includes/Services/InstaMigrateService.php:96
-#: includes/Steps/ConnectToInstaWp.php:90
+#: includes/Services/InstaMigrateService.php:99
+#: includes/Steps/ConnectToInstaWp.php:123
 msgid "Website could not connect successfully."
 msgstr "El sitio web no se pudo conectar correctamente."
 
-#: includes/Steps/ConnectToInstaWp.php:69
+#: includes/Steps/ConnectToInstaWp.php:76
 msgid "Migration utility is missing."
 msgstr "Falta la utilidad de migración."
 
-#: includes/Steps/GetInstaWpApiKey.php:56
+#: includes/Steps/GetInstaWpApiKey.php:64
 msgid "Cannot get Api key."
 msgstr "No se puede obtener la clave API."
 
