@@ -26,7 +26,7 @@ final class Events {
 		'migration_completed'             => true,
 		'migration_failed'                => true,
 		'migration_aborted'               => true,
-		'migration_vendor_plugin_connect'  => true,
+		'migration_vendor_plugin_connect' => true,
 		'migration_get_vendor_api_key'     => true,
 		'migration_successful'             => true,
 		'migration_initiated_tools'        => true,
