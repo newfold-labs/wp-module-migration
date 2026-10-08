@@ -79,7 +79,7 @@ class InstaWpOptionsUpdatesListener {
 										array(
 											'source_site_url' => $source_site_url,
 											'migrate_group_uuid' => $migrate_group_uuid,
-											'status'             => $migration_status,
+											'status' => $migration_status,
 										)
 									);
 								}
