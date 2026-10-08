@@ -77,9 +77,9 @@ class InstaWpOptionsUpdatesListener {
 										time() + 120,
 										'nfd_migration_page_speed_destination',
 										array(
-											'source_site_url'    => $source_site_url,
+											'source_site_url' => $source_site_url,
 											'migrate_group_uuid' => $migrate_group_uuid,
-											'status'             => $migration_status,
+											'status' => $migration_status,
 										)
 									);
 								}
