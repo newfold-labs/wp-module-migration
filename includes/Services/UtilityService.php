@@ -111,7 +111,7 @@ class UtilityService {
 		$response = wp_remote_get(
 			'https://app.instawp.io/api/v2/' . ltrim( $path, '/' ),
 			array(
-				'headers' => array(
+				'headers'    => array(
 					'Authorization' => 'Bearer ' . $token,
 				),
 				'timeout'   => 30,
