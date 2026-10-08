@@ -19,7 +19,7 @@ class MigrateControllerWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCas
 	public function test_controller_namespace_and_rest_base() {
 		$controller = new MigrateController();
 		$reflection = new \ReflectionClass( $controller );
-		$namespace   = $reflection->getProperty( 'namespace' );
+		$namespace  = $reflection->getProperty( 'namespace' );
 		$namespace->setAccessible( true );
 		$rest_base   = $reflection->getProperty( 'rest_base' );
 		$rest_base->setAccessible( true );
