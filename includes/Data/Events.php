@@ -24,7 +24,7 @@ final class Events {
 	 */
 	protected static $valid_actions = array(
 		'migration_completed'             => true,
-		'migration_failed'                 => true,
+		'migration_failed'                => true,
 		'migration_aborted'                => true,
 		'migration_vendor_plugin_connect'  => true,
 		'migration_get_vendor_api_key'     => true,
