@@ -30,7 +30,7 @@ final class Events {
 		'migration_get_vendor_api_key'    => true,
 		'migration_successful'            => true,
 		'migration_initiated_tools'       => true,
-		'mfe_migration_initiated'          => true,
+		'mfe_migration_initiated'         => true,
 		'migration_initiated'              => true,
 	);
 
