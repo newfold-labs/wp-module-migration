@@ -114,7 +114,7 @@ class UtilityService {
 				'headers'    => array(
 					'Authorization' => 'Bearer ' . $token,
 				),
-				'timeout'   => 30,
+				'timeout'    => 30,
 				'sslverify' => apply_filters( 'nfd_migration_iwp_sslverify', true ),
 				'user-agent' => self::get_insta_user_agent(),
 			)
