@@ -40,7 +40,6 @@ jobs:
       module-branch: ${{ needs.setup.outputs.branch }}
       plugin-repo: 'newfold-labs/wp-plugin-bluehost'
     secrets: inherit
-    timeout-minutes: 60
 
   bluehost-dev:
     name: Bluehost DEV Build and Test Playwright
@@ -54,4 +53,3 @@ jobs:
       plugin-repo: 'newfold-labs/wp-plugin-bluehost'
       plugin-branch: 'develop'
     secrets: inherit
-    timeout-minutes: 60
