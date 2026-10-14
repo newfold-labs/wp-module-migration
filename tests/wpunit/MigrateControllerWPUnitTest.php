@@ -17,11 +17,11 @@ class MigrateControllerWPUnitTest extends \lucatume\WPBrowser\TestCase\WPTestCas
 	 * @return void
 	 */
 	public function test_controller_namespace_and_rest_base() {
-		$controller  = new MigrateController();
-		$reflection  = new \ReflectionClass( $controller );
-		$namespace   = $reflection->getProperty( 'namespace' );
+		$controller = new MigrateController();
+		$reflection = new \ReflectionClass( $controller );
+		$namespace  = $reflection->getProperty( 'namespace' );
 		$namespace->setAccessible( true );
-		$rest_base   = $reflection->getProperty( 'rest_base' );
+		$rest_base = $reflection->getProperty( 'rest_base' );
 		$rest_base->setAccessible( true );
 		$this->assertSame( 'newfold-migration/v1', $namespace->getValue( $controller ) );
 		$this->assertSame( '/migrate', $rest_base->getValue( $controller ) );
