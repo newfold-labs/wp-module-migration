@@ -42,4 +42,3 @@ jobs:
       minimum-coverage: 25
     secrets:
       repo_token: ${{ secrets.GITHUB_TOKEN }}
-    timeout-minutes: 60
