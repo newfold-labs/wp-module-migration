@@ -20,7 +20,6 @@ jobs:
     permissions:
       contents: read        # Required to clone this private repository via actions/checkout.
       pull-requests: read   # Required for technote-space/get-diff-action (Octokit pulls API).
-      actions: write        # Required to restore and save Composer caches via actions/cache.
     timeout-minutes: 30
     steps:
 
